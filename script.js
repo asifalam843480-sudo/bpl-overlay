@@ -41,7 +41,37 @@ function saveHistory() {
     matchData.history.shift();
   }
 }
+function saveMatchInfo(){
 
+const teamA = document.getElementById("teamA");
+const teamB = document.getElementById("teamB");
+const striker = document.getElementById("striker");
+const nonStriker = document.getElementById("nonStriker");
+const bowler = document.getElementById("bowler");
+
+if(teamA){
+matchData.teamA = teamA.value;
+}
+
+if(teamB){
+matchData.teamB = teamB.value;
+}
+
+if(striker){
+matchData.striker = striker.value;
+}
+
+if(nonStriker){
+matchData.nonStriker = nonStriker.value;
+}
+
+if(bowler){
+matchData.bowler = bowler.value;
+}
+
+saveData();
+
+}
 function updateUI() {
 
   const scoreBox = document.getElementById("score");
@@ -264,7 +294,10 @@ document.addEventListener(
           btn.onclick =
             resetMatch;
         }
-
+setInterval(
+saveMatchInfo,
+1000
+);
       });
 
   }
