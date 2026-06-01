@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Admin Panel</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>BPL Scorer Panel</title>
 
 <style>
 
 body{
-background:#081b4b;
-font-family:Poppins,sans-serif;
-padding:20px;
+background:#071b4d;
+font-family:Arial,sans-serif;
 color:white;
+padding:20px;
 }
 
 .container{
@@ -21,40 +20,64 @@ max-width:1200px;
 margin:auto;
 }
 
-h1{
-text-align:center;
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
-}
-
 .card{
 background:#102b72;
-padding:20px;
-border-radius:15px;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+}
+
+h2{
+margin-bottom:10px;
 }
 
 input{
 width:100%;
 padding:10px;
 margin-top:5px;
-margin-bottom:15px;
+margin-bottom:10px;
 border:none;
 border-radius:8px;
 }
 
 button{
-background:#ffd23f;
-border:none;
-padding:12px 20px;
+padding:12px;
+margin:5px;
 font-size:18px;
-font-weight:700;
-border-radius:10px;
+font-weight:bold;
 cursor:pointer;
+border:none;
+border-radius:10px;
+}
+
+.runBtn{
+width:70px;
+height:60px;
+}
+
+.green{
+background:#1db954;
+color:white;
+}
+
+.red{
+background:#d62828;
+color:white;
+}
+
+.blue{
+background:#1976d2;
+color:white;
+}
+
+.yellow{
+background:#ffd23f;
+color:black;
+}
+
+.scoreBox{
+font-size:40px;
+font-weight:bold;
 }
 
 </style>
@@ -64,155 +87,120 @@ cursor:pointer;
 
 <div class="container">
 
-<h1>Bhikhanpur Premium League - Admin Panel</h1>
-
-<div class="grid">
-
 <div class="card">
 
-<h3>Team Information</h3>
+<h2>Match Setup</h2>
 
-<label>Team 1 Name</label>
-<input id="team1NameInput" value="ROYAL WARRIORS">
+<label>Team A</label>
+<input id="teamA" value="ROYAL WARRIORS">
 
-<label>Team 2 Name</label>
-<input id="team2NameInput" value="TIGER STRIKERS">
+<label>Team B</label>
+<input id="teamB" value="TIGER STRIKERS">
 
-<label>Team 1 Logo</label>
-<input type="file" id="team1LogoInput">
+<label>Total Overs</label>
+<input id="matchOvers" value="8">
 
-<label>Team 2 Logo</label>
-<input type="file" id="team2LogoInput">
+<label>Target</label>
+<input id="target" value="0">
 
-</div>
+<label>Team A Logo</label>
+<input type="file" id="teamALogo">
 
-<div class="card">
-
-<h3>Score Information</h3>
-
-<label>Score</label>
-<input id="scoreInput" value="124/4">
-
-<label>Overs</label>
-<input id="oversInput" value="15.2">
-
-<label>Need Runs</label>
-<input id="needRunsInput" value="41">
-
-<label>Need Balls</label>
-<input id="needBallsInput" value="28">
+<label>Team B Logo</label>
+<input type="file" id="teamBLogo">
 
 </div>
 
 <div class="card">
 
-<h3>Batsman</h3>
+<h2>Live Score</h2>
 
-<label>Batsman 1</label>
-<input id="bat1Input" value="ASIF*">
+<div class="scoreBox" id="score">
+0/0
+</div>
 
-<label>Batsman 1 Score</label>
-<input id="bat1ScoreInput" value="45 (31)">
+<div id="overs">
+0.0
+</div>
 
-<label>Batsman 2</label>
-<input id="bat2Input" value="RAHUL">
-
-<label>Batsman 2 Score</label>
-<input id="bat2ScoreInput" value="22 (18)">
+<div id="thisOver">
+-
+</div>
 
 </div>
 
 <div class="card">
 
-<h3>Bowler</h3>
+<h2>Batsman</h2>
 
-<label>Bowler Name</label>
-<input id="bowlerInput" value="IMRAN">
+<input id="striker"
+placeholder="Striker">
 
-<label>Bowler Figures</label>
-<input id="bowlerFiguresInput" value="2-18 (3.2)">
+<input id="nonStriker"
+placeholder="Non Striker">
+
+</div>
+
+<div class="card">
+
+<h2>Bowler</h2>
+
+<input id="bowler"
+placeholder="Bowler Name">
 
 </div>
 
-</div>
+<div class="card">
+
+<h2>Scoring Buttons</h2>
+
+<button class="runBtn green">0</button>
+<button class="runBtn green">1</button>
+<button class="runBtn green">2</button>
+<button class="runBtn green">3</button>
 
 <br>
 
-<button onclick="saveData()">
-Update Overlay
+<button class="runBtn green">4</button>
+<button class="runBtn green">5</button>
+
+<button class="runBtn red">
+6=OUT
+</button>
+
+<br>
+
+<button class="blue">
+WD
+</button>
+
+<button class="blue">
+NB
+</button>
+
+<button class="yellow">
+UNDO
 </button>
 
 </div>
 
-<script>
+<div class="card">
 
-function saveData(){
+<h2>Innings Control</h2>
 
-localStorage.setItem(
-'team1Name',
-document.getElementById('team1NameInput').value
-);
+<button class="green">
+START 2ND INNINGS
+</button>
 
-localStorage.setItem(
-'team2Name',
-document.getElementById('team2NameInput').value
-);
+<button class="red">
+RESET MATCH
+</button>
 
-localStorage.setItem(
-'score',
-document.getElementById('scoreInput').value
-);
+</div>
 
-localStorage.setItem(
-'overs',
-document.getElementById('oversInput').value
-);
+</div>
 
-localStorage.setItem(
-'needRuns',
-document.getElementById('needRunsInput').value
-);
-
-localStorage.setItem(
-'needBalls',
-document.getElementById('needBallsInput').value
-);
-
-localStorage.setItem(
-'bat1',
-document.getElementById('bat1Input').value
-);
-
-localStorage.setItem(
-'bat1Score',
-document.getElementById('bat1ScoreInput').value
-);
-
-localStorage.setItem(
-'bat2',
-document.getElementById('bat2Input').value
-);
-
-localStorage.setItem(
-'bat2Score',
-document.getElementById('bat2ScoreInput').value
-);
-
-localStorage.setItem(
-'bowler',
-document.getElementById('bowlerInput').value
-);
-
-localStorage.setItem(
-'bowlerFigures',
-document.getElementById('bowlerFiguresInput').value
-);
-
-alert("Overlay Updated");
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
