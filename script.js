@@ -1,135 +1,304 @@
 let matchData = JSON.parse(localStorage.getItem("bplData")) || {
-score: 0,
-wickets: 0,
-balls: 0,
-overs: 8,
-target: 0,
-innings: 1,
-thisOver: [],
-history: []
+
+teamA:"ROYAL WARRIORS",
+teamB:"TIGER STRIKERS",
+
+score:0,
+wickets:0,
+
+balls:0,
+
+totalOvers:8,
+
+target:0,
+
+innings:1,
+
+thisOver:[],
+
+history:[]
+
 };
 
 function saveData(){
-localStorage.setItem("bplData",JSON.stringify(matchData));
-}
 
-function getOvers(){
-return Math.floor(matchData.balls/6)+"."+(matchData.balls%6);
-}
-
-function addBall(run){
-
-matchData.history.push(
+localStorage.setItem(
+"bplData",
 JSON.stringify(matchData)
 );
 
-if(run==="W"){
-matchData.wickets++;
-matchData.balls++;
-matchData.thisOver.push("W");
-}
-else{
-matchData.score+=run;
-matchData.balls++;
-matchData.thisOver.push(run);
 }
 
-if(matchData.thisOver.length>6){
-matchData.thisOver.shift();
+function getOvers(){
+
+return Math.floor(
+matchData.balls/6
+)+"."+
+(matchData.balls%6);
+
+}
+
+function updateUI(){
+
+const scoreBox =
+document.getElementById("score");
+
+if(scoreBox){
+
+scoreBox.innerText=
+matchData.score+
+"/"+
+matchData.wickets;
+
+}
+
+const oversBox =
+document.getElementById("overs");
+
+if(oversBox){
+
+oversBox.innerText=
+getOvers();
+
+}
+
+const thisOverBox =
+document.getElementById("thisOver");
+
+if(thisOverBox){
+
+thisOverBox.innerText=
+matchData.thisOver.join(" ");
+
 }
 
 saveData();
-updateScreen();
+
+}
+
+function saveHistory(){
+
+matchData.history.push(
+
+JSON.stringify(matchData)
+
+);
+
+}
+
+function addRun(run){
+
+saveHistory();
+
+matchData.score += run;
+
+matchData.balls++;
+
+matchData.thisOver.push(run);
+
+if(matchData.thisOver.length>6){
+
+matchData.thisOver.shift();
+
+}
+
+updateUI();
+
+}
+
+function addWicket(){
+
+saveHistory();
+
+matchData.wickets++;
+
+matchData.balls++;
+
+matchData.thisOver.push("W");
+
+if(matchData.thisOver.length>6){
+
+matchData.thisOver.shift();
+
+}
+
+if(matchData.wickets>=8){
+
+alert("ALL OUT");
+
+}
+
+updateUI();
 
 }
 
 function wideBall(){
-matchData.history.push(
-JSON.stringify(matchData)
-);
 
-matchData.score+=1;
+saveHistory();
+
+matchData.score++;
+
 matchData.thisOver.push("WD");
 
-saveData();
-updateScreen();
+updateUI();
+
 }
 
 function noBall(){
-matchData.history.push(
-JSON.stringify(matchData)
-);
 
-matchData.score+=1;
+saveHistory();
+
+matchData.score++;
+
 matchData.thisOver.push("NB");
 
-saveData();
-updateScreen();
+updateUI();
+
 }
 
 function undoBall(){
 
-if(matchData.history.length===0)
+if(
+matchData.history.length===0
+){
+
 return;
+
+}
 
 matchData =
 JSON.parse(
+
 matchData.history.pop()
+
 );
 
-saveData();
-updateScreen();
+updateUI();
+
 }
 
 function startSecondInnings(){
 
-matchData.target=
-matchData.score+1;
+matchData.target =
+matchData.score + 1;
 
-matchData.score=0;
-matchData.wickets=0;
-matchData.balls=0;
-matchData.innings=2;
-matchData.thisOver=[];
+matchData.score = 0;
 
-saveData();
-updateScreen();
+matchData.wickets = 0;
+
+matchData.balls = 0;
+
+matchData.innings = 2;
+
+matchData.thisOver = [];
+
+updateUI();
+
+alert(
+"Target = "+
+matchData.target
+);
 
 }
 
-function updateScreen(){
+function resetMatch(){
 
-const scoreBox=
-document.getElementById("score");
+localStorage.removeItem(
+"bplData"
+);
 
-if(scoreBox)
-scoreBox.innerText=
-matchData.score+"/"+matchData.wickets;
-
-const oversBox=
-document.getElementById("overs");
-
-if(oversBox)
-oversBox.innerText=
-getOvers();
-
-const targetBox=
-document.getElementById("target");
-
-if(targetBox)
-targetBox.innerText=
-matchData.target;
-
-const overBox=
-document.getElementById("thisOver");
-
-if(overBox)
-overBox.innerText=
-matchData.thisOver.join(" ");
+location.reload();
 
 }
 
 document.addEventListener(
 "DOMContentLoaded",
-updateScreen
+()=>{
+
+updateUI();
+
+const buttons =
+document.querySelectorAll(
+".runBtn"
 );
+
+buttons.forEach(btn=>{
+
+btn.addEventListener(
+"click",
+()=>{
+
+const txt =
+btn.innerText.trim();
+
+if(txt==="0") addRun(0);
+
+if(txt==="1") addRun(1);
+
+if(txt==="2") addRun(2);
+
+if(txt==="3") addRun(3);
+
+if(txt==="4") addRun(4);
+
+if(txt==="5") addRun(5);
+
+if(txt==="6=OUT")
+addWicket();
+
+});
+
+});
+
+const allBtns =
+document.querySelectorAll(
+"button"
+);
+
+allBtns.forEach(btn=>{
+
+const txt =
+btn.innerText.trim();
+
+if(txt==="WD"){
+
+btn.onclick=
+wideBall;
+
+}
+
+if(txt==="NB"){
+
+btn.onclick=
+noBall;
+
+}
+
+if(txt==="UNDO"){
+
+btn.onclick=
+undoBall;
+
+}
+
+if(
+txt==="START 2ND INNINGS"
+){
+
+btn.onclick=
+startSecondInnings;
+
+}
+
+if(
+txt==="RESET MATCH"
+){
+
+btn.onclick=
+resetMatch;
+
+}
+
+});
+
+});
