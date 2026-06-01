@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPL Admin Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+background:#081b4b;
+font-family:Poppins,sans-serif;
+padding:20px;
+color:white;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.card{
+background:#102b72;
+padding:20px;
+border-radius:15px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+}
+
+button{
+background:#ffd23f;
+border:none;
+padding:12px 20px;
+font-size:18px;
+font-weight:700;
+border-radius:10px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Bhikhanpur Premium League - Admin Panel</h1>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Team Information</h3>
+
+<label>Team 1 Name</label>
+<input id="team1NameInput" value="ROYAL WARRIORS">
+
+<label>Team 2 Name</label>
+<input id="team2NameInput" value="TIGER STRIKERS">
+
+<label>Team 1 Logo</label>
+<input type="file" id="team1LogoInput">
+
+<label>Team 2 Logo</label>
+<input type="file" id="team2LogoInput">
+
+</div>
+
+<div class="card">
+
+<h3>Score Information</h3>
+
+<label>Score</label>
+<input id="scoreInput" value="124/4">
+
+<label>Overs</label>
+<input id="oversInput" value="15.2">
+
+<label>Need Runs</label>
+<input id="needRunsInput" value="41">
+
+<label>Need Balls</label>
+<input id="needBallsInput" value="28">
+
+</div>
+
+<div class="card">
+
+<h3>Batsman</h3>
+
+<label>Batsman 1</label>
+<input id="bat1Input" value="ASIF*">
+
+<label>Batsman 1 Score</label>
+<input id="bat1ScoreInput" value="45 (31)">
+
+<label>Batsman 2</label>
+<input id="bat2Input" value="RAHUL">
+
+<label>Batsman 2 Score</label>
+<input id="bat2ScoreInput" value="22 (18)">
+
+</div>
+
+<div class="card">
+
+<h3>Bowler</h3>
+
+<label>Bowler Name</label>
+<input id="bowlerInput" value="IMRAN">
+
+<label>Bowler Figures</label>
+<input id="bowlerFiguresInput" value="2-18 (3.2)">
+
+</div>
+
+</div>
+
+<br>
+
+<button onclick="saveData()">
+Update Overlay
+</button>
+
+</div>
+
+<script>
+
+function saveData(){
+
+localStorage.setItem(
+'team1Name',
+document.getElementById('team1NameInput').value
+);
+
+localStorage.setItem(
+'team2Name',
+document.getElementById('team2NameInput').value
+);
+
+localStorage.setItem(
+'score',
+document.getElementById('scoreInput').value
+);
+
+localStorage.setItem(
+'overs',
+document.getElementById('oversInput').value
+);
+
+localStorage.setItem(
+'needRuns',
+document.getElementById('needRunsInput').value
+);
+
+localStorage.setItem(
+'needBalls',
+document.getElementById('needBallsInput').value
+);
+
+localStorage.setItem(
+'bat1',
+document.getElementById('bat1Input').value
+);
+
+localStorage.setItem(
+'bat1Score',
+document.getElementById('bat1ScoreInput').value
+);
+
+localStorage.setItem(
+'bat2',
+document.getElementById('bat2Input').value
+);
+
+localStorage.setItem(
+'bat2Score',
+document.getElementById('bat2ScoreInput').value
+);
+
+localStorage.setItem(
+'bowler',
+document.getElementById('bowlerInput').value
+);
+
+localStorage.setItem(
+'bowlerFigures',
+document.getElementById('bowlerFiguresInput').value
+);
+
+alert("Overlay Updated");
+
+}
+
+</script>
+
+</body>
+</html>
