@@ -294,11 +294,11 @@ document.addEventListener(
           btn.onclick =
             resetMatch;
         }
+
+      });
 setInterval(
 saveMatchInfo,
 1000
 );
-      });
-
   }
 );
