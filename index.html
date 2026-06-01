@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="UTF-8">
@@ -21,62 +22,75 @@ bottom:20px;
 left:50%;
 transform:translateX(-50%);
 width:90%;
-
-background:linear-gradient(
-90deg,
-#001f5c,
-#0039a6,
-#001f5c
-);
-
+background:linear-gradient(90deg,#001f5c,#0039a6,#001f5c);
 border-radius:20px;
-padding:15px;
-
+padding:15px 25px;
 color:white;
-
 display:flex;
 justify-content:space-between;
 align-items:center;
-
 box-shadow:0 0 20px rgba(0,0,0,.4);
 }
 
-.score{
-font-size:50px;
+.league{
+font-size:26px;
 font-weight:bold;
+margin-bottom:8px;
+}
+
+.score{
+font-size:58px;
+font-weight:bold;
+line-height:1;
 }
 
 .overs{
 font-size:24px;
-margin-top:5px;
+margin-top:8px;
 }
 
 .target{
 font-size:24px;
+margin-top:8px;
 color:#ffd23f;
+font-weight:bold;
 }
 
 .thisOver{
-font-size:20px;
+font-size:18px;
 margin-top:10px;
+font-weight:bold;
 }
 
 .ticker{
 position:absolute;
 bottom:0;
 width:100%;
-height:35px;
+height:40px;
 background:#000;
-
 color:white;
-
 display:flex;
 align-items:center;
-
 padding-left:20px;
-
 font-size:16px;
 font-weight:bold;
+overflow:hidden;
+white-space:nowrap;
+}
+
+.ticker span{
+display:inline-block;
+padding-left:100%;
+animation:scroll 18s linear infinite;
+}
+
+@keyframes scroll{
+0%{
+transform:translateX(0);
+}
+100%{
+transform:translateX(-100%);
+}
 }
 
 </style>
@@ -88,22 +102,25 @@ font-weight:bold;
 <div class="overlay">
 
 <div>
-<h2>BHIKHANPUR PREMIUM LEAGUE</h2>
+
+<div class="league">
+BHIKHANPUR PREMIUM LEAGUE - SEASON 4
+</div>
 
 <div id="score" class="score">
 0/0
 </div>
 
 <div id="overs" class="overs">
-0.0
+0.0 OVERS
 </div>
 
 <div id="target" class="target">
-Target : 0
+TARGET : 0
 </div>
 
 <div id="thisOver" class="thisOver">
--
+THIS OVER : -
 </div>
 
 </div>
@@ -111,11 +128,11 @@ Target : 0
 </div>
 
 <div class="ticker">
-
-DIGITAL PROMOTION |
+<span>
+DIGITAL PROMOTION | ALL TYPE DIGITAL & PHYSICAL PROMOTION |
 CONTACT : 8252001148 |
 WHATSAPP : 8252001148
-
+</span>
 </div>
 
 <script>
@@ -123,44 +140,34 @@ WHATSAPP : 8252001148
 function loadData(){
 
 const data =
-JSON.parse(
-localStorage.getItem("bplData")
-);
+JSON.parse(localStorage.getItem("bplData"));
 
-if(!data) return;
+if(!data){
+return;
+}
 
-document.getElementById(
-"score"
-).innerText =
-data.score + "/" +
-data.wickets;
+document.getElementById("score").innerText =
+data.score + "/" + data.wickets;
 
-document.getElementById(
-"overs"
-).innerText =
-Math.floor(data.balls/6)
-+"."+
-(data.balls%6);
+document.getElementById("overs").innerText =
+Math.floor(data.balls/6) +
+"." +
+(data.balls%6) +
+" OVERS";
 
-document.getElementById(
-"target"
-).innerText =
-"Target : "+
-data.target;
+document.getElementById("target").innerText =
+"TARGET : " +
+(data.target || 0);
 
-document.getElementById(
-"thisOver"
-).innerText =
-data.thisOver.join(" ");
+document.getElementById("thisOver").innerText =
+"THIS OVER : " +
+((data.thisOver || []).join(" ") || "-");
 
 }
 
 loadData();
 
-setInterval(
-loadData,
-1000
-);
+setInterval(loadData,1000);
 
 </script>
 
