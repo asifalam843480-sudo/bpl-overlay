@@ -1,149 +1,135 @@
-// TEAM NAMES
+let matchData = JSON.parse(localStorage.getItem("bplData")) || {
+score: 0,
+wickets: 0,
+balls: 0,
+overs: 8,
+target: 0,
+innings: 1,
+thisOver: [],
+history: []
+};
 
-const team1Name = document.getElementById("team1Name");
-const team2Name = document.getElementById("team2Name");
+function saveData(){
+localStorage.setItem("bplData",JSON.stringify(matchData));
+}
 
-// SCORE
+function getOvers(){
+return Math.floor(matchData.balls/6)+"."+(matchData.balls%6);
+}
 
-const totalScore = document.getElementById("totalScore");
-const scoreLarge = document.getElementById("scoreLarge");
+function addBall(run){
 
-const overs = document.getElementById("overs");
-const oversLarge = document.getElementById("oversLarge");
+matchData.history.push(
+JSON.stringify(matchData)
+);
 
-// BATSMAN
+if(run==="W"){
+matchData.wickets++;
+matchData.balls++;
+matchData.thisOver.push("W");
+}
+else{
+matchData.score+=run;
+matchData.balls++;
+matchData.thisOver.push(run);
+}
 
-const batsman1 = document.getElementById("batsman1");
-const batsman1Score = document.getElementById("batsman1Score");
+if(matchData.thisOver.length>6){
+matchData.thisOver.shift();
+}
 
-const batsman2 = document.getElementById("batsman2");
-const batsman2Score = document.getElementById("batsman2Score");
-
-// NEED
-
-const needRuns = document.getElementById("needRuns");
-const needBalls = document.getElementById("needBalls");
-
-// BOWLER
-
-const bowlerName = document.getElementById("bowlerName");
-const bowlerFigures = document.getElementById("bowlerFigures");
-
-function updateOverlay(){
-
-const t1 =
-localStorage.getItem("team1Name");
-
-const t2 =
-localStorage.getItem("team2Name");
-
-const score =
-localStorage.getItem("score");
-
-const oversData =
-localStorage.getItem("overs");
-
-const nr =
-localStorage.getItem("needRuns");
-
-const nb =
-localStorage.getItem("needBalls");
-
-const bat1 =
-localStorage.getItem("bat1");
-
-const bat1s =
-localStorage.getItem("bat1Score");
-
-const bat2 =
-localStorage.getItem("bat2");
-
-const bat2s =
-localStorage.getItem("bat2Score");
-
-const bowler =
-localStorage.getItem("bowler");
-
-const figures =
-localStorage.getItem("bowlerFigures");
-
-if(t1) team1Name.innerText = t1;
-
-if(t2) team2Name.innerText = t2;
-
-if(score){
-
-totalScore.innerText = score;
-
-scoreLarge.innerText = score;
+saveData();
+updateScreen();
 
 }
 
-if(oversData){
+function wideBall(){
+matchData.history.push(
+JSON.stringify(matchData)
+);
 
-overs.innerText =
-oversData + " OVERS";
+matchData.score+=1;
+matchData.thisOver.push("WD");
 
-oversLarge.innerText =
-oversData + " OVERS";
+saveData();
+updateScreen();
+}
+
+function noBall(){
+matchData.history.push(
+JSON.stringify(matchData)
+);
+
+matchData.score+=1;
+matchData.thisOver.push("NB");
+
+saveData();
+updateScreen();
+}
+
+function undoBall(){
+
+if(matchData.history.length===0)
+return;
+
+matchData =
+JSON.parse(
+matchData.history.pop()
+);
+
+saveData();
+updateScreen();
+}
+
+function startSecondInnings(){
+
+matchData.target=
+matchData.score+1;
+
+matchData.score=0;
+matchData.wickets=0;
+matchData.balls=0;
+matchData.innings=2;
+matchData.thisOver=[];
+
+saveData();
+updateScreen();
 
 }
 
-if(nr){
+function updateScreen(){
 
-needRuns.innerText = nr;
+const scoreBox=
+document.getElementById("score");
 
-}
+if(scoreBox)
+scoreBox.innerText=
+matchData.score+"/"+matchData.wickets;
 
-if(nb){
+const oversBox=
+document.getElementById("overs");
 
-needBalls.innerText =
-"RUNS IN " + nb + " BALLS";
+if(oversBox)
+oversBox.innerText=
+getOvers();
 
-}
+const targetBox=
+document.getElementById("target");
 
-if(bat1){
+if(targetBox)
+targetBox.innerText=
+matchData.target;
 
-batsman1.innerText = bat1;
+const overBox=
+document.getElementById("thisOver");
 
-}
-
-if(bat1s){
-
-batsman1Score.innerText =
-bat1s;
-
-}
-
-if(bat2){
-
-batsman2.innerText = bat2;
-
-}
-
-if(bat2s){
-
-batsman2Score.innerText =
-bat2s;
+if(overBox)
+overBox.innerText=
+matchData.thisOver.join(" ");
 
 }
 
-if(bowler){
-
-bowlerName.innerText =
-bowler;
-
-}
-
-if(figures){
-
-bowlerFigures.innerText =
-figures;
-
-}
-
-}
-
-updateOverlay();
-
-setInterval(updateOverlay,1000);
+document.addEventListener(
+"DOMContentLoaded",
+updateScreen
+);
