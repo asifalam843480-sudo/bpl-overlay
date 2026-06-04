@@ -12,7 +12,17 @@ let matchData = JSON.parse(localStorage.getItem("bplData")) || {
   innings: 1,
 
   thisOver: [],
-  history: []
+  history: [],
+
+striker: "",
+nonStriker: "",
+bowler: "",
+
+strikerRuns: 0,
+strikerBalls: 0,
+
+nonStrikerRuns: 0,
+nonStrikerBalls: 0
 };
 
 function saveData() {
@@ -48,6 +58,7 @@ const teamB = document.getElementById("teamB");
 const striker = document.getElementById("striker");
 const nonStriker = document.getElementById("nonStriker");
 const bowler = document.getElementById("bowler");
+  const target = document.getElementById("target");
 
 if(teamA){
 matchData.teamA = teamA.value;
@@ -68,7 +79,9 @@ matchData.nonStriker = nonStriker.value;
 if(bowler){
 matchData.bowler = bowler.value;
 }
-
+if(target){
+matchData.target = parseInt(target.value) || 0;
+}
 saveData();
 
 }
@@ -90,7 +103,25 @@ function updateUI() {
     thisOverBox.innerText =
       matchData.thisOver.join(" ");
   }
+const strikerBox = document.getElementById("striker");
+if(strikerBox && matchData.striker){
+strikerBox.value = matchData.striker;
+}
 
+const nonStrikerBox = document.getElementById("nonStriker");
+if(nonStrikerBox && matchData.nonStriker){
+nonStrikerBox.value = matchData.nonStriker;
+}
+
+const bowlerBox = document.getElementById("bowler");
+if(bowlerBox && matchData.bowler){
+bowlerBox.value = matchData.bowler;
+}
+
+const targetBox = document.getElementById("target");
+if(targetBox){
+targetBox.value = matchData.target || 0;
+}
   saveData();
 }
 
@@ -99,6 +130,10 @@ function addRun(run) {
   saveHistory();
 
   matchData.score += run;
+  
+  matchData.strikerRuns += run;
+matchData.strikerBalls += 1;
+  
   matchData.balls++;
 
   matchData.thisOver.push(run);
@@ -115,6 +150,7 @@ function addWicket() {
   saveHistory();
 
   matchData.wickets++;
+  matchData.strikerBalls += 1;
   matchData.balls++;
 
   matchData.thisOver.push("W");
@@ -135,6 +171,7 @@ function wideBall() {
   saveHistory();
 
   matchData.score += 1;
+  matchData.strikerRuns += 1;
 
   matchData.thisOver.push("WD");
 
