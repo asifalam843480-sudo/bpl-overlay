@@ -66,9 +66,9 @@
                     STRIKER
                 </div>
 
-                <div class="batsman-score">
-                    -
-                </div>
+                <div class="batsman-score" id="batsman1Score">
+    0 (0)
+</div>
             </div>
 
             <div class="batsman-row">
@@ -76,9 +76,9 @@
                     NON STRIKER
                 </div>
 
-                <div class="batsman-score">
-                    -
-                </div>
+             <div class="batsman-score" id="batsman2Score">
+    0 (0)
+</div>
             </div>
 
         </div>
@@ -105,9 +105,9 @@
                 BOWLER
             </div>
 
-            <div class="bowler-figures">
-                -
-            </div>
+           <div class="bowler-figures" id="bowlerFigures">
+    0-0
+</div>
 
             <div class="this-over" id="thisOverBalls">
 
@@ -202,6 +202,35 @@ data.nonStriker || "NON STRIKER";
 if(document.getElementById("bowlerName"))
 document.getElementById("bowlerName").innerText =
 data.bowler || "BOWLER";
+
+    if(document.getElementById("batsman1Score"))
+document.getElementById("batsman1Score").innerText =
+(data.strikerRuns || 0) + " (" +
+(data.strikerBalls || 0) + ")";
+
+if(document.getElementById("batsman2Score"))
+document.getElementById("batsman2Score").innerText =
+(data.nonStrikerRuns || 0) + " (" +
+(data.nonStrikerBalls || 0) + ")";
+
+if(document.getElementById("bowlerFigures"))
+document.getElementById("bowlerFigures").innerText =
+(data.bowlerWickets || 0) + "-" +
+(data.bowlerRuns || 0);
+
+if(document.getElementById("thisOverBalls")){
+
+let html = "";
+
+(data.thisOver || []).forEach(ball => {
+
+html += `<span class="ball">${ball}</span>`;
+
+});
+
+document.getElementById("thisOverBalls").innerHTML = html;
+
+}
 
 }
 
