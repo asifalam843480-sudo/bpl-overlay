@@ -58,6 +58,14 @@ const teamB = document.getElementById("teamB");
 const striker = document.getElementById("striker");
 const nonStriker = document.getElementById("nonStriker");
 const bowler = document.getElementById("bowler");
+  const strikerRuns = document.getElementById("strikerRuns");
+const strikerBalls = document.getElementById("strikerBalls");
+
+const nonStrikerRuns = document.getElementById("nonStrikerRuns");
+const nonStrikerBalls = document.getElementById("nonStrikerBalls");
+
+const bowlerRuns = document.getElementById("bowlerRuns");
+const bowlerWickets = document.getElementById("bowlerWickets");
   const target = document.getElementById("target");
 
 if(teamA){
@@ -79,6 +87,31 @@ matchData.nonStriker = nonStriker.value;
 if(bowler){
 matchData.bowler = bowler.value;
 }
+
+  if(strikerRuns){
+matchData.strikerRuns = strikerRuns.value;
+}
+
+if(strikerBalls){
+matchData.strikerBalls = strikerBalls.value;
+}
+
+if(nonStrikerRuns){
+matchData.nonStrikerRuns = nonStrikerRuns.value;
+}
+
+if(nonStrikerBalls){
+matchData.nonStrikerBalls = nonStrikerBalls.value;
+}
+
+if(bowlerRuns){
+matchData.bowlerRuns = bowlerRuns.value;
+}
+
+if(bowlerWickets){
+matchData.bowlerWickets = bowlerWickets.value;
+}
+  
 if(target){
 matchData.target = parseInt(target.value) || 0;
 }
@@ -121,6 +154,35 @@ bowlerBox.value = matchData.bowler;
 const targetBox = document.getElementById("target");
 if(targetBox){
 targetBox.value = matchData.target || 0;
+}
+  const strikerRunsBox = document.getElementById("strikerRuns");
+if(strikerRunsBox){
+strikerRunsBox.value = matchData.strikerRuns || 0;
+}
+
+const strikerBallsBox = document.getElementById("strikerBalls");
+if(strikerBallsBox){
+strikerBallsBox.value = matchData.strikerBalls || 0;
+}
+
+const nonStrikerRunsBox = document.getElementById("nonStrikerRuns");
+if(nonStrikerRunsBox){
+nonStrikerRunsBox.value = matchData.nonStrikerRuns || 0;
+}
+
+const nonStrikerBallsBox = document.getElementById("nonStrikerBalls");
+if(nonStrikerBallsBox){
+nonStrikerBallsBox.value = matchData.nonStrikerBalls || 0;
+}
+
+const bowlerRunsBox = document.getElementById("bowlerRuns");
+if(bowlerRunsBox){
+bowlerRunsBox.value = matchData.bowlerRuns || 0;
+}
+
+const bowlerWicketsBox = document.getElementById("bowlerWickets");
+if(bowlerWicketsBox){
+bowlerWicketsBox.value = matchData.bowlerWickets || 0;
 }
   saveData();
 }
