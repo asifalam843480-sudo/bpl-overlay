@@ -193,7 +193,8 @@ function addRun(run) {
 
   matchData.score += run;
   
-  matchData.strikerRuns += run;
+ matchData.strikerRuns =
+Number(matchData.strikerRuns || 0) + Number(run);
 matchData.strikerBalls += 1;
   
   matchData.balls++;
