@@ -88,22 +88,6 @@ if(bowler){
 matchData.bowler = bowler.value;
 }
 
-  if(strikerRuns){
-matchData.strikerRuns = strikerRuns.value;
-}
-
-if(strikerBalls){
-matchData.strikerBalls = strikerBalls.value;
-}
-
-if(nonStrikerRuns){
-matchData.nonStrikerRuns = nonStrikerRuns.value;
-}
-
-if(nonStrikerBalls){
-matchData.nonStrikerBalls = nonStrikerBalls.value;
-}
-
 if(bowlerRuns){
 matchData.bowlerRuns = bowlerRuns.value;
 }
@@ -196,6 +180,29 @@ function addRun(run) {
  matchData.strikerRuns =
 Number(matchData.strikerRuns || 0) + Number(run);
 matchData.strikerBalls += 1;
+
+  matchData.strikerRuns =
+Number(matchData.strikerRuns || 0) + Number(run);
+
+matchData.strikerBalls += 1;
+
+if(run % 2 !== 0){
+
+let tempName = matchData.striker;
+matchData.striker = matchData.nonStriker;
+matchData.nonStriker = tempName;
+
+let tempRuns = matchData.strikerRuns;
+matchData.strikerRuns = matchData.nonStrikerRuns;
+matchData.nonStrikerRuns = tempRuns;
+
+let tempBalls = matchData.strikerBalls;
+matchData.strikerBalls = matchData.nonStrikerBalls;
+matchData.nonStrikerBalls = tempBalls;
+
+}
+
+matchData.balls++;
   
   matchData.balls++;
 
