@@ -144,6 +144,7 @@ if(strikerRunsBox){
 strikerRunsBox.value = matchData.strikerRuns || 0;
 }
 
+
 const strikerBallsBox = document.getElementById("strikerBalls");
 if(strikerBallsBox){
 strikerBallsBox.value = matchData.strikerBalls || 0;
