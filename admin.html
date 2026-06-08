@@ -3,210 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BPL Scorer Panel</title>
-
 <style>
-
-body{
-background:#071b4d;
-font-family:Arial,sans-serif;
-color:white;
-padding:20px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-.card{
-background:#102b72;
-padding:15px;
-border-radius:12px;
-margin-bottom:15px;
-}
-
-h2{
-margin-bottom:10px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:5px;
-margin-bottom:10px;
-border:none;
-border-radius:8px;
-}
-
-button{
-padding:12px;
-margin:5px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-border:none;
-border-radius:10px;
-}
-
-.runBtn{
-width:70px;
-height:60px;
-}
-
-.green{
-background:#1db954;
-color:white;
-}
-
-.red{
-background:#d62828;
-color:white;
-}
-
-.blue{
-background:#1976d2;
-color:white;
-}
-
-.yellow{
-background:#ffd23f;
-color:black;
-}
-
-.scoreBox{
-font-size:40px;
-font-weight:bold;
-}
-
+body{background:#071b4d;font-family:Arial,sans-serif;color:white;padding:20px;}
+.container{max-width:1200px;margin:auto;}
+.card{background:#102b72;padding:15px;border-radius:12px;margin-bottom:15px; border:1px solid #3fa9ff;}
+h2{margin-bottom:10px; color:#ffd23f;}
+input{width:100%;padding:10px;margin-top:5px;margin-bottom:10px;border:none;border-radius:8px;box-sizing:border-box;}
+button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;border:none;border-radius:10px;}
+.runBtn{width:70px;height:60px;}
+.green{background:#1db954;color:white;}
+.red{background:#d62828;color:white;}
+.blue{background:#1976d2;color:white;}
+.yellow{background:#ffd23f;color:black;}
+.orange{background:#f77f00;color:white;width:100%;}
+.scoreBox{font-size:40px;font-weight:bold;}
+.grid{display:grid; grid-template-columns: 1fr 1fr; gap:15px;}
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
 <div class="card">
+<h2>1. Match Setup & Manual Edits</h2>
+<p style="font-size:12px; color:#aaa;">Type karo aur sirf tabhi save hoga jab neechay orange button dabaoge.</p>
+<div class="grid">
+    <div>
+        <label>Team A Name</label>
+        <input id="teamA" value="ROYAL WARRIORS">
+        <label>Team A Logo (Upload Image)</label>
+        <input type="file" id="teamALogo" accept="image/*">
+    </div>
+    <div>
+        <label>Team B Name</label>
+        <input id="teamB" value="TIGER STRIKERS">
+        <label>Team B Logo (Upload Image)</label>
+        <input type="file" id="teamBLogo" accept="image/*">
+    </div>
+</div>
 
-<h2>Match Setup</h2>
+<div class="grid">
+    <div>
+        <label>Striker Name (🏏)</label>
+        <input id="striker" placeholder="Striker Name">
+        <input id="strikerRuns" placeholder="Runs" type="number">
+        <input id="strikerBalls" placeholder="Balls" type="number">
+    </div>
+    <div>
+        <label>Non-Striker Name</label>
+        <input id="nonStriker" placeholder="Non Striker Name">
+        <input id="nonStrikerRuns" placeholder="Runs" type="number">
+        <input id="nonStrikerBalls" placeholder="Balls" type="number">
+    </div>
+</div>
 
-<label>Team A</label>
-<input id="teamA" value="ROYAL WARRIORS">
-
-<label>Team B</label>
-<input id="teamB" value="TIGER STRIKERS">
-
-<label>Total Overs</label>
-<input id="matchOvers" value="8">
-
-<label>Target</label>
-<input id="target" value="0">
-
-<label>Team A Logo</label>
-<input type="file" id="teamALogo">
-
-<label>Team B Logo</label>
-<input type="file" id="teamBLogo">
-
+<div class="grid">
+    <div>
+        <label>Bowler Name</label>
+        <input id="bowler" placeholder="Bowler Name">
+        <input id="bowlerRuns" placeholder="Runs Given" type="number">
+        <input id="bowlerWickets" placeholder="Wickets" type="number">
+    </div>
+    <div>
+        <label>Target</label>
+        <input id="target" placeholder="Target" type="number">
+    </div>
+</div>
+<button class="orange" id="saveManualBtn">SAVE MANUAL EDITS TO OVERLAY</button>
 </div>
 
 <div class="card">
-
-<h2>Live Score</h2>
-
-<div class="scoreBox" id="score">
-0/0
-</div>
-
-<div id="overs">
-0.0
-</div>
-
-<div id="thisOver">
--
-</div>
-
+<h2>2. Live Score Tracker</h2>
+<div class="scoreBox" id="score">0/0</div>
+<div id="overs" style="font-size:24px; color:#ffd23f;">0.0 Overs</div>
+<div id="thisOver" style="margin-top:10px; font-size:18px;">-</div>
 </div>
 
 <div class="card">
-
-<h2>Batsman</h2>
-
-<input id="striker" placeholder="Striker Name">
-
-<input id="strikerRuns" placeholder="Striker Runs">
-
-<input id="strikerBalls" placeholder="Striker Balls">
-
-<input id="nonStriker" placeholder="Non Striker Name">
-
-<input id="nonStrikerRuns" placeholder="Non Striker Runs">
-
-<input id="nonStrikerBalls" placeholder="Non Striker Balls">
-
-</div>
-
-<h2>Bowler</h2>
-
-<input id="bowler" placeholder="Bowler Name">
-
-<input id="bowlerRuns" placeholder="Runs Given">
-
-<input id="bowlerWickets" placeholder="Wickets">
-</div>
-
-<div class="card">
-
-<h2>Scoring Buttons</h2>
-
+<h2>3. Scoring Buttons (Auto Math)</h2>
 <button class="runBtn green">0</button>
 <button class="runBtn green">1</button>
 <button class="runBtn green">2</button>
 <button class="runBtn green">3</button>
-
-<br>
-
 <button class="runBtn green">4</button>
 <button class="runBtn green">5</button>
-
-<button class="runBtn red">
-6=OUT
-</button>
-
-<br>
-
-<button class="blue">
-WD
-</button>
-
-<button class="blue">
-NB
-</button>
-
-<button class="yellow">
-UNDO
-</button>
-
+<button class="runBtn red">6=OUT</button>
+<br><br>
+<button class="blue">WD</button>
+<button class="blue">NB</button>
+<button class="yellow">UNDO</button>
 </div>
 
 <div class="card">
-
-<h2>Innings Control</h2>
-
-<button class="green">
-START 2ND INNINGS
-</button>
-
-<button class="red">
-RESET MATCH
-</button>
-
+<h2>4. Innings Control</h2>
+<button class="green">START 2ND INNINGS</button>
+<button class="red">RESET MATCH</button>
 </div>
 
 </div>
-
 <script src="script.js"></script>
-
 </body>
 </html>
