@@ -182,7 +182,6 @@ function addRun(run) {
 Number(matchData.strikerRuns || 0) + Number(run);
 matchData.strikerBalls += 1;
 
-matchData.strikerBalls += 1;
 
 if(run % 2 !== 0){
 
@@ -202,7 +201,6 @@ matchData.nonStrikerBalls = tempBalls;
 
 matchData.balls++;
   
-  matchData.balls++;
 
   matchData.thisOver.push(run);
 
