@@ -99,6 +99,23 @@ matchData.bowlerWickets = bowlerWickets.value;
 if(target){
 matchData.target = parseInt(target.value) || 0;
 }
+
+if(strikerRuns){
+matchData.strikerRuns = parseInt(strikerRuns.value) || 0;
+}
+
+if(strikerBalls){
+matchData.strikerBalls = parseInt(strikerBalls.value) || 0;
+}
+
+if(nonStrikerRuns){
+matchData.nonStrikerRuns = parseInt(nonStrikerRuns.value) || 0;
+}
+
+if(nonStrikerBalls){
+matchData.nonStrikerBalls = parseInt(nonStrikerBalls.value) || 0;
+}
+
 saveData();
 
 }
