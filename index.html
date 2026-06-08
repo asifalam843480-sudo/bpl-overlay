@@ -1,245 +1,115 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BPL Overlay</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
-
 <div class="overlay-container">
 
     <div class="score-box">
-
-        <div class="league-logo">
-            <img src="assets/bpl-logo.png" alt="">
-        </div>
-
         <div class="score-details">
-            <div id="totalScore" class="main-score">
-                0/0
-            </div>
-
-            <div id="oversTop" class="overs">
-                0.0
-            </div>
+            <div id="totalScore" class="main-score">0/0</div>
+            <div id="oversTop" class="overs">0.0</div>
         </div>
-
     </div>
 
     <div class="bottom-scorebar">
-
         <div class="team-section left">
-
-            <div class="team-logo">
-                <img id="team1Logo" src="logos/team1.png">
-            </div>
-
-            <div class="team-name" id="team1Name">
-                ROYAL WARRIORS
-            </div>
-
+            <div class="team-logo"><img id="team1Logo" src=""></div>
+            <div class="team-name" id="team1Name">TEAM A</div>
         </div>
 
         <div class="score-center">
-
-            <div id="scoreLarge" class="score-large">
-                0/0
-            </div>
-
-            <div id="oversLarge" class="overs-large">
-                0.0 OVERS
-            </div>
-
+            <div id="scoreLarge" class="score-large">0/0</div>
+            <div id="oversLarge" class="overs-large">0.0 OVERS</div>
         </div>
 
         <div class="batsman-panel">
-
             <div class="batsman-row">
-                <div class="batsman-name" id="batsman1">
-                    STRIKER
-                </div>
-
-                <div class="batsman-score" id="batsman1Score">
-    0 (0)
-</div>
+                <div class="batsman-name" id="batsman1">STRIKER</div>
+                <div class="batsman-score" id="batsman1Score">0 (0)</div>
             </div>
-
             <div class="batsman-row">
-                <div class="batsman-name" id="batsman2">
-                    NON STRIKER
-                </div>
-
-             <div class="batsman-score" id="batsman2Score">
-    0 (0)
-</div>
+                <div class="batsman-name" id="batsman2">NON STRIKER</div>
+                <div class="batsman-score" id="batsman2Score">0 (0)</div>
             </div>
-
         </div>
 
-        <div class="need-panel">
-
-            <div class="need-title">
-                TARGET
-            </div>
-
-            <div id="needRuns" class="need-runs">
-                0
-            </div>
-
-            <div class="need-balls">
-                TO WIN
-            </div>
-
+        <div class="need-panel" id="targetBox" style="display:none;">
+            <div class="need-title">TARGET</div>
+            <div id="needRuns" class="need-runs">0</div>
         </div>
 
         <div class="bowler-panel">
-
-            <div class="bowler-name" id="bowlerName">
-                BOWLER
-            </div>
-
-           <div class="bowler-figures" id="bowlerFigures">
-    0-0
-</div>
-
-            <div class="this-over" id="thisOverBalls">
-
-                <span class="ball">0</span>
-                <span class="ball">0</span>
-                <span class="ball">0</span>
-                <span class="ball">0</span>
-                <span class="ball">0</span>
-                <span class="ball">0</span>
-
-            </div>
-
+            <div class="bowler-name" id="bowlerName">BOWLER</div>
+            <div class="bowler-figures" id="bowlerFigures">0-0</div>
+            <div class="this-over" id="thisOverBalls"></div>
         </div>
 
         <div class="team-section right">
-
-            <div class="team-logo">
-                <img id="team2Logo" src="logos/team2.png">
-            </div>
-
-            <div class="team-name" id="team2Name">
-                TIGER STRIKERS
-            </div>
-
+            <div class="team-logo"><img id="team2Logo" src=""></div>
+            <div class="team-name" id="team2Name">TEAM B</div>
         </div>
-
     </div>
 
     <div class="ticker-bar">
-
         <div class="ticker-content">
-            DIGITAL PROMOTION |
-            ALL TYPE DIGITAL & PHYSICAL PROMOTION |
-            CONTACT : 8252001148 |
-            WHATSAPP : 8252001148 |
-            BHIKHANPUR PREMIUM LEAGUE SEASON - 4
+            DIGITAL PROMOTION | ALL TYPE DIGITAL & PHYSICAL PROMOTION | CONTACT : 8252001148 | BHIKHANPUR PREMIUM LEAGUE
         </div>
-
     </div>
-
 </div>
 
 <script>
-
 function loadData(){
+    const data = JSON.parse(localStorage.getItem("bplData"));
+    if(!data) return;
 
-const data = JSON.parse(localStorage.getItem("bplData"));
+    const score = (data.score || 0) + "/" + (data.wickets || 0);
+    const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
 
-if(!data) return;
+    document.getElementById("totalScore").innerText = score;
+    document.getElementById("scoreLarge").innerText = score;
+    document.getElementById("oversTop").innerText = overs;
+    document.getElementById("oversLarge").innerText = overs + " OVERS";
 
-const score =
-(data.score || 0) + "/" + (data.wickets || 0);
+    document.getElementById("team1Name").innerText = data.teamA;
+    document.getElementById("team2Name").innerText = data.teamB;
+    
+    // Logos will automatically show if uploaded in Admin
+    if(data.teamALogo) document.getElementById("team1Logo").src = data.teamALogo;
+    if(data.teamBLogo) document.getElementById("team2Logo").src = data.teamBLogo;
 
-const overs =
-Math.floor((data.balls || 0)/6)
-+ "."
-+ ((data.balls || 0)%6);
+    document.getElementById("batsman1").innerText = data.striker;
+    document.getElementById("batsman2").innerText = data.nonStriker;
+    document.getElementById("bowlerName").innerText = data.bowler;
 
-if(document.getElementById("totalScore"))
-document.getElementById("totalScore").innerText = score;
+    document.getElementById("batsman1Score").innerText = `${data.strikerRuns} (${data.strikerBalls})`;
+    document.getElementById("batsman2Score").innerText = `${data.nonStrikerRuns} (${data.nonStrikerBalls})`;
+    document.getElementById("bowlerFigures").innerText = `${data.bowlerWickets}-${data.bowlerRuns}`;
 
-if(document.getElementById("scoreLarge"))
-document.getElementById("scoreLarge").innerText = score;
+    // Target box logic
+    const targetBox = document.getElementById("targetBox");
+    if(data.innings === 2 && data.target > 0) {
+        targetBox.style.display = "block";
+        document.getElementById("needRuns").innerText = data.target;
+    } else {
+        targetBox.style.display = "none";
+    }
 
-if(document.getElementById("oversTop"))
-document.getElementById("oversTop").innerText = overs;
-
-if(document.getElementById("oversLarge"))
-document.getElementById("oversLarge").innerText =
-overs + " OVERS";
-
-if(document.getElementById("needRuns"))
-document.getElementById("needRuns").innerText =
-data.target || 0;
-
-if(document.getElementById("team1Name"))
-document.getElementById("team1Name").innerText =
-data.teamA || "TEAM A";
-
-if(document.getElementById("team2Name"))
-document.getElementById("team2Name").innerText =
-data.teamB || "TEAM B";
-
-if(document.getElementById("batsman1"))
-document.getElementById("batsman1").innerText =
-data.striker || "STRIKER";
-
-if(document.getElementById("batsman2"))
-document.getElementById("batsman2").innerText =
-data.nonStriker || "NON STRIKER";
-
-if(document.getElementById("bowlerName"))
-document.getElementById("bowlerName").innerText =
-data.bowler || "BOWLER";
-
-    if(document.getElementById("batsman1Score"))
-document.getElementById("batsman1Score").innerText =
-(data.strikerRuns || 0) + " (" +
-(data.strikerBalls || 0) + ")";
-
-if(document.getElementById("batsman2Score"))
-document.getElementById("batsman2Score").innerText =
-(data.nonStrikerRuns || 0) + " (" +
-(data.nonStrikerBalls || 0) + ")";
-
-if(document.getElementById("bowlerFigures"))
-document.getElementById("bowlerFigures").innerText =
-(data.bowlerWickets || 0) + "-" +
-(data.bowlerRuns || 0);
-
-if(document.getElementById("thisOverBalls")){
-
-let html = "";
-
-(data.thisOver || []).forEach(ball => {
-
-html += `<span class="ball">${ball}</span>`;
-
-});
-
-document.getElementById("thisOverBalls").innerHTML = html;
-
+    let html = "";
+    (data.thisOver || []).forEach(ball => {
+        let cls = "ball";
+        if(ball === 4) cls += " four";
+        if(ball === 6) cls += " six";
+        if(ball === "W") cls += " wicket";
+        html += `<span class="${cls}">${ball}</span>`;
+    });
+    document.getElementById("thisOverBalls").innerHTML = html;
 }
-
-}
-
-loadData();
-
-setInterval(loadData,1000);
-
+setInterval(loadData, 500); // 500ms speed for instant update on stream
 </script>
-
 </body>
 </html>
-```
