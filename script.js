@@ -1,14 +1,24 @@
-let matchData = JSON.parse(localStorage.getItem("bplData")) || {
+// THE CACHE KILLER: Agar purana kachra hai, toh usko uda do!
+const VERSION = "PRO_V1"; 
+let defaultData = {
+  version: VERSION,
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
   teamALogo: "", teamBLogo: "",
   score: 0, wickets: 0, balls: 0, target: 0, innings: 1,
   thisOver: [], history: [],
-  b1Name: "Player 1", b1Runs: 0, b1Balls: 0,
-  b2Name: "Player 2", b2Runs: 0, b2Balls: 0,
-  onStrike: 1, // 1 means b1 is playing, 2 means b2 is playing
-  bowler: "Bowler", bowlerRuns: 0, bowlerWickets: 0,
+  b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0,
+  b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0,
+  onStrike: 1, 
+  bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0,
   flashEvent: "", flashId: 0 
 };
+
+let matchData = JSON.parse(localStorage.getItem("bplData"));
+// Agar purana code mila jisme 'version' nahi hai, toh reset maaro!
+if (!matchData || matchData.version !== VERSION) {
+    matchData = defaultData;
+    localStorage.setItem("bplData", JSON.stringify(matchData));
+}
 
 function saveData() {
   localStorage.setItem("bplData", JSON.stringify(matchData));
@@ -24,14 +34,13 @@ function saveHistory() {
 }
 
 function rotateStrike() {
-  // Helmet paas karo
   matchData.onStrike = matchData.onStrike === 1 ? 2 : 1;
 }
 
 function checkOverComplete() {
   if (matchData.balls > 0 && matchData.balls % 6 === 0) {
       matchData.thisOver = [];
-      rotateStrike(); // Over khatam, strike ghumao
+      rotateStrike(); 
   }
 }
 
@@ -42,14 +51,14 @@ function triggerAnimation(type) {
 
 function addRun(run) {
   saveHistory();
-  run = parseInt(run) || 0; // Agar box khali hai, toh math fail nahi hoga, 0 maan lega
+  run = parseInt(run) || 0; 
   
   matchData.score = (parseInt(matchData.score) || 0) + run;
   matchData.bowlerRuns = (parseInt(matchData.bowlerRuns) || 0) + run;
   matchData.balls = (parseInt(matchData.balls) || 0) + 1;
   matchData.thisOver.push(run);
 
-  // Jo batsman strike par hai, usi ke dabbe mein run aur ball daalo
+  // EXACT MATH FOR STRIKER
   if (matchData.onStrike === 1) {
       matchData.b1Runs = (parseInt(matchData.b1Runs) || 0) + run;
       matchData.b1Balls = (parseInt(matchData.b1Balls) || 0) + 1;
@@ -59,7 +68,7 @@ function addRun(run) {
   }
 
   if (run === 4 || run === 6) triggerAnimation(run); 
-  if (run % 2 !== 0) rotateStrike(); // 1 ya 3 run lene par helmet paas karo
+  if (run % 2 !== 0) rotateStrike(); 
 
   checkOverComplete();
   updateUI();
@@ -72,7 +81,6 @@ function addWicket() {
   matchData.balls = (parseInt(matchData.balls) || 0) + 1;
   matchData.thisOver.push("W");
 
-  // Out hone wale ka ball count badhao
   if (matchData.onStrike === 1) {
       matchData.b1Balls = (parseInt(matchData.b1Balls) || 0) + 1;
   } else {
@@ -131,15 +139,16 @@ function updateUI() {
   setIfUnfocused("bowlerWickets", matchData.bowlerWickets);
   setIfUnfocused("target", matchData.target);
   
-  // Update Strike Buttons Visuals in Admin
   const btn1 = document.getElementById("btnStrike1");
   const btn2 = document.getElementById("btnStrike2");
-  if(matchData.onStrike === 1) {
-      btn1.className = "badge active"; btn1.innerText = "ON STRIKE (▶)";
-      btn2.className = "badge"; btn2.innerText = "SET STRIKE";
-  } else {
-      btn2.className = "badge active"; btn2.innerText = "ON STRIKE (▶)";
-      btn1.className = "badge"; btn1.innerText = "SET STRIKE";
+  if(btn1 && btn2) {
+      if(matchData.onStrike === 1) {
+          btn1.className = "badge active"; btn1.innerText = "ON STRIKE (▶)";
+          btn2.className = "badge"; btn2.innerText = "SET STRIKE";
+      } else {
+          btn2.className = "badge active"; btn2.innerText = "ON STRIKE (▶)";
+          btn1.className = "badge"; btn1.innerText = "SET STRIKE";
+      }
   }
 
   saveData();
@@ -148,7 +157,6 @@ function updateUI() {
 document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 
-  // Auto-Save Listeners
   const inputIds = ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target"];
   inputIds.forEach(id => {
       let el = document.getElementById(id);
@@ -171,16 +179,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll("button").forEach(btn => {
       let txt = btn.innerText.trim();
-      if (txt === "WD") btn.onclick = () => extraBall("WD");
-      if (txt === "NB") btn.onclick = () => extraBall("NB");
-      if (txt === "UNDO BALL") btn.onclick = undoBall;
+      if (txt === "WIDE (WD)") btn.onclick = () => extraBall("WD");
+      if (txt === "NO BALL (NB)") btn.onclick = () => extraBall("NB");
+      if (txt === "UNDO LAST BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
       if (txt === "RESET FULL MATCH") btn.onclick = () => { 
-          if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.removeItem("bplData"); location.reload(); } 
+          if(confirm("Bhai sab zero ho jayega. Pakka karna hai?")) { 
+              localStorage.removeItem("bplData"); location.reload(); 
+          } 
       };
   });
 
-  // Manual Strike Switchers
-  document.getElementById("btnStrike1").addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
-  document.getElementById("btnStrike2").addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
+  document.getElementById("btnStrike1")?.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
+  document.getElementById("btnStrike2")?.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
+
+  // BULLETPROOF LOGO COMPRESSOR
+  const uploadLogo = (id, key) => {
+      let el = document.getElementById(id);
+      if(el) {
+          el.addEventListener("change", function(e) {
+              const file = e.target.files[0];
+              if(!file) return;
+              const reader = new FileReader();
+              reader.onload = function(event) {
+                  const img = new Image();
+                  img.onload = function() {
+                      const canvas = document.createElement("canvas");
+                      const MAX_WIDTH = 120; // Perfect for TV Logo
+                      const scale = MAX_WIDTH / img.width;
+                      canvas.width = MAX_WIDTH;
+                      canvas.height = img.height * scale;
+                      const ctx = canvas.getContext("2d");
+                      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                      matchData[key] = canvas.toDataURL("image/png");
+                      saveData();
+                      alert("🔥 Premium Logo Loaded Successfully!");
+                  };
+                  img.src = event.target.result;
+              };
+              reader.readAsDataURL(file);
+          });
+      }
+  };
+  uploadLogo("teamALogo", "teamALogo");
+  uploadLogo("teamBLogo", "teamBLogo");
 });
