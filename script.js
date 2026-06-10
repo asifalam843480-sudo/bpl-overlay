@@ -1,5 +1,5 @@
-// THE CACHE KILLER: Agar purana kachra hai, toh usko uda do!
-const VERSION = "PRO_V1"; 
+// THE CACHE KILLER: Version update to force new memory
+const VERSION = "PRO_V2"; 
 let defaultData = {
   version: VERSION,
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
@@ -13,15 +13,27 @@ let defaultData = {
   flashEvent: "", flashId: 0 
 };
 
-let matchData = JSON.parse(localStorage.getItem("bplData"));
-// Agar purana code mila jisme 'version' nahi hai, toh reset maaro!
-if (!matchData || matchData.version !== VERSION) {
+let matchData;
+
+// THE AIRBAG (Try-Catch): Crash proofing the initialization
+try {
+    matchData = JSON.parse(localStorage.getItem("bplData"));
+    if (!matchData || matchData.version !== VERSION) {
+        matchData = defaultData;
+        localStorage.setItem("bplData", JSON.stringify(matchData));
+    }
+} catch (error) {
+    // Agar memory corrupt hui, toh script fail nahi hogi, chup-chap reset ho jayegi
     matchData = defaultData;
     localStorage.setItem("bplData", JSON.stringify(matchData));
 }
 
 function saveData() {
-  localStorage.setItem("bplData", JSON.stringify(matchData));
+  try {
+      localStorage.setItem("bplData", JSON.stringify(matchData));
+  } catch (error) {
+      alert("⚠️ ERROR: Browser memory full! Neeche 'RESET FULL MATCH' dabao.");
+  }
 }
 
 function getOvers() {
