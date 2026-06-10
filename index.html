@@ -165,7 +165,6 @@ function loadData(){
     const data = JSON.parse(localStorage.getItem("bplData"));
     if(!data) return;
 
-    // V.I.P Animation Tracker
     if (data.flashId && data.flashId !== lastFlashId) {
         fireIPLAnimation(data.flashEvent);
         lastFlashId = data.flashId;
@@ -212,14 +211,8 @@ function loadData(){
     document.getElementById("thisOverBalls").innerHTML = html;
 }
 
-// THE ULTIMATE BUG KILLER:
-// Yeh line system ko sone hi nahi degi. Jaise hi Admin panel mein kuch change hoga,
-// yeh turant (instantly) bina delay ke TV screen update kar dega!
-window.addEventListener('storage', loadData);
-
-// Backup system, taaki file pehli baar load hone par bhi data dikhe
-loadData();
-setInterval(loadData, 2000); 
+// 200 milliseconds loop: Never sleeps, hamesha real-time update karega OBS mein.
+setInterval(loadData, 200); 
 </script>
 </body>
 </html>
