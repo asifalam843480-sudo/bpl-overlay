@@ -1,9 +1,9 @@
 let matchData = JSON.parse(localStorage.getItem("bplData")) || {
-  teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
+  teamA: "TEAM A", teamB: "TEAM B",
   teamALogo: "", teamBLogo: "",
   score: 0, wickets: 0, balls: 0, target: 0, innings: 1,
   thisOver: [], history: [],
-  striker: "Player 1", nonStriker: "Player 2", bowler: "Bowler",
+  striker: "Batsman 1", nonStriker: "Batsman 2", bowler: "Bowler",
   strikerRuns: 0, strikerBalls: 0, nonStrikerRuns: 0, nonStrikerBalls: 0,
   bowlerRuns: 0, bowlerWickets: 0
 };
@@ -19,9 +19,10 @@ function getOvers() {
 function saveHistory() {
   const snapshot = JSON.parse(JSON.stringify(matchData));
   matchData.history.push(snapshot);
-  if (matchData.history.length > 20) matchData.history.shift();
+  if (matchData.history.length > 25) matchData.history.shift();
 }
 
+// Solid Strike Rotation
 function rotateStrike() {
   let tName = matchData.striker; matchData.striker = matchData.nonStriker; matchData.nonStriker = tName;
   let tRuns = matchData.strikerRuns; matchData.strikerRuns = matchData.nonStrikerRuns; matchData.nonStrikerRuns = tRuns;
@@ -31,7 +32,7 @@ function rotateStrike() {
 function checkOverComplete() {
   if (matchData.balls > 0 && matchData.balls % 6 === 0) {
       matchData.thisOver = [];
-      rotateStrike();
+      rotateStrike(); // Over complete pe strike ghumti hai
   }
 }
 
@@ -45,7 +46,7 @@ function addRun(run) {
   matchData.balls++;
   matchData.thisOver.push(run);
 
-  if (run % 2 !== 0) rotateStrike();
+  if (run % 2 !== 0) rotateStrike(); // 1, 3 run pe strike ghumti hai
   checkOverComplete();
   updateUI();
 }
@@ -66,6 +67,7 @@ function extraBall(type) {
   matchData.score++;
   matchData.bowlerRuns++;
   matchData.thisOver.push(type);
+  // WD and NB do NOT add a ball to the over, and do NOT rotate strike
   updateUI();
 }
 
@@ -90,24 +92,42 @@ function updateUI() {
   document.getElementById("overs").innerText = getOvers() + " Overs";
   document.getElementById("thisOver").innerText = matchData.thisOver.join(" ");
 
-  document.getElementById("teamA").value = matchData.teamA;
-  document.getElementById("teamB").value = matchData.teamB;
-  document.getElementById("striker").value = matchData.striker;
-  document.getElementById("strikerRuns").value = matchData.strikerRuns;
-  document.getElementById("strikerBalls").value = matchData.strikerBalls;
-  document.getElementById("nonStriker").value = matchData.nonStriker;
-  document.getElementById("nonStrikerRuns").value = matchData.nonStrikerRuns;
-  document.getElementById("nonStrikerBalls").value = matchData.nonStrikerBalls;
-  document.getElementById("bowler").value = matchData.bowler;
-  document.getElementById("bowlerRuns").value = matchData.bowlerRuns;
-  document.getElementById("bowlerWickets").value = matchData.bowlerWickets;
-  document.getElementById("target").value = matchData.target;
+  // THE MAGIC LOCK: Sirf wahi update karo jisme cursor na ho
+  const setIfUnfocused = (id, val) => {
+      const el = document.getElementById(id);
+      if (document.activeElement !== el) el.value = val;
+  };
+
+  setIfUnfocused("teamA", matchData.teamA);
+  setIfUnfocused("teamB", matchData.teamB);
+  setIfUnfocused("striker", matchData.striker);
+  setIfUnfocused("strikerRuns", matchData.strikerRuns);
+  setIfUnfocused("strikerBalls", matchData.strikerBalls);
+  setIfUnfocused("nonStriker", matchData.nonStriker);
+  setIfUnfocused("nonStrikerRuns", matchData.nonStrikerRuns);
+  setIfUnfocused("nonStrikerBalls", matchData.nonStrikerBalls);
+  setIfUnfocused("bowler", matchData.bowler);
+  setIfUnfocused("bowlerRuns", matchData.bowlerRuns);
+  setIfUnfocused("bowlerWickets", matchData.bowlerWickets);
+  setIfUnfocused("target", matchData.target);
   
   saveData();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   updateUI();
+
+  // AUTO-SAVE LISTENERS (No more clicking "Save Edits")
+  const inputIds = ["teamA", "teamB", "striker", "strikerRuns", "strikerBalls", "nonStriker", "nonStrikerRuns", "nonStrikerBalls", "bowler", "bowlerRuns", "bowlerWickets", "target"];
+  
+  inputIds.forEach(id => {
+      document.getElementById(id).addEventListener("input", (e) => {
+          let val = e.target.value;
+          if(e.target.type === 'number') { val = parseInt(val) || 0; }
+          matchData[id] = val;
+          saveData(); // Turant LocalStorage mein daal do
+      });
+  });
 
   document.querySelectorAll(".runBtn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -120,25 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
       let txt = btn.innerText.trim();
       if (txt === "WD") btn.onclick = () => extraBall("WD");
       if (txt === "NB") btn.onclick = () => extraBall("NB");
-      if (txt === "UNDO") btn.onclick = undoBall;
+      if (txt === "UNDO BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
-      if (txt === "RESET MATCH") btn.onclick = () => { if(confirm("Sab delete ho jayega. Pakka?")) { localStorage.removeItem("bplData"); location.reload(); } };
-  });
-
-  document.getElementById("saveManualBtn").addEventListener("click", () => {
-      matchData.teamA = document.getElementById("teamA").value;
-      matchData.teamB = document.getElementById("teamB").value;
-      matchData.striker = document.getElementById("striker").value;
-      matchData.strikerRuns = parseInt(document.getElementById("strikerRuns").value) || 0;
-      matchData.strikerBalls = parseInt(document.getElementById("strikerBalls").value) || 0;
-      matchData.nonStriker = document.getElementById("nonStriker").value;
-      matchData.nonStrikerRuns = parseInt(document.getElementById("nonStrikerRuns").value) || 0;
-      matchData.nonStrikerBalls = parseInt(document.getElementById("nonStrikerBalls").value) || 0;
-      matchData.bowler = document.getElementById("bowler").value;
-      matchData.bowlerRuns = parseInt(document.getElementById("bowlerRuns").value) || 0;
-      matchData.bowlerWickets = parseInt(document.getElementById("bowlerWickets").value) || 0;
-      matchData.target = parseInt(document.getElementById("target").value) || 0;
-      updateUI();
+      if (txt === "RESET FULL MATCH") btn.onclick = () => { if(confirm("Sab zero ho jayega. Pakka?")) { localStorage.removeItem("bplData"); location.reload(); } };
   });
 
   const uploadLogo = (id, key) => {
