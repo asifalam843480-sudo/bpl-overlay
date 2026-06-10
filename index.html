@@ -3,103 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Pro Overlay</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<title>BPL Premium TV Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-    /* SARA DESIGN AB YAHIN HAI - KOI FILE LINK NAHI KARNI */
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body { background: transparent; overflow: hidden; }
-    
+    /* MASTER CSS INCLUDED */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background: transparent; overflow: hidden; font-family: 'Roboto Condensed', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
 
-    /* --- PREMIUM BOTTOM SCOREBAR --- */
+    /* IPL LEVEL BOTTOM BAR */
     .bottom-scorebar {
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%);
-        width:96%; height:95px;
-        background: linear-gradient(90deg, rgba(0, 19, 77, 0.95), rgba(0, 62, 166, 0.95), rgba(0, 19, 77, 0.95));
-        border: 2px solid #3fa9ff; border-radius: 20px;
+        width:92%; height:90px;
+        background: rgba(10, 15, 30, 0.95);
+        border-top: 3px solid #ffcc00;
+        border-bottom: 1px solid rgba(255, 204, 0, 0.3);
         display:flex; align-items:center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 170, 255, 0.4);
-        backdrop-filter: blur(5px);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.7), 0 0 15px rgba(255, 204, 0, 0.2);
+        clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%);
     }
 
-    .team-section { width: 180px; display:flex; align-items:center; justify-content:center; gap:10px; padding:8px; }
-    .team-logo img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5)); }
-    .team-name { font-size: 16px; font-weight: 800; color: white; line-height: 1.1; text-transform: uppercase; }
+    /* TEAM SECTIONS */
+    .team-section { width: 220px; display:flex; align-items:center; justify-content:center; gap:12px; padding:0 10px; }
+    .team-logo img { width: 65px; height: 65px; object-fit: contain; drop-shadow: 0 4px 6px black; }
+    .team-name { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; }
 
+    /* THE GLOWING SCORE CENTER */
     .score-center {
-        width: 190px; text-align: center;
-        border-left: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2);
+        width: 200px; text-align: center;
+        background: linear-gradient(180deg, rgba(255, 204, 0, 0.15) 0%, transparent 100%);
+        height: 100%; display: flex; flex-direction: column; justify-content: center;
+        border-left: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1);
     }
-    .score-large { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; color: white; line-height: 1; text-shadow: 2px 2px 5px #000; }
-    .overs-large { font-size: 16px; font-weight: 800; color: #ffd23f; letter-spacing: 1px; }
-
-    .batsman-panel, .bowler-panel { width: 230px; padding: 0 15px; }
-    .batsman-row { display:flex; justify-content:space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
-    .batsman-name { font-size: 15px; font-weight: 600; color: white; text-transform: uppercase; }
-    .batsman-score { font-size: 16px; font-weight: 800; color: white; }
-
-    .bowler-name { font-size: 18px; font-weight: 800; color: #ffd23f; text-transform: uppercase; }
-    .bowler-figures { font-size: 20px; font-weight: 800; color: white; font-family: 'Oswald', sans-serif; }
     
-    .this-over { display:flex; gap:6px; margin-top:6px; }
-    .ball { 
-        width: 24px; height: 24px; border-radius: 50%; background: #0d4cff; color: white;
-        display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 800;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    /* SHINING GOLD TEXT ANIMATION */
+    .score-large { 
+        font-family: 'Montserrat', sans-serif; font-size: 52px; font-weight: 900; line-height: 1;
+        background: linear-gradient(90deg, #fff, #ffcc00, #fff);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: goldShine 3s linear infinite;
+        filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.8));
     }
-    .ball.four { background: #18a558; }
-    .ball.six { background: #6f42c1; }
-    .ball.wicket { background: #d62828; }
+    @keyframes goldShine { to { background-position: 200% center; } }
+    
+    .overs-large { font-size: 16px; font-weight: 700; color: #ffcc00; letter-spacing: 2px; margin-top: -2px; }
 
-    .need-panel { width: 140px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; margin: 0 10px; border: 1px solid #ffd23f; }
-    .need-title { font-size: 13px; font-weight: 800; color: white; letter-spacing: 1px; }
-    .need-runs { font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; color: #ffd23f; line-height: 1; }
+    /* STATS PANELS */
+    .batsman-panel, .bowler-panel { width: 250px; padding: 0 20px; }
+    .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 3px 0; }
+    .batsman-name { font-size: 16px; font-weight: 700; color: #ccc; text-transform: uppercase; display: flex; align-items: center; gap:5px; }
+    .striker-indicator { color: #ffcc00; font-size: 14px; }
+    .batsman-score { font-size: 18px; font-weight: 700; color: white; }
+    .batsman-score span { font-size: 14px; color: #888; }
 
-    /* --- TICKER NEWS BAR --- */
+    .bowler-name { font-size: 18px; font-weight: 700; color: #ffcc00; text-transform: uppercase; }
+    .bowler-figures { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: white; letter-spacing: 1px; }
+    
+    /* OVER BALLS DOTS */
+    .this-over { display:flex; gap:6px; margin-top:4px; }
+    .ball { 
+        width: 22px; height: 22px; border-radius: 50%; background: #333; color: white;
+        display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 700;
+        border: 1px solid #555;
+    }
+    .ball.run { background: #0056b3; border-color:#007bff; }
+    .ball.four { background: #008a3c; border-color:#00e664; color:white; }
+    .ball.six { background: #7b2cbf; border-color:#9d4edd; color:white; }
+    .ball.wicket { background: #d62828; border-color:#ff4d4d; color:#ffcc00; font-weight: 900;}
+
+    /* TARGET BOX */
+    .need-panel { 
+        width: 130px; text-align: center; background: rgba(255, 204, 0, 0.1); 
+        padding: 5px; border-radius: 8px; border: 1px solid #ffcc00; margin: 0 10px;
+    }
+    .need-title { font-size: 12px; font-weight: 700; color: #ffcc00; letter-spacing: 1px; }
+    .need-runs { font-family: 'Montserrat', sans-serif; font-size: 30px; font-weight: 900; color: white; line-height: 1; }
+
+    /* SLEEK NEWS TICKER */
     .ticker-bar {
-        position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
-        width:96%; height:36px;
-        background: linear-gradient(90deg, #000a29, #001b5c, #000a29);
-        border-radius: 8px; border: 1px solid #4da6ff; overflow: hidden;
+        position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
+        width:90%; height:30px; background: #000; border-radius: 4px; overflow: hidden;
     }
     .ticker-content {
-        white-space: nowrap; font-size: 15px; font-weight: 600; color: white; line-height: 36px;
-        letter-spacing: 1px; animation: tickerMove 20s linear infinite;
+        white-space: nowrap; font-size: 14px; font-weight: 700; color: #ffcc00; line-height: 30px;
+        letter-spacing: 2px; animation: tickerMove 25s linear infinite; text-transform: uppercase;
     }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* --- TOP SCORE BOX --- */
-    .score-box {
-        position:absolute; top:25px; right:25px; width:220px; height:85px;
-        background: linear-gradient(135deg, rgba(0,27,92,0.9), rgba(0,57,166,0.9));
-        border: 2px solid #4da6ff; border-radius: 15px; display:flex; align-items:center; justify-content: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.4); flex-direction: column; backdrop-filter: blur(5px);
-    }
-    .score-box .main-score { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; color: white; line-height: 1; }
-    .score-box .overs { font-size: 16px; font-weight: 800; color: #ffd23f; }
-
-    /* --- IPL ADVANCED ANIMATION ENGINE --- */
-    #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10000; }
+    /* IPL 3D POPUP ANIMATIONS */
+    #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
     
-    @keyframes megaBlast {
-        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-        15% { transform: translate(-50%, -50%) scale(1.2) rotate(-5deg); opacity: 1; }
-        85% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-        100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+    @keyframes slamBlast {
+        0% { transform: translate(-50%, -50%) scale(5); opacity: 0; filter: blur(10px); }
+        15% { transform: translate(-50%, -50%) scale(1) skewX(-10deg); opacity: 1; filter: blur(0px); }
+        85% { transform: translate(-50%, -50%) scale(1.1) skewX(0deg); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
     }
 
     .ipl-graphic {
         position: absolute; top: 35%; left: 50%;
-        font-family: 'Oswald', sans-serif; font-size: 100px; font-weight: 700; color: white;
-        text-transform: uppercase; letter-spacing: 4px; padding: 20px 60px; border-radius: 20px;
-        animation: megaBlast 3.5s forwards; text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+        font-family: 'Montserrat', sans-serif; font-size: 110px; font-style: italic; font-weight: 900; 
+        color: white; text-transform: uppercase; letter-spacing: 5px; padding: 15px 70px; 
+        border-radius: 10px; animation: slamBlast 3.5s forwards; 
+        text-shadow: 5px 5px 0px #000; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
     }
     
-    .ipl-graphic.four { background: linear-gradient(45deg, #0052D4, #4364F7); border: 5px solid white; box-shadow: 0 0 80px #4364F7; }
-    .ipl-graphic.six { background: linear-gradient(45deg, #FF416C, #FF4B2B); border: 5px solid white; box-shadow: 0 0 80px #FF416C; }
-    .ipl-graphic.wicket { background: linear-gradient(45deg, #111, #d62828); border: 5px solid white; box-shadow: 0 0 80px #d62828; color: #ffd23f; }
+    .ipl-graphic.four { background: linear-gradient(90deg, #004e92, #000428); border-bottom: 8px solid #00c6ff; box-shadow: 0 20px 50px rgba(0, 198, 255, 0.5); }
+    .ipl-graphic.six { background: linear-gradient(90deg, #cb2d3e, #ef473a); border-bottom: 8px solid #ffcc00; box-shadow: 0 20px 50px rgba(255, 204, 0, 0.5); }
+    .ipl-graphic.wicket { background: #000; color: #ff2a2a; border-bottom: 8px solid #ff2a2a; box-shadow: 0 20px 50px rgba(255, 42, 42, 0.5); }
 </style>
 </head>
 <body>
@@ -107,11 +121,6 @@
 <div class="overlay-container">
     
     <div id="animation-container"></div>
-
-    <div class="score-box">
-        <div id="totalScore" class="main-score">0/0</div>
-        <div id="oversTop" class="overs">0.0</div>
-    </div>
 
     <div class="bottom-scorebar">
         <div class="team-section left">
@@ -126,12 +135,12 @@
 
         <div class="batsman-panel">
             <div class="batsman-row">
-                <div class="batsman-name" id="batsman1">STRIKER</div>
-                <div class="batsman-score" id="batsman1Score">0 (0)</div>
+                <div class="batsman-name"><span class="striker-indicator">▶</span> <span id="batsman1">STRIKER</span></div>
+                <div class="batsman-score" id="batsman1Score">0 <span>(0)</span></div>
             </div>
             <div class="batsman-row">
-                <div class="batsman-name" id="batsman2">NON STRIKER</div>
-                <div class="batsman-score" id="batsman2Score">0 (0)</div>
+                <div class="batsman-name" style="padding-left:18px;" id="batsman2">NON STRIKER</div>
+                <div class="batsman-score" id="batsman2Score">0 <span>(0)</span></div>
             </div>
         </div>
 
@@ -147,14 +156,14 @@
         </div>
 
         <div class="team-section right">
-            <div class="team-logo"><img id="team2Logo" src=""></div>
             <div class="team-name" id="team2Name">TEAM B</div>
+            <div class="team-logo"><img id="team2Logo" src=""></div>
         </div>
     </div>
 
     <div class="ticker-bar">
         <div class="ticker-content">
-            🔥 BHIKHANPUR PREMIUM LEAGUE LIVE 🔥 | DIGITAL PROMOTION | CONTACT : 8252001148 | SUBSCRIBE & SHARE THE STREAM!
+            🏆 BHIKHANPUR PREMIUM LEAGUE LIVE 🏆 | SPONSORED BY DIGITAL PROMOTION | CONTACT : 8252001148 | LIKE & SUBSCRIBE
         </div>
     </div>
 </div>
@@ -162,37 +171,24 @@
 <script>
 let lastKnownBalls = -1; 
 
-// YEH FUNCTION ANIMATION BANA KAR KHUD DELETE KAR DETA HAI (KABHI ATKEGA NAHI)
 function fireIPLAnimation(type) {
     const container = document.getElementById("animation-container");
-    container.innerHTML = ""; // Purana kachra saaf
-
+    container.innerHTML = ""; 
     const animBox = document.createElement("div");
     
-    if (type === 4) {
-        animBox.className = "ipl-graphic four";
-        animBox.innerText = "FOUR!";
-    } else if (type === 6) {
-        animBox.className = "ipl-graphic six";
-        animBox.innerText = "MAXIMUM!";
-    } else if (type === "W") {
-        animBox.className = "ipl-graphic wicket";
-        animBox.innerText = "WICKET!";
-    }
+    if (type === 4) { animBox.className = "ipl-graphic four"; animBox.innerText = "FOUR!"; } 
+    else if (type === 6) { animBox.className = "ipl-graphic six"; animBox.innerText = "MAXIMUM!"; } 
+    else if (type === "W") { animBox.className = "ipl-graphic wicket"; animBox.innerText = "OUT!"; }
 
     container.appendChild(animBox);
-
-    // Theek 3.5 second baad computer is element ko jadd se mita dega
-    setTimeout(() => {
-        animBox.remove();
-    }, 3500);
+    setTimeout(() => { animBox.remove(); }, 3500);
 }
 
 function loadData(){
     const data = JSON.parse(localStorage.getItem("bplData"));
     if(!data) return;
 
-    // --- ANIMATION CHECKER ---
+    // Trigger Animations
     const currentBalls = data.balls || 0;
     if (lastKnownBalls !== -1 && currentBalls > lastKnownBalls) {
         const lastEvent = data.thisOver[data.thisOver.length - 1];
@@ -201,14 +197,12 @@ function loadData(){
         }
     }
     lastKnownBalls = currentBalls;
-    // --------------------------
 
-    const score = (data.score || 0) + "/" + (data.wickets || 0);
+    // Top & Bottom Scores
+    const score = (data.score || 0) + "-" + (data.wickets || 0);
     const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
 
-    document.getElementById("totalScore").innerText = score;
     document.getElementById("scoreLarge").innerText = score;
-    document.getElementById("oversTop").innerText = overs;
     document.getElementById("oversLarge").innerText = overs + " OVERS";
 
     document.getElementById("team1Name").innerText = data.teamA;
@@ -221,8 +215,8 @@ function loadData(){
     document.getElementById("batsman2").innerText = data.nonStriker;
     document.getElementById("bowlerName").innerText = data.bowler;
 
-    document.getElementById("batsman1Score").innerText = `${data.strikerRuns} (${data.strikerBalls})`;
-    document.getElementById("batsman2Score").innerText = `${data.nonStrikerRuns} (${data.nonStrikerBalls})`;
+    document.getElementById("batsman1Score").innerHTML = `${data.strikerRuns} <span>(${data.strikerBalls})</span>`;
+    document.getElementById("batsman2Score").innerHTML = `${data.nonStrikerRuns} <span>(${data.nonStrikerBalls})</span>`;
     document.getElementById("bowlerFigures").innerText = `${data.bowlerWickets}-${data.bowlerRuns}`;
 
     const targetBox = document.getElementById("targetBox");
@@ -237,15 +231,16 @@ function loadData(){
     (data.thisOver || []).forEach(ball => {
         let cls = "ball";
         if(ball === 4) cls += " four";
-        if(ball === 6) cls += " six";
-        if(ball === "W") cls += " wicket";
+        else if(ball === 6) cls += " six";
+        else if(ball === "W") cls += " wicket";
+        else if(ball === "WD" || ball === "NB") cls += " extra";
+        else cls += " run";
         html += `<span class="${cls}">${ball}</span>`;
     });
     document.getElementById("thisOverBalls").innerHTML = html;
 }
 
-// 300 millisecond mein update, bilkul TV jaisi speed
-setInterval(loadData, 300); 
+setInterval(loadData, 200); 
 </script>
 </body>
 </html>
