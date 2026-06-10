@@ -9,6 +9,10 @@
 <body>
 <div class="overlay-container">
 
+    <div id="hypeGraphic" class="hype-graphic">
+        <h1 id="hypeText">FOUR</h1>
+    </div>
+
     <div class="score-box">
         <div class="score-details">
             <div id="totalScore" class="main-score">0/0</div>
@@ -63,9 +67,44 @@
 </div>
 
 <script>
+let lastKnownBalls = -1; // Animation track karne ke liye memory
+
+function showHype(text, gradientColors) {
+    const hypeEl = document.getElementById("hypeGraphic");
+    const textEl = document.getElementById("hypeText");
+    
+    textEl.innerText = text;
+    hypeEl.style.background = `linear-gradient(135deg, ${gradientColors})`;
+    hypeEl.style.boxShadow = `0 0 50px ${gradientColors.split(',')[0]}`;
+    
+    hypeEl.classList.add("show");
+    
+    // 3 second baad graphic screen se hata do
+    setTimeout(() => {
+        hypeEl.classList.remove("show");
+    }, 3000);
+}
+
 function loadData(){
     const data = JSON.parse(localStorage.getItem("bplData"));
     if(!data) return;
+
+    // --- ANIMATION LOGIC (The Twist) ---
+    const currentBalls = data.balls || 0;
+    if (lastKnownBalls !== -1 && currentBalls > lastKnownBalls) {
+        // Nayi ball feki gayi hai! Last event check karo:
+        const lastEvent = data.thisOver[data.thisOver.length - 1];
+        
+        if (lastEvent === 4) {
+            showHype("BOUNDARY!", "#0072ff, #00c6ff"); // Blue Flash
+        } else if (lastEvent === 6) {
+            showHype("MAXIMUM!", "#ff0055, #ffb300"); // Orange/Red Fire
+        } else if (lastEvent === "W") {
+            showHype("WICKET!", "#d62828, #000000"); // Danger Red/Black
+        }
+    }
+    lastKnownBalls = currentBalls;
+    // -----------------------------------
 
     const score = (data.score || 0) + "/" + (data.wickets || 0);
     const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
@@ -78,7 +117,6 @@ function loadData(){
     document.getElementById("team1Name").innerText = data.teamA;
     document.getElementById("team2Name").innerText = data.teamB;
     
-    // Logos will automatically show if uploaded in Admin
     if(data.teamALogo) document.getElementById("team1Logo").src = data.teamALogo;
     if(data.teamBLogo) document.getElementById("team2Logo").src = data.teamBLogo;
 
@@ -90,7 +128,6 @@ function loadData(){
     document.getElementById("batsman2Score").innerText = `${data.nonStrikerRuns} (${data.nonStrikerBalls})`;
     document.getElementById("bowlerFigures").innerText = `${data.bowlerWickets}-${data.bowlerRuns}`;
 
-    // Target box logic
     const targetBox = document.getElementById("targetBox");
     if(data.innings === 2 && data.target > 0) {
         targetBox.style.display = "block";
@@ -109,7 +146,9 @@ function loadData(){
     });
     document.getElementById("thisOverBalls").innerHTML = html;
 }
-setInterval(loadData, 500); // 500ms speed for instant update on stream
+
+// Har 300ms pe data check karega, animation instant trigger hoga
+setInterval(loadData, 300); 
 </script>
 </body>
 </html>
