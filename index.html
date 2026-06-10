@@ -3,21 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Overlay</title>
-<link rel="stylesheet" href="style.css">
+<title>BPL Pro Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+    /* SARA DESIGN AB YAHIN HAI - KOI FILE LINK NAHI KARNI */
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background: transparent; overflow: hidden; }
+    
+    .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+
+    /* --- PREMIUM BOTTOM SCOREBAR --- */
+    .bottom-scorebar {
+        position:absolute; bottom:55px; left:50%; transform:translateX(-50%);
+        width:96%; height:95px;
+        background: linear-gradient(90deg, rgba(0, 19, 77, 0.95), rgba(0, 62, 166, 0.95), rgba(0, 19, 77, 0.95));
+        border: 2px solid #3fa9ff; border-radius: 20px;
+        display:flex; align-items:center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 170, 255, 0.4);
+        backdrop-filter: blur(5px);
+    }
+
+    .team-section { width: 180px; display:flex; align-items:center; justify-content:center; gap:10px; padding:8px; }
+    .team-logo img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5)); }
+    .team-name { font-size: 16px; font-weight: 800; color: white; line-height: 1.1; text-transform: uppercase; }
+
+    .score-center {
+        width: 190px; text-align: center;
+        border-left: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2);
+    }
+    .score-large { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; color: white; line-height: 1; text-shadow: 2px 2px 5px #000; }
+    .overs-large { font-size: 16px; font-weight: 800; color: #ffd23f; letter-spacing: 1px; }
+
+    .batsman-panel, .bowler-panel { width: 230px; padding: 0 15px; }
+    .batsman-row { display:flex; justify-content:space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .batsman-name { font-size: 15px; font-weight: 600; color: white; text-transform: uppercase; }
+    .batsman-score { font-size: 16px; font-weight: 800; color: white; }
+
+    .bowler-name { font-size: 18px; font-weight: 800; color: #ffd23f; text-transform: uppercase; }
+    .bowler-figures { font-size: 20px; font-weight: 800; color: white; font-family: 'Oswald', sans-serif; }
+    
+    .this-over { display:flex; gap:6px; margin-top:6px; }
+    .ball { 
+        width: 24px; height: 24px; border-radius: 50%; background: #0d4cff; color: white;
+        display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 800;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .ball.four { background: #18a558; }
+    .ball.six { background: #6f42c1; }
+    .ball.wicket { background: #d62828; }
+
+    .need-panel { width: 140px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; margin: 0 10px; border: 1px solid #ffd23f; }
+    .need-title { font-size: 13px; font-weight: 800; color: white; letter-spacing: 1px; }
+    .need-runs { font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; color: #ffd23f; line-height: 1; }
+
+    /* --- TICKER NEWS BAR --- */
+    .ticker-bar {
+        position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+        width:96%; height:36px;
+        background: linear-gradient(90deg, #000a29, #001b5c, #000a29);
+        border-radius: 8px; border: 1px solid #4da6ff; overflow: hidden;
+    }
+    .ticker-content {
+        white-space: nowrap; font-size: 15px; font-weight: 600; color: white; line-height: 36px;
+        letter-spacing: 1px; animation: tickerMove 20s linear infinite;
+    }
+    @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+    /* --- TOP SCORE BOX --- */
+    .score-box {
+        position:absolute; top:25px; right:25px; width:220px; height:85px;
+        background: linear-gradient(135deg, rgba(0,27,92,0.9), rgba(0,57,166,0.9));
+        border: 2px solid #4da6ff; border-radius: 15px; display:flex; align-items:center; justify-content: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4); flex-direction: column; backdrop-filter: blur(5px);
+    }
+    .score-box .main-score { font-family: 'Oswald', sans-serif; font-size: 42px; font-weight: 700; color: white; line-height: 1; }
+    .score-box .overs { font-size: 16px; font-weight: 800; color: #ffd23f; }
+
+    /* --- IPL ADVANCED ANIMATION ENGINE --- */
+    #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10000; }
+    
+    @keyframes megaBlast {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        15% { transform: translate(-50%, -50%) scale(1.2) rotate(-5deg); opacity: 1; }
+        85% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+    }
+
+    .ipl-graphic {
+        position: absolute; top: 35%; left: 50%;
+        font-family: 'Oswald', sans-serif; font-size: 100px; font-weight: 700; color: white;
+        text-transform: uppercase; letter-spacing: 4px; padding: 20px 60px; border-radius: 20px;
+        animation: megaBlast 3.5s forwards; text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+    
+    .ipl-graphic.four { background: linear-gradient(45deg, #0052D4, #4364F7); border: 5px solid white; box-shadow: 0 0 80px #4364F7; }
+    .ipl-graphic.six { background: linear-gradient(45deg, #FF416C, #FF4B2B); border: 5px solid white; box-shadow: 0 0 80px #FF416C; }
+    .ipl-graphic.wicket { background: linear-gradient(45deg, #111, #d62828); border: 5px solid white; box-shadow: 0 0 80px #d62828; color: #ffd23f; }
+</style>
 </head>
 <body>
-<div class="overlay-container">
 
-    <div id="hypeGraphic" class="hype-graphic">
-        <h1 id="hypeText">FOUR</h1>
-    </div>
+<div class="overlay-container">
+    
+    <div id="animation-container"></div>
 
     <div class="score-box">
-        <div class="score-details">
-            <div id="totalScore" class="main-score">0/0</div>
-            <div id="oversTop" class="overs">0.0</div>
-        </div>
+        <div id="totalScore" class="main-score">0/0</div>
+        <div id="oversTop" class="overs">0.0</div>
     </div>
 
     <div class="bottom-scorebar">
@@ -61,50 +154,54 @@
 
     <div class="ticker-bar">
         <div class="ticker-content">
-            DIGITAL PROMOTION | ALL TYPE DIGITAL & PHYSICAL PROMOTION | CONTACT : 8252001148 | BHIKHANPUR PREMIUM LEAGUE
+            🔥 BHIKHANPUR PREMIUM LEAGUE LIVE 🔥 | DIGITAL PROMOTION | CONTACT : 8252001148 | SUBSCRIBE & SHARE THE STREAM!
         </div>
     </div>
 </div>
 
 <script>
-let lastKnownBalls = -1; // Animation track karne ke liye memory
+let lastKnownBalls = -1; 
 
-function showHype(text, gradientColors) {
-    const hypeEl = document.getElementById("hypeGraphic");
-    const textEl = document.getElementById("hypeText");
+// YEH FUNCTION ANIMATION BANA KAR KHUD DELETE KAR DETA HAI (KABHI ATKEGA NAHI)
+function fireIPLAnimation(type) {
+    const container = document.getElementById("animation-container");
+    container.innerHTML = ""; // Purana kachra saaf
+
+    const animBox = document.createElement("div");
     
-    textEl.innerText = text;
-    hypeEl.style.background = `linear-gradient(135deg, ${gradientColors})`;
-    hypeEl.style.boxShadow = `0 0 50px ${gradientColors.split(',')[0]}`;
-    
-    hypeEl.classList.add("show");
-    
-    // 3 second baad graphic screen se hata do
+    if (type === 4) {
+        animBox.className = "ipl-graphic four";
+        animBox.innerText = "FOUR!";
+    } else if (type === 6) {
+        animBox.className = "ipl-graphic six";
+        animBox.innerText = "MAXIMUM!";
+    } else if (type === "W") {
+        animBox.className = "ipl-graphic wicket";
+        animBox.innerText = "WICKET!";
+    }
+
+    container.appendChild(animBox);
+
+    // Theek 3.5 second baad computer is element ko jadd se mita dega
     setTimeout(() => {
-        hypeEl.classList.remove("show");
-    }, 3000);
+        animBox.remove();
+    }, 3500);
 }
 
 function loadData(){
     const data = JSON.parse(localStorage.getItem("bplData"));
     if(!data) return;
 
-    // --- ANIMATION LOGIC (The Twist) ---
+    // --- ANIMATION CHECKER ---
     const currentBalls = data.balls || 0;
     if (lastKnownBalls !== -1 && currentBalls > lastKnownBalls) {
-        // Nayi ball feki gayi hai! Last event check karo:
         const lastEvent = data.thisOver[data.thisOver.length - 1];
-        
-        if (lastEvent === 4) {
-            showHype("BOUNDARY!", "#0072ff, #00c6ff"); // Blue Flash
-        } else if (lastEvent === 6) {
-            showHype("MAXIMUM!", "#ff0055, #ffb300"); // Orange/Red Fire
-        } else if (lastEvent === "W") {
-            showHype("WICKET!", "#d62828, #000000"); // Danger Red/Black
+        if (lastEvent === 4 || lastEvent === 6 || lastEvent === "W") {
+            fireIPLAnimation(lastEvent);
         }
     }
     lastKnownBalls = currentBalls;
-    // -----------------------------------
+    // --------------------------
 
     const score = (data.score || 0) + "/" + (data.wickets || 0);
     const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
@@ -147,7 +244,7 @@ function loadData(){
     document.getElementById("thisOverBalls").innerHTML = html;
 }
 
-// Har 300ms pe data check karega, animation instant trigger hoga
+// 300 millisecond mein update, bilkul TV jaisi speed
 setInterval(loadData, 300); 
 </script>
 </body>
