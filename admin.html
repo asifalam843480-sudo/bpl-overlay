@@ -19,44 +19,41 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
 .yellow{background:#ffcc00;color:black;}
 .scoreBox{font-size:45px;font-weight:900; color:#fff;}
 .grid{display:grid; grid-template-columns: 1fr 1fr; gap:15px;}
-.badge{background:red; color:white; padding:2px 6px; border-radius:4px; font-size:10px; vertical-align:top;}
+.badge{background:#555; color:white; padding:4px 8px; border-radius:4px; font-size:12px; border:none; cursor:pointer;}
+.badge.active{background:#ffcc00; color:black; font-weight:bold; box-shadow:0 0 10px #ffcc00;}
 </style>
 </head>
 <body>
 <div class="container">
 
 <div class="card">
-<h2>1. Live Match Engine <span class="badge">AUTO-SAVE ON</span></h2>
+<h2>1. Live Match Engine</h2>
 <div class="grid">
     <div>
         <label>Team A Name</label>
         <input id="teamA" placeholder="Team A">
-        <label style="color:#00e664;">Team A Logo (Auto-Compress)</label>
-        <input type="file" id="teamALogo" accept="image/*" style="padding:5px;">
     </div>
     <div>
         <label>Team B Name</label>
         <input id="teamB" placeholder="Team B">
-        <label style="color:#00e664;">Team B Logo (Auto-Compress)</label>
-        <input type="file" id="teamBLogo" accept="image/*" style="padding:5px;">
     </div>
 </div>
 
 <div class="grid">
     <div>
-        <label style="color:#ffcc00;">Striker Name (🏏)</label>
-        <input id="striker" placeholder="Striker">
+        <label>Batsman 1 <button id="btnStrike1" class="badge active">ON STRIKE (▶)</button></label>
+        <input id="b1Name" placeholder="Batsman 1 Name">
         <div style="display:flex; gap:5px;">
-            <input id="strikerRuns" placeholder="Runs" type="number">
-            <input id="strikerBalls" placeholder="Balls" type="number">
+            <input id="b1Runs" placeholder="Runs" type="number">
+            <input id="b1Balls" placeholder="Balls" type="number">
         </div>
     </div>
     <div>
-        <label>Non-Striker Name</label>
-        <input id="nonStriker" placeholder="Non Striker">
+        <label>Batsman 2 <button id="btnStrike2" class="badge">SET STRIKE</button></label>
+        <input id="b2Name" placeholder="Batsman 2 Name">
         <div style="display:flex; gap:5px;">
-            <input id="nonStrikerRuns" placeholder="Runs" type="number">
-            <input id="nonStrikerBalls" placeholder="Balls" type="number">
+            <input id="b2Runs" placeholder="Runs" type="number">
+            <input id="b2Balls" placeholder="Balls" type="number">
         </div>
     </div>
 </div>
@@ -66,8 +63,8 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
         <label>Bowler Name</label>
         <input id="bowler" placeholder="Bowler">
         <div style="display:flex; gap:5px;">
-            <input id="bowlerWickets" placeholder="W" type="number">
-            <input id="bowlerRuns" placeholder="R" type="number">
+            <input id="bowlerWickets" placeholder="Wickets" type="number">
+            <input id="bowlerRuns" placeholder="Runs" type="number">
         </div>
     </div>
     <div>
