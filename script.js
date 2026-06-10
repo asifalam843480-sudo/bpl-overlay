@@ -6,11 +6,15 @@ let matchData = JSON.parse(localStorage.getItem("bplData")) || {
   striker: "Batsman 1", nonStriker: "Batsman 2", bowler: "Bowler",
   strikerRuns: 0, strikerBalls: 0, nonStrikerRuns: 0, nonStrikerBalls: 0,
   bowlerRuns: 0, bowlerWickets: 0,
-  flashEvent: "", flashId: 0 // <--- Naya V.I.P Animation System
+  flashEvent: "", flashId: 0 
 };
 
 function saveData() {
-  localStorage.setItem("bplData", JSON.stringify(matchData));
+  try {
+      localStorage.setItem("bplData", JSON.stringify(matchData));
+  } catch (error) {
+      alert("⚠️ ERROR: Tumhara browser memory full ho gaya hai! Neeche 'RESET FULL MATCH' dabao aur fir shuru karo.");
+  }
 }
 
 function getOvers() {
@@ -36,10 +40,9 @@ function checkOverComplete() {
   }
 }
 
-// ALARM SYSTEM FOR TV SCREEN
 function triggerAnimation(type) {
     matchData.flashEvent = type;
-    matchData.flashId = Date.now(); // Har baar naya ID banega, toh TV screen hamesha alert hogi
+    matchData.flashId = Date.now(); 
 }
 
 function addRun(run) {
@@ -52,7 +55,7 @@ function addRun(run) {
   matchData.balls++;
   matchData.thisOver.push(run);
 
-  if (run === 4 || run === 6) triggerAnimation(run); // Direct animation fire
+  if (run === 4 || run === 6) triggerAnimation(run); 
 
   if (run % 2 !== 0) rotateStrike(); 
   checkOverComplete();
@@ -67,7 +70,7 @@ function addWicket() {
   matchData.balls++;
   matchData.thisOver.push("W");
 
-  triggerAnimation("W"); // Direct wicket animation fire
+  triggerAnimation("W"); 
 
   checkOverComplete();
   updateUI();
@@ -124,6 +127,7 @@ function updateUI() {
   saveData();
 }
 
+// IMAGE COMPRESSOR & EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 
@@ -154,16 +158,41 @@ document.addEventListener("DOMContentLoaded", () => {
       if (txt === "NB") btn.onclick = () => extraBall("NB");
       if (txt === "UNDO BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
-      if (txt === "RESET FULL MATCH") btn.onclick = () => { if(confirm("Sab zero ho jayega. Pakka?")) { localStorage.removeItem("bplData"); location.reload(); } };
+      if (txt === "RESET FULL MATCH") btn.onclick = () => { 
+          if(confirm("Dhyan se! Sab clear ho jayega. Pakka?")) { 
+              localStorage.removeItem("bplData"); location.reload(); 
+          } 
+      };
   });
 
+  // THE CANVAS CRUSHER: Compresses High-Res Photos to 10kb
   const uploadLogo = (id, key) => {
       let el = document.getElementById(id);
       if(el) {
           el.addEventListener("change", function(e) {
+              const file = e.target.files[0];
+              if(!file) return;
+
               const reader = new FileReader();
-              reader.onload = (event) => { matchData[key] = event.target.result; saveData(); };
-              if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+              reader.onload = function(event) {
+                  const img = new Image();
+                  img.onload = function() {
+                      const canvas = document.createElement("canvas");
+                      const MAX_WIDTH = 150; // TV ke liye kaafi hai
+                      const scale = MAX_WIDTH / img.width;
+                      canvas.width = MAX_WIDTH;
+                      canvas.height = img.height * scale;
+                      
+                      const ctx = canvas.getContext("2d");
+                      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                      
+                      matchData[key] = canvas.toDataURL("image/png");
+                      saveData();
+                      alert("Logo compressed & saved successfully! ✅");
+                  };
+                  img.src = event.target.result;
+              };
+              reader.readAsDataURL(file);
           });
       }
   };
