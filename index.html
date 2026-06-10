@@ -49,7 +49,6 @@
     .batsman-score { font-size: 18px; font-weight: 700; color: white; transition: 0.3s; }
     .batsman-score span { font-size: 14px; color: #888; }
 
-    /* The Strike Glow Effect */
     .on-strike { color: white; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
     .off-strike { color: #666; }
     .off-strike .batsman-score { color: #999; }
@@ -87,7 +86,6 @@
     }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* IPL 3D POPUP ANIMATIONS */
     #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
     
     @keyframes slamBlast {
@@ -163,7 +161,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_FINAL_DATA_1"; // Same key as admin to ensure sync
+const DB_KEY = "BPL_FINAL_MATCH_DATA"; 
 
 function fireIPLAnimation(type) {
     const container = document.getElementById("animation-container");
@@ -179,66 +177,98 @@ function fireIPLAnimation(type) {
 }
 
 function loadData(){
-    const data = JSON.parse(localStorage.getItem(DB_KEY));
-    if(!data) return; // Wait for admin to create data
+    let data;
+    try {
+        data = JSON.parse(localStorage.getItem(DB_KEY));
+    } catch(e) { return; }
+    
+    if(!data) return; 
 
     if (data.flashId && data.flashId !== lastFlashId) {
         fireIPLAnimation(data.flashEvent);
         lastFlashId = data.flashId;
     }
 
-    const score = (data.score || 0) + "-" + (data.wickets || 0);
+    const score = (data.score || 0) + "/" + (data.wickets || 0);
     const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
 
-    document.getElementById("scoreLarge").innerText = score;
-    document.getElementById("oversLarge").innerText = overs + " OVERS";
-
-    document.getElementById("team1Name").innerText = data.teamA;
-    document.getElementById("team2Name").innerText = data.teamB;
+    let scoreLarge = document.getElementById("scoreLarge");
+    if(scoreLarge) scoreLarge.innerText = score;
     
-    if(data.teamALogo) document.getElementById("team1Logo").src = data.teamALogo;
-    if(data.teamBLogo) document.getElementById("team2Logo").src = data.teamBLogo;
+    let oversLarge = document.getElementById("oversLarge");
+    if(oversLarge) oversLarge.innerText = overs + " OVERS";
 
-    document.getElementById("b1NameDisplay").innerText = data.b1Name || "BATSMAN 1";
-    document.getElementById("b1ScoreDisplay").innerHTML = `${data.b1Runs || 0} <span>(${data.b1Balls || 0})</span>`;
+    let team1Name = document.getElementById("team1Name");
+    if(team1Name) team1Name.innerText = data.teamA;
     
-    document.getElementById("b2NameDisplay").innerText = data.b2Name || "BATSMAN 2";
-    document.getElementById("b2ScoreDisplay").innerHTML = `${data.b2Runs || 0} <span>(${data.b2Balls || 0})</span>`;
+    let team2Name = document.getElementById("team2Name");
+    if(team2Name) team2Name.innerText = data.teamB;
+    
+    let team1Logo = document.getElementById("team1Logo");
+    if(data.teamALogo && team1Logo) team1Logo.src = data.teamALogo;
+    
+    let team2Logo = document.getElementById("team2Logo");
+    if(data.teamBLogo && team2Logo) team2Logo.src = data.teamBLogo;
 
-    if (data.onStrike === 1) {
-        document.getElementById("rowB1").className = "batsman-row on-strike";
-        document.getElementById("rowB2").className = "batsman-row off-strike";
-    } else {
-        document.getElementById("rowB1").className = "batsman-row off-strike";
-        document.getElementById("rowB2").className = "batsman-row on-strike";
+    let b1NameDisplay = document.getElementById("b1NameDisplay");
+    if(b1NameDisplay) b1NameDisplay.innerText = data.b1Name || "BATSMAN 1";
+    
+    let b1ScoreDisplay = document.getElementById("b1ScoreDisplay");
+    if(b1ScoreDisplay) b1ScoreDisplay.innerHTML = `${data.b1Runs || 0} <span>(${data.b1Balls || 0})</span>`;
+    
+    let b2NameDisplay = document.getElementById("b2NameDisplay");
+    if(b2NameDisplay) b2NameDisplay.innerText = data.b2Name || "BATSMAN 2";
+    
+    let b2ScoreDisplay = document.getElementById("b2ScoreDisplay");
+    if(b2ScoreDisplay) b2ScoreDisplay.innerHTML = `${data.b2Runs || 0} <span>(${data.b2Balls || 0})</span>`;
+
+    let rowB1 = document.getElementById("rowB1");
+    let rowB2 = document.getElementById("rowB2");
+    if(rowB1 && rowB2) {
+        if (data.onStrike === 1) {
+            rowB1.className = "batsman-row on-strike";
+            rowB2.className = "batsman-row off-strike";
+        } else {
+            rowB1.className = "batsman-row off-strike";
+            rowB2.className = "batsman-row on-strike";
+        }
     }
 
-    document.getElementById("bowlerName").innerText = data.bowler || "BOWLER";
-    document.getElementById("bowlerFigures").innerText = `${data.bowlerWickets || 0}-${data.bowlerRuns || 0}`;
+    let bowlerName = document.getElementById("bowlerName");
+    if(bowlerName) bowlerName.innerText = data.bowler || "BOWLER";
+    
+    let bowlerFigures = document.getElementById("bowlerFigures");
+    if(bowlerFigures) bowlerFigures.innerText = `${data.bowlerWickets || 0}-${data.bowlerRuns || 0}`;
 
     const targetBox = document.getElementById("targetBox");
-    if(data.innings === 2 && data.target > 0) {
-        targetBox.style.display = "block";
-        document.getElementById("needRuns").innerText = data.target;
-    } else {
-        targetBox.style.display = "none";
+    if(targetBox) {
+        if(data.innings === 2 && data.target > 0) {
+            targetBox.style.display = "block";
+            let needRuns = document.getElementById("needRuns");
+            if(needRuns) needRuns.innerText = data.target;
+        } else {
+            targetBox.style.display = "none";
+        }
     }
 
-    let html = "";
-    (data.thisOver || []).forEach(ball => {
-        let cls = "ball";
-        if(ball === 4) cls += " four";
-        else if(ball === 6) cls += " six";
-        else if(ball === "W") cls += " wicket";
-        else if(ball === "WD" || ball === "NB") cls += " extra";
-        else cls += " run";
-        html += `<span class="${cls}">${ball}</span>`;
-    });
-    document.getElementById("thisOverBalls").innerHTML = html;
+    let thisOverBalls = document.getElementById("thisOverBalls");
+    if(thisOverBalls) {
+        let html = "";
+        (data.thisOver || []).forEach(ball => {
+            let cls = "ball";
+            if(ball === 4) cls += " four";
+            else if(ball === 6) cls += " six";
+            else if(ball === "W") cls += " wicket";
+            else if(ball === "WD" || ball === "NB") cls += " extra";
+            else cls += " run";
+            html += `<span class="${cls}">${ball}</span>`;
+        });
+        thisOverBalls.innerHTML = html;
+    }
 }
 
 window.addEventListener('storage', loadData);
-setInterval(loadData, 300); // Super fast 300ms refresh
+setInterval(loadData, 300); 
 loadData();
 </script>
 </body>
