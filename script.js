@@ -1,6 +1,7 @@
-const DB_KEY = "BPL_FINAL_DATA_1"; // Nayi chaabi = Nayi memory. Bug khatam.
+// THE TITANIUM ENGINE (With Auto-Recovery)
+const DB_KEY = "BPL_FINAL_MATCH_DATA"; 
 
-let matchData = JSON.parse(localStorage.getItem(DB_KEY)) || {
+let defaultData = {
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
   teamALogo: "", teamBLogo: "",
   score: 0, wickets: 0, balls: 0, target: 0, innings: 1,
@@ -12,8 +13,27 @@ let matchData = JSON.parse(localStorage.getItem(DB_KEY)) || {
   flashEvent: "", flashId: 0 
 };
 
+let matchData;
+
+// THE AIRBAG: Agar memory me kachra hai, toh script crash hone ke bajaye reset ho jayegi
+try {
+    let saved = localStorage.getItem(DB_KEY);
+    if (saved) {
+        matchData = JSON.parse(saved);
+    } else {
+        matchData = JSON.parse(JSON.stringify(defaultData));
+    }
+} catch (error) {
+    matchData = JSON.parse(JSON.stringify(defaultData));
+    localStorage.setItem(DB_KEY, JSON.stringify(matchData));
+}
+
 function saveData() {
-  localStorage.setItem(DB_KEY, JSON.stringify(matchData));
+    try {
+        localStorage.setItem(DB_KEY, JSON.stringify(matchData));
+    } catch (e) {
+        console.error("Storage limit reached:", e);
+    }
 }
 
 function getOvers() {
@@ -108,9 +128,14 @@ function startSecondInnings() {
 }
 
 function updateUI() {
-  document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
-  document.getElementById("overs").innerText = getOvers() + " Overs";
-  document.getElementById("thisOver").innerText = matchData.thisOver.join(" ");
+  let scoreEl = document.getElementById("score");
+  if (scoreEl) scoreEl.innerText = matchData.score + "/" + matchData.wickets;
+  
+  let oversEl = document.getElementById("overs");
+  if (oversEl) oversEl.innerText = getOvers() + " Overs";
+  
+  let thisOverEl = document.getElementById("thisOver");
+  if (thisOverEl) thisOverEl.innerText = matchData.thisOver.join(" ");
 
   const setIfUnfocused = (id, val) => {
       const el = document.getElementById(id);
@@ -178,8 +203,10 @@ document.addEventListener("DOMContentLoaded", () => {
       };
   });
 
-  document.getElementById("btnStrike1")?.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
-  document.getElementById("btnStrike2")?.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
+  let strikeBtn1 = document.getElementById("btnStrike1");
+  let strikeBtn2 = document.getElementById("btnStrike2");
+  if(strikeBtn1) strikeBtn1.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
+  if(strikeBtn2) strikeBtn2.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
 
   const uploadLogo = (id, key) => {
       let el = document.getElementById(id);
