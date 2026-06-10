@@ -1,7 +1,6 @@
-// THE CACHE KILLER: Version update to force new memory
-const VERSION = "PRO_V2"; 
-let defaultData = {
-  version: VERSION,
+const DB_KEY = "BPL_FINAL_DATA_1"; // Nayi chaabi = Nayi memory. Bug khatam.
+
+let matchData = JSON.parse(localStorage.getItem(DB_KEY)) || {
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
   teamALogo: "", teamBLogo: "",
   score: 0, wickets: 0, balls: 0, target: 0, innings: 1,
@@ -13,27 +12,8 @@ let defaultData = {
   flashEvent: "", flashId: 0 
 };
 
-let matchData;
-
-// THE AIRBAG (Try-Catch): Crash proofing the initialization
-try {
-    matchData = JSON.parse(localStorage.getItem("bplData"));
-    if (!matchData || matchData.version !== VERSION) {
-        matchData = defaultData;
-        localStorage.setItem("bplData", JSON.stringify(matchData));
-    }
-} catch (error) {
-    // Agar memory corrupt hui, toh script fail nahi hogi, chup-chap reset ho jayegi
-    matchData = defaultData;
-    localStorage.setItem("bplData", JSON.stringify(matchData));
-}
-
 function saveData() {
-  try {
-      localStorage.setItem("bplData", JSON.stringify(matchData));
-  } catch (error) {
-      alert("⚠️ ERROR: Browser memory full! Neeche 'RESET FULL MATCH' dabao.");
-  }
+  localStorage.setItem(DB_KEY, JSON.stringify(matchData));
 }
 
 function getOvers() {
@@ -42,7 +22,7 @@ function getOvers() {
 
 function saveHistory() {
   matchData.history.push(JSON.parse(JSON.stringify(matchData)));
-  if (matchData.history.length > 25) matchData.history.shift();
+  if (matchData.history.length > 20) matchData.history.shift();
 }
 
 function rotateStrike() {
@@ -70,7 +50,6 @@ function addRun(run) {
   matchData.balls = (parseInt(matchData.balls) || 0) + 1;
   matchData.thisOver.push(run);
 
-  // EXACT MATH FOR STRIKER
   if (matchData.onStrike === 1) {
       matchData.b1Runs = (parseInt(matchData.b1Runs) || 0) + run;
       matchData.b1Balls = (parseInt(matchData.b1Balls) || 0) + 1;
@@ -162,7 +141,6 @@ function updateUI() {
           btn1.className = "badge"; btn1.innerText = "SET STRIKE";
       }
   }
-
   saveData();
 }
 
@@ -195,17 +173,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (txt === "NO BALL (NB)") btn.onclick = () => extraBall("NB");
       if (txt === "UNDO LAST BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
-      if (txt === "RESET FULL MATCH") btn.onclick = () => { 
-          if(confirm("Bhai sab zero ho jayega. Pakka karna hai?")) { 
-              localStorage.removeItem("bplData"); location.reload(); 
-          } 
+      if (txt === "RESET MATCH") btn.onclick = () => { 
+          if(confirm("Sab delete ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } 
       };
   });
 
   document.getElementById("btnStrike1")?.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
   document.getElementById("btnStrike2")?.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
 
-  // BULLETPROOF LOGO COMPRESSOR
   const uploadLogo = (id, key) => {
       let el = document.getElementById(id);
       if(el) {
@@ -217,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   const img = new Image();
                   img.onload = function() {
                       const canvas = document.createElement("canvas");
-                      const MAX_WIDTH = 120; // Perfect for TV Logo
+                      const MAX_WIDTH = 120; 
                       const scale = MAX_WIDTH / img.width;
                       canvas.width = MAX_WIDTH;
                       canvas.height = img.height * scale;
@@ -225,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
                       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                       matchData[key] = canvas.toDataURL("image/png");
                       saveData();
-                      alert("🔥 Premium Logo Loaded Successfully!");
                   };
                   img.src = event.target.result;
               };
