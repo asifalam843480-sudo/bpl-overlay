@@ -3,24 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel Pro</title>
+<title>BPL Scorer Panel | Director Cut</title>
 <style>
-body{background:#0a0f24;font-family:Arial,sans-serif;color:white;padding:20px;}
+body{background:#040914;font-family:Arial,sans-serif;color:white;padding:20px;}
 .container{max-width:1200px;margin:auto;}
-.card{background:#111936;padding:15px;border-radius:12px;margin-bottom:15px; border:1px solid #ffcc00; box-shadow: 0 0 15px rgba(255,204,0,0.1);}
-h2{margin-bottom:10px; color:#ffcc00; text-transform: uppercase; letter-spacing: 1px;}
-input{width:100%;padding:12px;margin-top:5px;margin-bottom:10px;background:#0a0f24; color:white; border:1px solid #334; border-radius:8px; font-weight:bold;}
-input:focus{outline:none; border-color:#ffcc00;}
-button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;border:none;border-radius:8px; text-transform: uppercase;}
-.runBtn{width:70px;height:60px; font-size: 22px;}
+.card{background:#0a122c;padding:15px;border-radius:12px;margin-bottom:15px; border:1px solid #ffd700; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.05);}
+h2{margin-bottom:15px; color:#ffd700; text-transform: uppercase; letter-spacing: 2px;}
+input{width:100%;padding:12px;margin-top:5px;margin-bottom:10px;background:#040914; color:white; border:1px solid #334; border-radius:8px; font-weight:bold;}
+input:focus{outline:none; border-color:#ffd700; box-shadow: 0 0 8px rgba(255,215,0,0.5);}
+button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;border:none;border-radius:8px; text-transform: uppercase; transition: 0.2s;}
+button:active{transform: scale(0.95);}
+.runBtn{width:70px;height:60px; font-size: 22px; border-radius: 12px;}
 .green{background:#00b85c;color:white;}
 .red{background:#ff2a2a;color:white;}
-.blue{background:#0073ff;color:white;}
-.yellow{background:#ffcc00;color:black;}
-.scoreBox{font-size:45px;font-weight:900; color:#fff;}
-.grid{display:grid; grid-template-columns: 1fr 1fr; gap:15px;}
-.badge{background:#555; color:white; padding:4px 8px; border-radius:4px; font-size:12px; border:none; cursor:pointer;}
-.badge.active{background:#ffcc00; color:black; font-weight:bold; box-shadow:0 0 10px #ffcc00;}
+.blue{background:#007bff;color:white;}
+.yellow{background:#ffd700;color:black;}
+.scoreBox{font-size:50px;font-weight:900; color:#fff; letter-spacing: 2px;}
+.grid{display:grid; grid-template-columns: 1fr 1fr; gap:20px;}
+.badge{background:#222; color:#888; padding:5px 10px; border-radius:6px; font-size:12px; border:none; cursor:pointer;}
+.badge.active{background:#ffd700; color:black; font-weight:900; box-shadow:0 0 15px rgba(255,215,0,0.6);}
 </style>
 </head>
 <body>
@@ -32,10 +33,14 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
     <div>
         <label>Team A Name</label>
         <input id="teamA" placeholder="Team A">
+        <label style="color:#00b85c; font-size:12px;">Team A Logo</label>
+        <input type="file" id="teamALogo" accept="image/*" style="padding:5px;">
     </div>
     <div>
         <label>Team B Name</label>
         <input id="teamB" placeholder="Team B">
+        <label style="color:#00b85c; font-size:12px;">Team B Logo</label>
+        <input type="file" id="teamBLogo" accept="image/*" style="padding:5px;">
     </div>
 </div>
 
@@ -43,7 +48,7 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
     <div>
         <label>Batsman 1 <button id="btnStrike1" class="badge active">ON STRIKE (▶)</button></label>
         <input id="b1Name" placeholder="Batsman 1 Name">
-        <div style="display:flex; gap:5px;">
+        <div style="display:flex; gap:10px;">
             <input id="b1Runs" placeholder="Runs" type="number">
             <input id="b1Balls" placeholder="Balls" type="number">
         </div>
@@ -51,7 +56,7 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
     <div>
         <label>Batsman 2 <button id="btnStrike2" class="badge">SET STRIKE</button></label>
         <input id="b2Name" placeholder="Batsman 2 Name">
-        <div style="display:flex; gap:5px;">
+        <div style="display:flex; gap:10px;">
             <input id="b2Runs" placeholder="Runs" type="number">
             <input id="b2Balls" placeholder="Balls" type="number">
         </div>
@@ -62,7 +67,7 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
     <div>
         <label>Bowler Name</label>
         <input id="bowler" placeholder="Bowler">
-        <div style="display:flex; gap:5px;">
+        <div style="display:flex; gap:10px;">
             <input id="bowlerWickets" placeholder="Wickets" type="number">
             <input id="bowlerRuns" placeholder="Runs" type="number">
         </div>
@@ -74,14 +79,14 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
 </div>
 </div>
 
-<div class="card">
+<div class="card" style="text-align: center;">
 <div class="scoreBox" id="score">0/0</div>
-<div id="overs" style="font-size:24px; color:#aaa;">0.0 Overs</div>
-<div id="thisOver" style="margin-top:10px; font-size:20px; font-weight:bold; letter-spacing:3px;">-</div>
+<div id="overs" style="font-size:26px; color:#aaa; font-weight:bold;">0.0 Overs</div>
+<div id="thisOver" style="margin-top:15px; font-size:24px; font-weight:900; letter-spacing:5px; color:#ffd700;">-</div>
 </div>
 
-<div class="card">
-<h2>3. Action Buttons</h2>
+<div class="card" style="text-align: center;">
+<h2>3. Action Room</h2>
 <button class="runBtn green">0</button>
 <button class="runBtn green">1</button>
 <button class="runBtn green">2</button>
@@ -90,15 +95,14 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
 <button class="runBtn green">5</button>
 <button class="runBtn red">6=OUT</button>
 <br><br>
-<button class="blue">WD</button>
-<button class="blue">NB</button>
-<button class="yellow">UNDO BALL</button>
+<button class="blue">WIDE (WD)</button>
+<button class="blue">NO BALL (NB)</button>
+<button class="yellow">UNDO LAST BALL</button>
 </div>
 
-<div class="card">
-<h2>4. Match Controls</h2>
-<button class="green">START 2ND INNINGS</button>
-<button class="red" style="background:darkred;">RESET FULL MATCH</button>
+<div class="card" style="display:flex; justify-content:space-between;">
+<button class="green" style="width:48%;">START 2ND INNINGS</button>
+<button class="red" style="width:48%; background:darkred;">RESET FULL MATCH</button>
 </div>
 
 </div>
