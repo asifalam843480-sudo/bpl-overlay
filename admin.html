@@ -3,84 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel</title>
+<title>BPL Scorer Panel Pro</title>
 <style>
-body{background:#071b4d;font-family:Arial,sans-serif;color:white;padding:20px;}
+body{background:#0a0f24;font-family:Arial,sans-serif;color:white;padding:20px;}
 .container{max-width:1200px;margin:auto;}
-.card{background:#102b72;padding:15px;border-radius:12px;margin-bottom:15px; border:1px solid #3fa9ff;}
-h2{margin-bottom:10px; color:#ffd23f;}
-input{width:100%;padding:10px;margin-top:5px;margin-bottom:10px;border:none;border-radius:8px;box-sizing:border-box;}
-button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;border:none;border-radius:10px;}
-.runBtn{width:70px;height:60px;}
-.green{background:#1db954;color:white;}
-.red{background:#d62828;color:white;}
-.blue{background:#1976d2;color:white;}
-.yellow{background:#ffd23f;color:black;}
-.orange{background:#f77f00;color:white;width:100%;}
-.scoreBox{font-size:40px;font-weight:bold;}
+.card{background:#111936;padding:15px;border-radius:12px;margin-bottom:15px; border:1px solid #ffcc00; box-shadow: 0 0 15px rgba(255,204,0,0.1);}
+h2{margin-bottom:10px; color:#ffcc00; text-transform: uppercase; letter-spacing: 1px;}
+input{width:100%;padding:12px;margin-top:5px;margin-bottom:10px;background:#0a0f24; color:white; border:1px solid #334; border-radius:8px; font-weight:bold;}
+input:focus{outline:none; border-color:#ffcc00;}
+button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;border:none;border-radius:8px; text-transform: uppercase;}
+.runBtn{width:70px;height:60px; font-size: 22px;}
+.green{background:#00b85c;color:white;}
+.red{background:#ff2a2a;color:white;}
+.blue{background:#0073ff;color:white;}
+.yellow{background:#ffcc00;color:black;}
+.orange{background:#ff6600;color:white;width:100%;}
+.scoreBox{font-size:45px;font-weight:900; color:#fff;}
 .grid{display:grid; grid-template-columns: 1fr 1fr; gap:15px;}
+.badge{background:red; color:white; padding:2px 6px; border-radius:4px; font-size:10px; vertical-align:top;}
 </style>
 </head>
 <body>
 <div class="container">
 
 <div class="card">
-<h2>1. Match Setup & Manual Edits</h2>
-<p style="font-size:12px; color:#aaa;">Type karo aur sirf tabhi save hoga jab neechay orange button dabaoge.</p>
+<h2>1. Live Match Engine <span class="badge">AUTO-SAVE ON</span></h2>
+<p style="font-size:12px; color:#888;">Box mein naam likho, apne aap TV par update ho jayega.</p>
 <div class="grid">
     <div>
         <label>Team A Name</label>
-        <input id="teamA" value="ROYAL WARRIORS">
-        <label>Team A Logo (Upload Image)</label>
-        <input type="file" id="teamALogo" accept="image/*">
+        <input id="teamA" placeholder="Team A">
+        <label>Team A Logo</label>
+        <input type="file" id="teamALogo" accept="image/*" style="padding:5px;">
     </div>
     <div>
         <label>Team B Name</label>
-        <input id="teamB" value="TIGER STRIKERS">
-        <label>Team B Logo (Upload Image)</label>
-        <input type="file" id="teamBLogo" accept="image/*">
+        <input id="teamB" placeholder="Team B">
+        <label>Team B Logo</label>
+        <input type="file" id="teamBLogo" accept="image/*" style="padding:5px;">
     </div>
 </div>
 
 <div class="grid">
     <div>
-        <label>Striker Name (🏏)</label>
-        <input id="striker" placeholder="Striker Name">
-        <input id="strikerRuns" placeholder="Runs" type="number">
-        <input id="strikerBalls" placeholder="Balls" type="number">
+        <label style="color:#ffcc00;">Striker Name (🏏)</label>
+        <input id="striker" placeholder="Striker">
+        <div style="display:flex; gap:5px;">
+            <input id="strikerRuns" placeholder="Runs" type="number">
+            <input id="strikerBalls" placeholder="Balls" type="number">
+        </div>
     </div>
     <div>
         <label>Non-Striker Name</label>
-        <input id="nonStriker" placeholder="Non Striker Name">
-        <input id="nonStrikerRuns" placeholder="Runs" type="number">
-        <input id="nonStrikerBalls" placeholder="Balls" type="number">
+        <input id="nonStriker" placeholder="Non Striker">
+        <div style="display:flex; gap:5px;">
+            <input id="nonStrikerRuns" placeholder="Runs" type="number">
+            <input id="nonStrikerBalls" placeholder="Balls" type="number">
+        </div>
     </div>
 </div>
 
 <div class="grid">
     <div>
         <label>Bowler Name</label>
-        <input id="bowler" placeholder="Bowler Name">
-        <input id="bowlerRuns" placeholder="Runs Given" type="number">
-        <input id="bowlerWickets" placeholder="Wickets" type="number">
+        <input id="bowler" placeholder="Bowler">
+        <div style="display:flex; gap:5px;">
+            <input id="bowlerWickets" placeholder="W" type="number">
+            <input id="bowlerRuns" placeholder="R" type="number">
+        </div>
     </div>
     <div>
         <label>Target</label>
         <input id="target" placeholder="Target" type="number">
     </div>
 </div>
-<button class="orange" id="saveManualBtn">SAVE MANUAL EDITS TO OVERLAY</button>
 </div>
 
 <div class="card">
-<h2>2. Live Score Tracker</h2>
 <div class="scoreBox" id="score">0/0</div>
-<div id="overs" style="font-size:24px; color:#ffd23f;">0.0 Overs</div>
-<div id="thisOver" style="margin-top:10px; font-size:18px;">-</div>
+<div id="overs" style="font-size:24px; color:#aaa;">0.0 Overs</div>
+<div id="thisOver" style="margin-top:10px; font-size:20px; font-weight:bold; letter-spacing:3px;">-</div>
 </div>
 
 <div class="card">
-<h2>3. Scoring Buttons (Auto Math)</h2>
+<h2>3. Action Buttons</h2>
 <button class="runBtn green">0</button>
 <button class="runBtn green">1</button>
 <button class="runBtn green">2</button>
@@ -91,13 +97,13 @@ button{padding:12px;margin:5px;font-size:18px;font-weight:bold;cursor:pointer;bo
 <br><br>
 <button class="blue">WD</button>
 <button class="blue">NB</button>
-<button class="yellow">UNDO</button>
+<button class="yellow">UNDO BALL</button>
 </div>
 
 <div class="card">
-<h2>4. Innings Control</h2>
+<h2>4. Match Controls</h2>
 <button class="green">START 2ND INNINGS</button>
-<button class="red">RESET MATCH</button>
+<button class="red" style="background:darkred;">RESET FULL MATCH</button>
 </div>
 
 </div>
