@@ -7,29 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-    /* MASTER CSS INCLUDED */
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background: transparent; overflow: hidden; font-family: 'Roboto Condensed', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
 
-    /* IPL LEVEL BOTTOM BAR */
     .bottom-scorebar {
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%);
-        width:92%; height:90px;
-        background: rgba(10, 15, 30, 0.95);
-        border-top: 3px solid #ffcc00;
-        border-bottom: 1px solid rgba(255, 204, 0, 0.3);
+        width:92%; height:90px; background: rgba(10, 15, 30, 0.95);
+        border-top: 3px solid #ffcc00; border-bottom: 1px solid rgba(255, 204, 0, 0.3);
         display:flex; align-items:center;
         box-shadow: 0 -10px 40px rgba(0,0,0,0.7), 0 0 15px rgba(255, 204, 0, 0.2);
         clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%);
     }
 
-    /* TEAM SECTIONS */
     .team-section { width: 220px; display:flex; align-items:center; justify-content:center; gap:12px; padding:0 10px; }
-    .team-logo img { width: 65px; height: 65px; object-fit: contain; drop-shadow: 0 4px 6px black; }
+    .team-logo img { width: 65px; height: 65px; object-fit: contain; filter: drop-shadow(0 4px 6px black); }
     .team-name { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* THE GLOWING SCORE CENTER */
     .score-center {
         width: 200px; text-align: center;
         background: linear-gradient(180deg, rgba(255, 204, 0, 0.15) 0%, transparent 100%);
@@ -37,21 +31,16 @@
         border-left: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1);
     }
     
-    /* SHINING GOLD TEXT ANIMATION */
     .score-large { 
         font-family: 'Montserrat', sans-serif; font-size: 52px; font-weight: 900; line-height: 1;
-        background: linear-gradient(90deg, #fff, #ffcc00, #fff);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: goldShine 3s linear infinite;
-        filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.8));
+        background: linear-gradient(90deg, #fff, #ffcc00, #fff); background-size: 200% auto;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        animation: goldShine 3s linear infinite; filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.8));
     }
     @keyframes goldShine { to { background-position: 200% center; } }
     
     .overs-large { font-size: 16px; font-weight: 700; color: #ffcc00; letter-spacing: 2px; margin-top: -2px; }
 
-    /* STATS PANELS */
     .batsman-panel, .bowler-panel { width: 250px; padding: 0 20px; }
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 3px 0; }
     .batsman-name { font-size: 16px; font-weight: 700; color: #ccc; text-transform: uppercase; display: flex; align-items: center; gap:5px; }
@@ -62,7 +51,6 @@
     .bowler-name { font-size: 18px; font-weight: 700; color: #ffcc00; text-transform: uppercase; }
     .bowler-figures { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: white; letter-spacing: 1px; }
     
-    /* OVER BALLS DOTS */
     .this-over { display:flex; gap:6px; margin-top:4px; }
     .ball { 
         width: 22px; height: 22px; border-radius: 50%; background: #333; color: white;
@@ -74,7 +62,6 @@
     .ball.six { background: #7b2cbf; border-color:#9d4edd; color:white; }
     .ball.wicket { background: #d62828; border-color:#ff4d4d; color:#ffcc00; font-weight: 900;}
 
-    /* TARGET BOX */
     .need-panel { 
         width: 130px; text-align: center; background: rgba(255, 204, 0, 0.1); 
         padding: 5px; border-radius: 8px; border: 1px solid #ffcc00; margin: 0 10px;
@@ -82,7 +69,6 @@
     .need-title { font-size: 12px; font-weight: 700; color: #ffcc00; letter-spacing: 1px; }
     .need-runs { font-family: 'Montserrat', sans-serif; font-size: 30px; font-weight: 900; color: white; line-height: 1; }
 
-    /* SLEEK NEWS TICKER */
     .ticker-bar {
         position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
         width:90%; height:30px; background: #000; border-radius: 4px; overflow: hidden;
@@ -93,7 +79,6 @@
     }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* IPL 3D POPUP ANIMATIONS */
     #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
     
     @keyframes slamBlast {
@@ -119,20 +104,16 @@
 <body>
 
 <div class="overlay-container">
-    
     <div id="animation-container"></div>
-
     <div class="bottom-scorebar">
         <div class="team-section left">
             <div class="team-logo"><img id="team1Logo" src=""></div>
             <div class="team-name" id="team1Name">TEAM A</div>
         </div>
-
         <div class="score-center">
             <div id="scoreLarge" class="score-large">0/0</div>
             <div id="oversLarge" class="overs-large">0.0 OVERS</div>
         </div>
-
         <div class="batsman-panel">
             <div class="batsman-row">
                 <div class="batsman-name"><span class="striker-indicator">▶</span> <span id="batsman1">STRIKER</span></div>
@@ -143,24 +124,20 @@
                 <div class="batsman-score" id="batsman2Score">0 <span>(0)</span></div>
             </div>
         </div>
-
         <div class="need-panel" id="targetBox" style="display:none;">
             <div class="need-title">TARGET</div>
             <div id="needRuns" class="need-runs">0</div>
         </div>
-
         <div class="bowler-panel">
             <div class="bowler-name" id="bowlerName">BOWLER</div>
             <div class="bowler-figures" id="bowlerFigures">0-0</div>
             <div class="this-over" id="thisOverBalls"></div>
         </div>
-
         <div class="team-section right">
             <div class="team-name" id="team2Name">TEAM B</div>
             <div class="team-logo"><img id="team2Logo" src=""></div>
         </div>
     </div>
-
     <div class="ticker-bar">
         <div class="ticker-content">
             🏆 BHIKHANPUR PREMIUM LEAGUE LIVE 🏆 | SPONSORED BY DIGITAL PROMOTION | CONTACT : 8252001148 | LIKE & SUBSCRIBE
@@ -169,7 +146,7 @@
 </div>
 
 <script>
-let lastKnownBalls = -1; 
+let lastFlashId = 0; 
 
 function fireIPLAnimation(type) {
     const container = document.getElementById("animation-container");
@@ -188,17 +165,12 @@ function loadData(){
     const data = JSON.parse(localStorage.getItem("bplData"));
     if(!data) return;
 
-    // Trigger Animations
-    const currentBalls = data.balls || 0;
-    if (lastKnownBalls !== -1 && currentBalls > lastKnownBalls) {
-        const lastEvent = data.thisOver[data.thisOver.length - 1];
-        if (lastEvent === 4 || lastEvent === 6 || lastEvent === "W") {
-            fireIPLAnimation(lastEvent);
-        }
+    // V.I.P Animation Tracker
+    if (data.flashId && data.flashId !== lastFlashId) {
+        fireIPLAnimation(data.flashEvent);
+        lastFlashId = data.flashId;
     }
-    lastKnownBalls = currentBalls;
 
-    // Top & Bottom Scores
     const score = (data.score || 0) + "-" + (data.wickets || 0);
     const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
 
@@ -240,7 +212,14 @@ function loadData(){
     document.getElementById("thisOverBalls").innerHTML = html;
 }
 
-setInterval(loadData, 200); 
+// THE ULTIMATE BUG KILLER:
+// Yeh line system ko sone hi nahi degi. Jaise hi Admin panel mein kuch change hoga,
+// yeh turant (instantly) bina delay ke TV screen update kar dega!
+window.addEventListener('storage', loadData);
+
+// Backup system, taaki file pehli baar load hone par bhi data dikhe
+loadData();
+setInterval(loadData, 2000); 
 </script>
 </body>
 </html>
