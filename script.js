@@ -1,11 +1,12 @@
 let matchData = JSON.parse(localStorage.getItem("bplData")) || {
-  teamA: "TEAM A", teamB: "TEAM B",
+  teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
   teamALogo: "", teamBLogo: "",
   score: 0, wickets: 0, balls: 0, target: 0, innings: 1,
   thisOver: [], history: [],
   striker: "Batsman 1", nonStriker: "Batsman 2", bowler: "Bowler",
   strikerRuns: 0, strikerBalls: 0, nonStrikerRuns: 0, nonStrikerBalls: 0,
-  bowlerRuns: 0, bowlerWickets: 0
+  bowlerRuns: 0, bowlerWickets: 0,
+  flashEvent: "", flashId: 0 // <--- Naya V.I.P Animation System
 };
 
 function saveData() {
@@ -22,7 +23,6 @@ function saveHistory() {
   if (matchData.history.length > 25) matchData.history.shift();
 }
 
-// Solid Strike Rotation
 function rotateStrike() {
   let tName = matchData.striker; matchData.striker = matchData.nonStriker; matchData.nonStriker = tName;
   let tRuns = matchData.strikerRuns; matchData.strikerRuns = matchData.nonStrikerRuns; matchData.nonStrikerRuns = tRuns;
@@ -32,8 +32,14 @@ function rotateStrike() {
 function checkOverComplete() {
   if (matchData.balls > 0 && matchData.balls % 6 === 0) {
       matchData.thisOver = [];
-      rotateStrike(); // Over complete pe strike ghumti hai
+      rotateStrike(); 
   }
+}
+
+// ALARM SYSTEM FOR TV SCREEN
+function triggerAnimation(type) {
+    matchData.flashEvent = type;
+    matchData.flashId = Date.now(); // Har baar naya ID banega, toh TV screen hamesha alert hogi
 }
 
 function addRun(run) {
@@ -46,7 +52,9 @@ function addRun(run) {
   matchData.balls++;
   matchData.thisOver.push(run);
 
-  if (run % 2 !== 0) rotateStrike(); // 1, 3 run pe strike ghumti hai
+  if (run === 4 || run === 6) triggerAnimation(run); // Direct animation fire
+
+  if (run % 2 !== 0) rotateStrike(); 
   checkOverComplete();
   updateUI();
 }
@@ -58,6 +66,9 @@ function addWicket() {
   matchData.bowlerWickets++;
   matchData.balls++;
   matchData.thisOver.push("W");
+
+  triggerAnimation("W"); // Direct wicket animation fire
+
   checkOverComplete();
   updateUI();
 }
@@ -67,7 +78,6 @@ function extraBall(type) {
   matchData.score++;
   matchData.bowlerRuns++;
   matchData.thisOver.push(type);
-  // WD and NB do NOT add a ball to the over, and do NOT rotate strike
   updateUI();
 }
 
@@ -84,6 +94,7 @@ function startSecondInnings() {
   matchData.nonStrikerRuns = 0; matchData.nonStrikerBalls = 0;
   matchData.bowlerRuns = 0; matchData.bowlerWickets = 0;
   matchData.innings = 2; matchData.thisOver = []; matchData.history = [];
+  matchData.flashEvent = ""; matchData.flashId = 0;
   updateUI();
 }
 
@@ -92,10 +103,9 @@ function updateUI() {
   document.getElementById("overs").innerText = getOvers() + " Overs";
   document.getElementById("thisOver").innerText = matchData.thisOver.join(" ");
 
-  // THE MAGIC LOCK: Sirf wahi update karo jisme cursor na ho
   const setIfUnfocused = (id, val) => {
       const el = document.getElementById(id);
-      if (document.activeElement !== el) el.value = val;
+      if (el && document.activeElement !== el) el.value = val;
   };
 
   setIfUnfocused("teamA", matchData.teamA);
@@ -117,16 +127,18 @@ function updateUI() {
 document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 
-  // AUTO-SAVE LISTENERS (No more clicking "Save Edits")
   const inputIds = ["teamA", "teamB", "striker", "strikerRuns", "strikerBalls", "nonStriker", "nonStrikerRuns", "nonStrikerBalls", "bowler", "bowlerRuns", "bowlerWickets", "target"];
   
   inputIds.forEach(id => {
-      document.getElementById(id).addEventListener("input", (e) => {
-          let val = e.target.value;
-          if(e.target.type === 'number') { val = parseInt(val) || 0; }
-          matchData[id] = val;
-          saveData(); // Turant LocalStorage mein daal do
-      });
+      let el = document.getElementById(id);
+      if(el) {
+          el.addEventListener("input", (e) => {
+              let val = e.target.value;
+              if(e.target.type === 'number') { val = parseInt(val) || 0; }
+              matchData[id] = val;
+              saveData(); 
+          });
+      }
   });
 
   document.querySelectorAll(".runBtn").forEach(btn => {
@@ -146,11 +158,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const uploadLogo = (id, key) => {
-      document.getElementById(id).addEventListener("change", function(e) {
-          const reader = new FileReader();
-          reader.onload = (event) => { matchData[key] = event.target.result; saveData(); };
-          if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
-      });
+      let el = document.getElementById(id);
+      if(el) {
+          el.addEventListener("change", function(e) {
+              const reader = new FileReader();
+              reader.onload = (event) => { matchData[key] = event.target.result; saveData(); };
+              if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+          });
+      }
   };
   uploadLogo("teamALogo", "teamALogo");
   uploadLogo("teamBLogo", "teamBLogo");
