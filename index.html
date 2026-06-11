@@ -32,11 +32,13 @@
         height: 100%; display: flex; flex-direction: column; justify-content: center;
         border-left: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05);
     }
+    
     .score-large { 
-        font-family: 'Bebas Neue', cursive; font-size: 65px; color: white; line-height: 0.9;
+        font-family: 'Bebas Neue', cursive; font-size: 65px; color: white; line-height: 0.9; display: inline-block;
         background: linear-gradient(to right, #fff, #FFD700, #fff);
         background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         animation: shine 3s linear infinite; filter: drop-shadow(0px 4px 6px rgba(0,0,0,1));
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes shine { to { background-position: 200% center; } }
     .overs-large { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 900; color: #FFD700; letter-spacing: 3px; }
@@ -44,7 +46,11 @@
     .batsman-panel, .bowler-panel { width: 280px; padding: 0 25px; }
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; transition: 0.3s; }
     .batsman-name { font-size: 16px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap:8px; }
-    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 1px; }
+    
+    .batsman-score { 
+        font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 1px; display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
     .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #888; font-weight:700; letter-spacing:0px; }
 
     .on-strike { color: #fff; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4); }
@@ -55,7 +61,10 @@
     .on-strike .striker-icon { opacity: 1; }
 
     .bowler-name { font-size: 18px; font-weight: 900; color: #FFD700; text-transform: uppercase; }
-    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 32px; color: white; letter-spacing: 2px; }
+    .bowler-figures { 
+        font-family: 'Bebas Neue', cursive; font-size: 32px; color: white; letter-spacing: 2px; display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
     
     .this-over { display:flex; gap:6px; margin-top:5px; }
     .ball { 
@@ -85,14 +94,15 @@
     }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
+    /* 3D FULL SCREEN BLAST ANIMATION */
     #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     
     @keyframes smashBlast {
-        0% { transform: translate(-50%, -50%) scale(0) rotate(15deg); opacity: 0; }
-        15% { transform: translate(-50%, -50%) scale(1.1) rotate(-5deg); opacity: 1; }
-        25% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        0% { transform: translate(-50%, -50%) scale(0) rotate(25deg); opacity: 0; filter: blur(20px); }
+        15% { transform: translate(-50%, -50%) scale(1.2) rotate(-10deg); opacity: 1; filter: blur(0px); }
+        30% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
         85% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; filter:blur(0px); }
-        100% { transform: translate(-50%, -50%) scale(3); opacity: 0; filter:blur(10px); }
+        100% { transform: translate(-50%, -50%) scale(4); opacity: 0; filter:blur(15px); }
     }
 
     .ipl-graphic {
@@ -160,7 +170,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_FINAL_PRO_V3"; 
+const DB_KEY = "BPL_FINAL_PRO_V4"; 
 
 function fireIPLAnimation(type) {
     const container = document.getElementById("animation-container");
@@ -173,6 +183,17 @@ function fireIPLAnimation(type) {
 
     container.appendChild(animBox);
     setTimeout(() => { animBox.remove(); }, 3500);
+}
+
+// NUMBER POP ANIMATION LOGIC
+function animateValue(id, newValue) {
+    let el = document.getElementById(id);
+    if(!el) return;
+    if(el.innerHTML !== newValue) {
+        el.style.transform = "scale(1.4)";
+        el.innerHTML = newValue;
+        setTimeout(() => { el.style.transform = "scale(1)"; }, 300);
+    }
 }
 
 function loadData(){
@@ -191,11 +212,9 @@ function loadData(){
     }
 
     const score = (data.score || 0) + "/" + (data.wickets || 0);
-    const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
+    animateValue("scoreLarge", score);
 
-    let scoreLarge = document.getElementById("scoreLarge");
-    if(scoreLarge) scoreLarge.innerText = score;
-    
+    const overs = Math.floor((data.balls || 0)/6) + "." + ((data.balls || 0)%6);
     let oversLarge = document.getElementById("oversLarge");
     if(oversLarge) oversLarge.innerText = overs + " OVERS";
 
@@ -214,14 +233,14 @@ function loadData(){
     let b1NameDisplay = document.getElementById("b1NameDisplay");
     if(b1NameDisplay) b1NameDisplay.innerText = data.b1Name || "BATSMAN 1";
     
-    let b1ScoreDisplay = document.getElementById("b1ScoreDisplay");
-    if(b1ScoreDisplay) b1ScoreDisplay.innerHTML = `${data.b1Runs || 0} <span>(${data.b1Balls || 0})</span>`;
+    let b1ScoreText = `${data.b1Runs || 0} <span>(${data.b1Balls || 0})</span>`;
+    animateValue("b1ScoreDisplay", b1ScoreText);
     
     let b2NameDisplay = document.getElementById("b2NameDisplay");
     if(b2NameDisplay) b2NameDisplay.innerText = data.b2Name || "BATSMAN 2";
     
-    let b2ScoreDisplay = document.getElementById("b2ScoreDisplay");
-    if(b2ScoreDisplay) b2ScoreDisplay.innerHTML = `${data.b2Runs || 0} <span>(${data.b2Balls || 0})</span>`;
+    let b2ScoreText = `${data.b2Runs || 0} <span>(${data.b2Balls || 0})</span>`;
+    animateValue("b2ScoreDisplay", b2ScoreText);
 
     let rowB1 = document.getElementById("rowB1");
     let rowB2 = document.getElementById("rowB2");
@@ -238,8 +257,8 @@ function loadData(){
     let bowlerName = document.getElementById("bowlerName");
     if(bowlerName) bowlerName.innerText = data.bowler || "BOWLER";
     
-    let bowlerFigures = document.getElementById("bowlerFigures");
-    if(bowlerFigures) bowlerFigures.innerText = `${data.bowlerWickets || 0}-${data.bowlerRuns || 0}`;
+    let bowlerFigText = `${data.bowlerWickets || 0}-${data.bowlerRuns || 0}`;
+    animateValue("bowlerFigures", bowlerFigText);
 
     const targetBox = document.getElementById("targetBox");
     if(targetBox) {
