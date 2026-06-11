@@ -1,5 +1,4 @@
-// THE TITANIUM ENGINE (With Auto-Recovery)
-const DB_KEY = "BPL_FINAL_MATCH_DATA"; 
+const DB_KEY = "BPL_FINAL_PRO_V3"; // Nayi chaabi takki purana koi error wapas na aaye
 
 let defaultData = {
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
@@ -15,45 +14,43 @@ let defaultData = {
 
 let matchData;
 
-// THE AIRBAG: Agar memory me kachra hai, toh script crash hone ke bajaye reset ho jayegi
 try {
     let saved = localStorage.getItem(DB_KEY);
-    if (saved) {
-        matchData = JSON.parse(saved);
-    } else {
-        matchData = JSON.parse(JSON.stringify(defaultData));
-    }
+    if (saved) { matchData = JSON.parse(saved); } 
+    else { matchData = JSON.parse(JSON.stringify(defaultData)); }
 } catch (error) {
     matchData = JSON.parse(JSON.stringify(defaultData));
     localStorage.setItem(DB_KEY, JSON.stringify(matchData));
 }
 
 function saveData() {
-    try {
-        localStorage.setItem(DB_KEY, JSON.stringify(matchData));
-    } catch (e) {
-        console.error("Storage limit reached:", e);
-    }
+    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } 
+    catch (e) { console.error("Storage Error:", e); }
 }
 
 function getOvers() {
   return Math.floor((parseInt(matchData.balls) || 0) / 6) + "." + ((parseInt(matchData.balls) || 0) % 6);
 }
 
+// BUG 1 FIX: History mein se logo delete karna taaki memory full na ho
 function saveHistory() {
-  matchData.history.push(JSON.parse(JSON.stringify(matchData)));
-  if (matchData.history.length > 20) matchData.history.shift();
+  let snapshot = JSON.parse(JSON.stringify(matchData));
+  delete snapshot.teamALogo;
+  delete snapshot.teamBLogo;
+  matchData.history.push(snapshot);
+  if (matchData.history.length > 25) matchData.history.shift();
 }
 
 function rotateStrike() {
   matchData.onStrike = matchData.onStrike === 1 ? 2 : 1;
 }
 
-function checkOverComplete() {
-  if (matchData.balls > 0 && matchData.balls % 6 === 0) {
-      matchData.thisOver = [];
-      rotateStrike(); 
-  }
+// BUG 2 FIX: Asli cricket logic. Over tabhi saaf hoga jab usme 6 valid balls hongi aur agli ball feki jayegi.
+function clearOverIfNeeded() {
+    let legalBalls = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
+    if (legalBalls >= 6) {
+        matchData.thisOver = [];
+    }
 }
 
 function triggerAnimation(type) {
@@ -63,8 +60,9 @@ function triggerAnimation(type) {
 
 function addRun(run) {
   saveHistory();
+  clearOverIfNeeded(); // Nayi ball padte hi purana over saaf
+
   run = parseInt(run) || 0; 
-  
   matchData.score = (parseInt(matchData.score) || 0) + run;
   matchData.bowlerRuns = (parseInt(matchData.bowlerRuns) || 0) + run;
   matchData.balls = (parseInt(matchData.balls) || 0) + 1;
@@ -81,12 +79,18 @@ function addRun(run) {
   if (run === 4 || run === 6) triggerAnimation(run); 
   if (run % 2 !== 0) rotateStrike(); 
 
-  checkOverComplete();
+  // Strike changes immediately after 6th valid ball
+  if (matchData.balls > 0 && matchData.balls % 6 === 0) {
+      rotateStrike(); 
+  }
+
   updateUI();
 }
 
 function addWicket() {
   saveHistory();
+  clearOverIfNeeded();
+
   matchData.wickets = (parseInt(matchData.wickets) || 0) + 1;
   matchData.bowlerWickets = (parseInt(matchData.bowlerWickets) || 0) + 1;
   matchData.balls = (parseInt(matchData.balls) || 0) + 1;
@@ -99,12 +103,18 @@ function addWicket() {
   }
 
   triggerAnimation("W"); 
-  checkOverComplete();
+  
+  if (matchData.balls > 0 && matchData.balls % 6 === 0) {
+      rotateStrike(); 
+  }
+
   updateUI();
 }
 
 function extraBall(type) {
   saveHistory();
+  clearOverIfNeeded();
+
   matchData.score = (parseInt(matchData.score) || 0) + 1;
   matchData.bowlerRuns = (parseInt(matchData.bowlerRuns) || 0) + 1;
   matchData.thisOver.push(type);
@@ -113,7 +123,14 @@ function extraBall(type) {
 
 function undoBall() {
   if (matchData.history.length === 0) return;
+  // UNDO karte waqt logos gayab na ho jaye, uski safety
+  let oldLogoA = matchData.teamALogo;
+  let oldLogoB = matchData.teamBLogo;
+  
   matchData = matchData.history.pop();
+  
+  matchData.teamALogo = oldLogoA;
+  matchData.teamBLogo = oldLogoB;
   updateUI();
 }
 
@@ -198,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (txt === "NO BALL (NB)") btn.onclick = () => extraBall("NB");
       if (txt === "UNDO LAST BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
-      if (txt === "RESET MATCH") btn.onclick = () => { 
+      if (txt === "RESET FULL MATCH") btn.onclick = () => { 
           if(confirm("Sab delete ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } 
       };
   });
