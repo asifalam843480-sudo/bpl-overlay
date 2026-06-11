@@ -1,4 +1,4 @@
-const DB_KEY = "BPL_FINAL_PRO_V3"; // Nayi chaabi takki purana koi error wapas na aaye
+const DB_KEY = "BPL_FINAL_PRO_V4"; // Memory refresh key
 
 let defaultData = {
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
@@ -32,20 +32,20 @@ function getOvers() {
   return Math.floor((parseInt(matchData.balls) || 0) / 6) + "." + ((parseInt(matchData.balls) || 0) % 6);
 }
 
-// BUG 1 FIX: History mein se logo delete karna taaki memory full na ho
+// BUG FIX: Memory Leak destroyed. History ke andar history save nahi hogi ab.
 function saveHistory() {
   let snapshot = JSON.parse(JSON.stringify(matchData));
   delete snapshot.teamALogo;
   delete snapshot.teamBLogo;
+  delete snapshot.history; // THE MASTER FIX
   matchData.history.push(snapshot);
-  if (matchData.history.length > 25) matchData.history.shift();
+  if (matchData.history.length > 30) matchData.history.shift(); 
 }
 
 function rotateStrike() {
   matchData.onStrike = matchData.onStrike === 1 ? 2 : 1;
 }
 
-// BUG 2 FIX: Asli cricket logic. Over tabhi saaf hoga jab usme 6 valid balls hongi aur agli ball feki jayegi.
 function clearOverIfNeeded() {
     let legalBalls = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
     if (legalBalls >= 6) {
@@ -60,7 +60,7 @@ function triggerAnimation(type) {
 
 function addRun(run) {
   saveHistory();
-  clearOverIfNeeded(); // Nayi ball padte hi purana over saaf
+  clearOverIfNeeded(); 
 
   run = parseInt(run) || 0; 
   matchData.score = (parseInt(matchData.score) || 0) + run;
@@ -79,7 +79,6 @@ function addRun(run) {
   if (run === 4 || run === 6) triggerAnimation(run); 
   if (run % 2 !== 0) rotateStrike(); 
 
-  // Strike changes immediately after 6th valid ball
   if (matchData.balls > 0 && matchData.balls % 6 === 0) {
       rotateStrike(); 
   }
@@ -121,16 +120,22 @@ function extraBall(type) {
   updateUI();
 }
 
+// BUG FIX: Undo karne pe image aur array destroy nahi honge
 function undoBall() {
   if (matchData.history.length === 0) return;
-  // UNDO karte waqt logos gayab na ho jaye, uski safety
+  
   let oldLogoA = matchData.teamALogo;
   let oldLogoB = matchData.teamBLogo;
+  let remainingHistory = matchData.history;
   
-  matchData = matchData.history.pop();
+  let previousState = remainingHistory.pop();
+  
+  matchData = previousState;
   
   matchData.teamALogo = oldLogoA;
   matchData.teamBLogo = oldLogoB;
+  matchData.history = remainingHistory;
+  
   updateUI();
 }
 
@@ -216,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (txt === "UNDO LAST BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
       if (txt === "RESET FULL MATCH") btn.onclick = () => { 
-          if(confirm("Sab delete ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } 
+          if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } 
       };
   });
 
