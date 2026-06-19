@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Pro V4</title>
+<title>BPL Scorer Panel | Titanium V5</title>
 <style>
 body{background:#040914;font-family:Arial,sans-serif;color:white;padding:20px;}
 .container{max-width:1200px;margin:auto;}
@@ -31,50 +31,35 @@ button:active{transform: scale(0.95);}
 <h2>1. Live Match Engine</h2>
 <div class="grid">
     <div>
-        <label>Team A Name</label>
-        <input id="teamA" placeholder="Team A">
+        <label>Team A Name</label><input id="teamA" placeholder="Team A">
         <label style="color:#00b85c; font-size:12px;">Team A Logo</label>
         <input type="file" id="teamALogo" accept="image/*" style="padding:5px;">
     </div>
     <div>
-        <label>Team B Name</label>
-        <input id="teamB" placeholder="Team B">
+        <label>Team B Name</label><input id="teamB" placeholder="Team B">
         <label style="color:#00b85c; font-size:12px;">Team B Logo</label>
         <input type="file" id="teamBLogo" accept="image/*" style="padding:5px;">
     </div>
 </div>
-
 <div class="grid">
     <div>
-        <label>Batsman 1 <button id="btnStrike1" class="badge active">ON STRIKE (▶)</button></label>
+        <label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">ON STRIKE (▶)</button></label>
         <input id="b1Name" placeholder="Batsman 1 Name">
-        <div style="display:flex; gap:10px;">
-            <input id="b1Runs" placeholder="Runs" type="number">
-            <input id="b1Balls" placeholder="Balls" type="number">
-        </div>
+        <div style="display:flex; gap:10px;"><input id="b1Runs" placeholder="Runs" type="number"><input id="b1Balls" placeholder="Balls" type="number"></div>
     </div>
     <div>
-        <label>Batsman 2 <button id="btnStrike2" class="badge">SET STRIKE</button></label>
+        <label>Batsman 2 <button id="btnStrike2" class="badge" onclick="setStrike(2)">SET STRIKE</button></label>
         <input id="b2Name" placeholder="Batsman 2 Name">
-        <div style="display:flex; gap:10px;">
-            <input id="b2Runs" placeholder="Runs" type="number">
-            <input id="b2Balls" placeholder="Balls" type="number">
-        </div>
+        <div style="display:flex; gap:10px;"><input id="b2Runs" placeholder="Runs" type="number"><input id="b2Balls" placeholder="Balls" type="number"></div>
     </div>
 </div>
-
 <div class="grid">
     <div>
-        <label>Bowler Name</label>
-        <input id="bowler" placeholder="Bowler">
-        <div style="display:flex; gap:10px;">
-            <input id="bowlerWickets" placeholder="Wickets" type="number">
-            <input id="bowlerRuns" placeholder="Runs" type="number">
-        </div>
+        <label>Bowler Name</label><input id="bowler" placeholder="Bowler">
+        <div style="display:flex; gap:10px;"><input id="bowlerWickets" placeholder="Wickets" type="number"><input id="bowlerRuns" placeholder="Runs" type="number"></div>
     </div>
     <div>
-        <label>Target</label>
-        <input id="target" placeholder="Target" type="number">
+        <label>Target</label><input id="target" placeholder="Target" type="number">
     </div>
 </div>
 </div>
@@ -87,36 +72,150 @@ button:active{transform: scale(0.95);}
 
 <div class="card" style="text-align: center;">
 <h2>3. Action Room</h2>
-<button class="runBtn green">0</button>
-<button class="runBtn green">1</button>
-<button class="runBtn green">2</button>
-<button class="runBtn green">3</button>
-<button class="runBtn green">4</button>
-<button class="runBtn green">5</button>
-<button class="runBtn red">6=OUT</button>
+<button class="runBtn green" onclick="addRun(0)">0</button>
+<button class="runBtn green" onclick="addRun(1)">1</button>
+<button class="runBtn green" onclick="addRun(2)">2</button>
+<button class="runBtn green" onclick="addRun(3)">3</button>
+<button class="runBtn green" onclick="addRun(4)">4</button>
+<button class="runBtn green" onclick="addRun(5)">5</button>
+<button class="runBtn red" onclick="addWicket()">6=OUT</button>
 <br><br>
-<button class="blue">WIDE (WD)</button>
-<button class="blue">NO BALL (NB)</button>
-<button class="blue">5 RUNS (BYE)</button>
-<button class="yellow">UNDO LAST BALL</button>
+<button class="blue" onclick="extraBall('WD')">WIDE (WD)</button>
+<button class="blue" onclick="extraBall('NB')">NO BALL (NB)</button>
+<button class="blue" onclick="addFiveExtras('5B')">5 RUNS (BYE)</button>
+<button class="yellow" onclick="undoBall()">UNDO LAST BALL</button>
 </div>
 
-<!-- MATCH WINNER BOARD CONTROL -->
 <div class="card" style="text-align: center;">
 <h2>🏆 Match Winner Board</h2>
 <input id="winnerText" placeholder="Jaise: TIGER STRIKERS WON BY 5 WICKETS">
 <div style="display:flex; gap:10px; justify-content: center;">
-    <button id="btnShowWinner" class="green" style="padding: 10px 25px; background:#00b85c;">Show Winner Banner</button>
-    <button id="btnHideWinner" class="red" style="padding: 10px 25px; background:#ff2a2a;">Hide Banner</button>
+    <button class="green" style="padding: 10px 25px; background:#00b85c;" onclick="showWinnerBanner()">Show Winner Banner</button>
+    <button class="red" style="padding: 10px 25px; background:#ff2a2a;" onclick="hideWinnerBanner()">Hide Banner</button>
 </div>
 </div>
 
 <div class="card" style="display:flex; justify-content:space-between;">
-<button class="green" style="width:48%;">START 2ND INNINGS</button>
-<button class="red" style="width:48%; background:darkred;">RESET FULL MATCH</button>
+<button class="green" style="width:48%;" onclick="startSecondInnings()">START 2ND INNINGS</button>
+<button class="red" style="width:48%; background:darkred;" onclick="hardReset()">RESET FULL MATCH</button>
 </div>
 
 </div>
-<script src="script.js"></script>
+
+<script>
+const DB_KEY = "BPL_FINAL_PRO_V4"; 
+let defaultData = {
+  teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS", teamALogo: "", teamBLogo: "",
+  score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [],
+  b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0, b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0,
+  onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0,
+  flashEvent: "", flashId: 0, winnerText: "", showWinner: false
+};
+let matchData;
+try {
+    let saved = localStorage.getItem(DB_KEY);
+    matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+} catch (e) { matchData = JSON.parse(JSON.stringify(defaultData)); saveData(); }
+
+function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); }
+function getOvers() { return Math.floor((matchData.balls || 0) / 6) + "." + ((matchData.balls || 0) % 6); }
+function saveHistory() {
+  let snap = JSON.parse(JSON.stringify(matchData));
+  delete snap.teamALogo; delete snap.teamBLogo; delete snap.history; 
+  matchData.history.push(snap);
+  if (matchData.history.length > 30) matchData.history.shift(); 
+}
+function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
+function clearOverIfNeeded() {
+    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
+    if (legal >= 6) matchData.thisOver = [];
+}
+function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
+
+function addRun(run) {
+  saveHistory(); clearOverIfNeeded(); run = parseInt(run); 
+  matchData.score += run; matchData.bowlerRuns += run; matchData.balls += 1;
+  matchData.thisOver.push(run);
+  if (matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls += 1; } 
+  else { matchData.b2Runs += run; matchData.b2Balls += 1; }
+  if (run === 4 || run === 6) triggerAnimation(run); 
+  if (run % 2 !== 0) rotateStrike(); 
+  if (matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); 
+  updateUI();
+}
+
+function addWicket() {
+  saveHistory(); clearOverIfNeeded();
+  matchData.wickets += 1; matchData.bowlerWickets += 1; matchData.balls += 1;
+  matchData.thisOver.push("W");
+  if (matchData.onStrike === 1) matchData.b1Balls += 1; else matchData.b2Balls += 1;
+  triggerAnimation("W"); 
+  if (matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); 
+  updateUI();
+}
+
+function extraBall(type) { saveHistory(); clearOverIfNeeded(); matchData.score += 1; matchData.bowlerRuns += 1; matchData.thisOver.push(type); updateUI(); }
+function addFiveExtras(type) { saveHistory(); clearOverIfNeeded(); matchData.score += 5; matchData.bowlerRuns += 5; matchData.thisOver.push(type); updateUI(); }
+
+function undoBall() {
+  if (matchData.history.length === 0) return;
+  let oldA = matchData.teamALogo, oldB = matchData.teamBLogo, hist = matchData.history;
+  matchData = hist.pop(); matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.history = hist;
+  updateUI();
+}
+
+function startSecondInnings() {
+  matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0;
+  matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0;
+  matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; matchData.thisOver = []; matchData.history = []; matchData.showWinner = false;
+  updateUI();
+}
+
+function setStrike(playerNum) { matchData.onStrike = playerNum; updateUI(); }
+function showWinnerBanner() { matchData.showWinner = true; updateUI(); }
+function hideWinnerBanner() { matchData.showWinner = false; updateUI(); }
+function hardReset() { if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } }
+
+function updateUI() {
+  document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
+  document.getElementById("overs").innerText = getOvers() + " Overs";
+  document.getElementById("thisOver").innerText = matchData.thisOver.join(" ");
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.value = val; };
+  ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => setVal(id, matchData[id]));
+  
+  const b1 = document.getElementById("btnStrike1"), b2 = document.getElementById("btnStrike2");
+  if(matchData.onStrike === 1) { b1.className = "badge active"; b1.innerText = "ON STRIKE (▶)"; b2.className = "badge"; b2.innerText = "SET STRIKE"; } 
+  else { b2.className = "badge active"; b2.innerText = "ON STRIKE (▶)"; b1.className = "badge"; b1.innerText = "SET STRIKE"; }
+  saveData();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateUI();
+  ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => {
+      document.getElementById(id).addEventListener("input", (e) => {
+          let val = e.target.type === 'number' ? (parseInt(e.target.value) || 0) : e.target.value;
+          matchData[id] = val; saveData();
+      });
+  });
+  const uploadLogo = (id, key) => {
+      document.getElementById(id).addEventListener("change", (e) => {
+          const file = e.target.files[0]; if(!file) return;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+              const img = new Image();
+              img.onload = () => {
+                  const canvas = document.createElement("canvas");
+                  const scale = 120 / img.width; canvas.width = 120; canvas.height = img.height * scale;
+                  canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                  matchData[key] = canvas.toDataURL("image/png"); saveData();
+              };
+              img.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+      });
+  };
+  uploadLogo("teamALogo", "teamALogo"); uploadLogo("teamBLogo", "teamBLogo");
+});
+</script>
 </body>
 </html>
