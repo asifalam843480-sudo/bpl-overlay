@@ -76,6 +76,7 @@
     .ball.four { background: #00b85c; border-color:#00fa7e; color:#000; }
     .ball.six { background: #9d4edd; border-color:#c77dff; color:#fff; }
     .ball.wicket { background: #e60000; border-color:#ff4d4d; color:#FFD700; }
+    .ball.extra { background: #e67e22; border-color:#d35400; color:#fff; }
 
     .need-panel { 
         width: 140px; text-align: center; background: rgba(255, 215, 0, 0.1); 
@@ -117,12 +118,31 @@
     .ipl-graphic.four { background: linear-gradient(90deg, #001f3f, #0074D9); border-bottom: 10px solid #7FDBFF; box-shadow: 0 0 100px #0074D9; }
     .ipl-graphic.six { background: linear-gradient(90deg, #85144b, #FF4136); border-bottom: 10px solid #FFD700; box-shadow: 0 0 100px #FF4136; color:#FFD700; }
     .ipl-graphic.wicket { background: #111; color: #FF4136; border-bottom: 10px solid #FF4136; box-shadow: 0 0 100px #FF4136; }
+
+    /* NEW CHAMPION WINNER BANNER STYLE */
+    #winnerBanner {
+        display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, rgba(10, 18, 44, 0.98) 0%, rgba(4, 9, 20, 0.98) 100%);
+        border: 5px solid #ffd700; padding: 40px 60px; border-radius: 24px;
+        box-shadow: 0 0 60px rgba(255,215,0,0.4), inset 0 0 20px rgba(255,215,0,0.2);
+        text-align: center; z-index: 99999; width: 85%; max-width: 900px;
+        animation: winnerPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    #winnerTitle { color: #ffd700; font-size: 55px; font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; text-shadow: 0 0 15px rgba(255,215,0,0.6); font-family: 'Bebas Neue', cursive; }
+    #winnerDisplayHtml { color: white; font-size: 36px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+    @keyframes winnerPop { 0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
 </style>
 </head>
 <body>
 
 <div class="overlay-container">
     <div id="animation-container"></div>
+    
+    <div id="winnerBanner">
+        <h1 id="winnerTitle">🏆 MATCH CHAMPION 🏆</h1>
+        <p id="winnerDisplayHtml">TEAM NAME WON</p>
+    </div>
+
     <div class="bottom-scorebar">
         <div class="team-section left">
             <div class="team-logo"><img id="team1Logo" src=""></div>
@@ -185,7 +205,6 @@ function fireIPLAnimation(type) {
     setTimeout(() => { animBox.remove(); }, 3500);
 }
 
-// NUMBER POP ANIMATION LOGIC
 function animateValue(id, newValue) {
     let el = document.getElementById(id);
     if(!el) return;
@@ -279,11 +298,23 @@ function loadData(){
             if(ball === 4) cls += " four";
             else if(ball === 6) cls += " six";
             else if(ball === "W") cls += " wicket";
-            else if(ball === "WD" || ball === "NB") cls += " extra";
+            else if(ball === "WD" || ball === "NB" || ball === "5B") cls += " extra";
             else cls += " run";
             html += `<span class="${cls}">${ball}</span>`;
         });
         thisOverBalls.innerHTML = html;
+    }
+
+    // WINNER BANNER LIVE UPDATE
+    let winnerBanner = document.getElementById("winnerBanner");
+    let winnerDisplayHtml = document.getElementById("winnerDisplayHtml");
+    if(winnerBanner && winnerDisplayHtml) {
+        if(data.showWinner && data.winnerText) {
+            winnerBanner.style.display = "block";
+            winnerDisplayHtml.innerText = data.winnerText;
+        } else {
+            winnerBanner.style.display = "none";
+        }
     }
 }
 
