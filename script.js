@@ -1,4 +1,4 @@
-const DB_KEY = "BPL_FINAL_PRO_V4"; // Memory refresh key
+const DB_KEY = "BPL_FINAL_PRO_V4"; 
 
 let defaultData = {
   teamA: "ROYAL WARRIORS", teamB: "TIGER STRIKERS",
@@ -120,7 +120,6 @@ function extraBall(type) {
   updateUI();
 }
 
-// NEW: 5 Run Bye/Penalty Logic
 function addFiveExtras(type) {
   saveHistory();
   clearOverIfNeeded();
@@ -243,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if(strikeBtn1) strikeBtn1.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
   if(strikeBtn2) strikeBtn2.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
 
-  // Winner Board Control Buttons Mapping
   let btnShowWinner = document.getElementById("btnShowWinner");
   let btnHideWinner = document.getElementById("btnHideWinner");
   if(btnShowWinner) btnShowWinner.onclick = () => { matchData.showWinner = true; updateUI(); };
