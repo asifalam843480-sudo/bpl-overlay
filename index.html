@@ -95,7 +95,6 @@
     }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* 3D FULL SCREEN BLAST ANIMATION */
     #animation-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     
     @keyframes smashBlast {
@@ -119,14 +118,14 @@
     .ipl-graphic.six { background: linear-gradient(90deg, #85144b, #FF4136); border-bottom: 10px solid #FFD700; box-shadow: 0 0 100px #FF4136; color:#FFD700; }
     .ipl-graphic.wicket { background: #111; color: #FF4136; border-bottom: 10px solid #FF4136; box-shadow: 0 0 100px #FF4136; }
 
-    /* NEW CHAMPION WINNER BANNER STYLE */
+    /* CHAMPION BANNER UPGRADED */
     #winnerBanner {
         display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
         background: linear-gradient(135deg, rgba(10, 18, 44, 0.98) 0%, rgba(4, 9, 20, 0.98) 100%);
         border: 5px solid #ffd700; padding: 40px 60px; border-radius: 24px;
-        box-shadow: 0 0 60px rgba(255,215,0,0.4), inset 0 0 20px rgba(255,215,0,0.2);
-        text-align: center; z-index: 99999; width: 85%; max-width: 900px;
-        animation: winnerPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        box-shadow: 0 0 60px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.3);
+        text-align: center; z-index: 999999; width: 85%; max-width: 900px;
+        animation: winnerPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
     #winnerTitle { color: #ffd700; font-size: 55px; font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; text-shadow: 0 0 15px rgba(255,215,0,0.6); font-family: 'Bebas Neue', cursive; }
     #winnerDisplayHtml { color: white; font-size: 36px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 4px 8px rgba(0,0,0,0.5); }
@@ -138,6 +137,7 @@
 <div class="overlay-container">
     <div id="animation-container"></div>
     
+    <!-- MATCH WINNER DISPLAY POPUP -->
     <div id="winnerBanner">
         <h1 id="winnerTitle">🏆 MATCH CHAMPION 🏆</h1>
         <p id="winnerDisplayHtml">TEAM NAME WON</p>
@@ -225,6 +225,22 @@ function loadData(){
     
     if(!data) return; 
 
+    // CRITICAL BUG FIX: WINNER BANNER IS NOW TOP PRIORITY 1
+    let winnerBanner = document.getElementById("winnerBanner");
+    let winnerDisplayHtml = document.getElementById("winnerDisplayHtml");
+    if(winnerBanner && winnerDisplayHtml) {
+        if(data.showWinner === true || data.showWinner === "true") {
+            if(winnerBanner.style.display !== "block") {
+                winnerBanner.style.display = "block";
+            }
+            winnerDisplayHtml.innerText = data.winnerText || "Match Completed!";
+        } else {
+            if(winnerBanner.style.display !== "none") {
+                winnerBanner.style.display = "none";
+            }
+        }
+    }
+
     if (data.flashId && data.flashId !== lastFlashId) {
         fireIPLAnimation(data.flashEvent);
         lastFlashId = data.flashId;
@@ -303,18 +319,6 @@ function loadData(){
             html += `<span class="${cls}">${ball}</span>`;
         });
         thisOverBalls.innerHTML = html;
-    }
-
-    // WINNER BANNER LIVE UPDATE
-    let winnerBanner = document.getElementById("winnerBanner");
-    let winnerDisplayHtml = document.getElementById("winnerDisplayHtml");
-    if(winnerBanner && winnerDisplayHtml) {
-        if(data.showWinner && data.winnerText) {
-            winnerBanner.style.display = "block";
-            winnerDisplayHtml.innerText = data.winnerText;
-        } else {
-            winnerBanner.style.display = "none";
-        }
     }
 }
 
