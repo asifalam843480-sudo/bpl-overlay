@@ -9,7 +9,8 @@ let defaultData = {
   b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0,
   onStrike: 1, 
   bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0,
-  flashEvent: "", flashId: 0 
+  flashEvent: "", flashId: 0,
+  winnerText: "", showWinner: false
 };
 
 let matchData;
@@ -32,12 +33,11 @@ function getOvers() {
   return Math.floor((parseInt(matchData.balls) || 0) / 6) + "." + ((parseInt(matchData.balls) || 0) % 6);
 }
 
-// BUG FIX: Memory Leak destroyed. History ke andar history save nahi hogi ab.
 function saveHistory() {
   let snapshot = JSON.parse(JSON.stringify(matchData));
   delete snapshot.teamALogo;
   delete snapshot.teamBLogo;
-  delete snapshot.history; // THE MASTER FIX
+  delete snapshot.history; 
   matchData.history.push(snapshot);
   if (matchData.history.length > 30) matchData.history.shift(); 
 }
@@ -120,7 +120,17 @@ function extraBall(type) {
   updateUI();
 }
 
-// BUG FIX: Undo karne pe image aur array destroy nahi honge
+// NEW: 5 Run Bye/Penalty Logic
+function addFiveExtras(type) {
+  saveHistory();
+  clearOverIfNeeded();
+
+  matchData.score = (parseInt(matchData.score) || 0) + 5;
+  matchData.bowlerRuns = (parseInt(matchData.bowlerRuns) || 0) + 5;
+  matchData.thisOver.push(type);
+  updateUI();
+}
+
 function undoBall() {
   if (matchData.history.length === 0) return;
   
@@ -146,6 +156,7 @@ function startSecondInnings() {
   matchData.b2Runs = 0; matchData.b2Balls = 0;
   matchData.bowlerRuns = 0; matchData.bowlerWickets = 0;
   matchData.innings = 2; matchData.thisOver = []; matchData.history = [];
+  matchData.showWinner = false;
   updateUI();
 }
 
@@ -176,6 +187,7 @@ function updateUI() {
   setIfUnfocused("bowlerRuns", matchData.bowlerRuns);
   setIfUnfocused("bowlerWickets", matchData.bowlerWickets);
   setIfUnfocused("target", matchData.target);
+  setIfUnfocused("winnerText", matchData.winnerText || "");
   
   const btn1 = document.getElementById("btnStrike1");
   const btn2 = document.getElementById("btnStrike2");
@@ -194,7 +206,7 @@ function updateUI() {
 document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 
-  const inputIds = ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target"];
+  const inputIds = ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"];
   inputIds.forEach(id => {
       let el = document.getElementById(id);
       if(el) {
@@ -218,6 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let txt = btn.innerText.trim();
       if (txt === "WIDE (WD)") btn.onclick = () => extraBall("WD");
       if (txt === "NO BALL (NB)") btn.onclick = () => extraBall("NB");
+      if (txt === "5 RUNS (BYE)") btn.onclick = () => addFiveExtras("5B");
       if (txt === "UNDO LAST BALL") btn.onclick = undoBall;
       if (txt === "START 2ND INNINGS") btn.onclick = startSecondInnings;
       if (txt === "RESET FULL MATCH") btn.onclick = () => { 
@@ -229,6 +242,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let strikeBtn2 = document.getElementById("btnStrike2");
   if(strikeBtn1) strikeBtn1.addEventListener("click", () => { matchData.onStrike = 1; updateUI(); });
   if(strikeBtn2) strikeBtn2.addEventListener("click", () => { matchData.onStrike = 2; updateUI(); });
+
+  // Winner Board Control Buttons Mapping
+  let btnShowWinner = document.getElementById("btnShowWinner");
+  let btnHideWinner = document.getElementById("btnHideWinner");
+  if(btnShowWinner) btnShowWinner.onclick = () => { matchData.showWinner = true; updateUI(); };
+  if(btnHideWinner) btnHideWinner.onclick = () => { matchData.showWinner = false; updateUI(); };
 
   const uploadLogo = (id, key) => {
       let el = document.getElementById(id);
