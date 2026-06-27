@@ -1,1 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,800;1,900&display=swap');
 
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    background: transparent; /* For OBS */
+}
+
+/* --- THE BILLIONAIRE BROADCAST UI --- */
+#overlay-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    display: flex;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 10px rgba(255, 215, 0, 0.1);
+    color: white;
+    text-transform: uppercase;
+    overflow: hidden;
+}
+
+.team-info {
+    background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
+    color: black;
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 900;
+    font-size: 28px;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+}
+
+.score-box { font-size: 32px; letter-spacing: 1px; }
+.overs { font-size: 18px; color: #333; }
+
+.match-info, .bowler-info {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: #E0E0E0;
+}
+
+.bowler-info { margin-left: auto; color: #FFD700; }
+
+/* --- PREMIUM ANIMATIONS (The Drama) --- */
+#animation-layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    text-align: center;
+    width: 100%;
+}
+
+.hidden { display: none !important; }
+
+#anim-text {
+    font-size: 100px;
+    font-style: italic;
+    font-weight: 900;
+    margin: 0;
+    text-transform: uppercase;
+    opacity: 0;
+}
+
+/* Wicket / Hat-trick / Winner Animations */
+.anim-smash {
+    animation: smashIn 2.5s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
+    background: -webkit-linear-gradient(#FF0000, #8B0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255,0,0,0.8));
+}
+
+.anim-gold {
+    animation: slideUpGlow 3s ease-out forwards;
+    background: -webkit-linear-gradient(#FFF, #FFD700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255,215,0,0.9));
+}
+
+@keyframes smashIn {
+    0% { transform: scale(3); opacity: 0; filter: blur(10px); }
+    15% { transform: scale(1); opacity: 1; filter: blur(0px); }
+    80% { transform: scale(1.05); opacity: 1; filter: blur(0px); }
+    100% { transform: scale(0.5); opacity: 0; filter: blur(5px); }
+}
+
+@keyframes slideUpGlow {
+    0% { transform: translateY(100px); opacity: 0; letter-spacing: -10px; }
+    20% { transform: translateY(0); opacity: 1; letter-spacing: 5px; }
+    80% { transform: translateY(-10px); opacity: 1; letter-spacing: 5px; }
+    100% { transform: translateY(-50px); opacity: 0; filter: blur(10px); }
+}
