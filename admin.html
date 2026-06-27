@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Titanium V11</title>
+<title>BPL Scorer Panel | Ultimate Pro V5</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -22,7 +22,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 .blue { background: linear-gradient(135deg, #36d1dc, #5b86e5); color: #fff; }
 .gold { background: linear-gradient(135deg, #f12711, #f5af19); color: #fff; }
 .scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
-.badge { background: #1e293b; color: #8892b0; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; border: none; }
+.badge { background: #1e293b; color: #8892b0; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
 .badge.active { background: #ffd700; color: #000; box-shadow: 0 0 15px rgba(255,215,0,0.6); }
 .over-log { display: inline-block; padding: 5px 10px; background: #111; margin: 2px; border-radius: 5px; font-weight: bold; border: 1px solid #333; }
 </style>
@@ -33,14 +33,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <div class="card">
 <h2>1. Live Match Engine</h2>
 <div class="grid">
-    <div>
-        <label>Team A Name</label><input id="teamA">
-        <label style="color:#00b85c;">Team A Logo (Bug-Free Upload)</label><input type="file" id="teamALogo" accept="image/*">
-    </div>
-    <div>
-        <label>Team B Name</label><input id="teamB">
-        <label style="color:#00b85c;">Team B Logo (Bug-Free Upload)</label><input type="file" id="teamBLogo" accept="image/*">
-    </div>
+    <div><label>Team A Name</label><input id="teamA"><label style="color:#00b85c;">Team A Logo</label><input type="file" id="teamALogo" accept="image/*"></div>
+    <div><label>Team B Name</label><input id="teamB"><label style="color:#00b85c;">Team B Logo</label><input type="file" id="teamBLogo" accept="image/*"></div>
 </div>
 <div class="grid">
     <div>
@@ -59,7 +53,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
         <label>Bowler Name</label><input id="bowler">
         <div style="display:flex; gap:10px;"><input id="bowlerWickets" type="number" placeholder="Wickets"><input id="bowlerRuns" type="number" placeholder="Runs"></div>
     </div>
-    <div><label>Target (2nd Innings)</label><input id="target" type="number"></div>
+    <div><label>Target</label><input id="target" type="number"></div>
 </div>
 </div>
 
@@ -75,36 +69,35 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <button class="runBtn green" onclick="addRun(1)">1</button>
 <button class="runBtn green" onclick="addRun(2)">2</button>
 <button class="runBtn green" onclick="addRun(3)">3</button>
-<button class="runBtn gold" style="font-size: 30px;" onclick="addRun(4)">4</button>
-<button class="runBtn gold" style="font-size: 30px;" onclick="addRun(6)">6</button>
+<button class="runBtn green" onclick="addRun(4)">4</button>
+<button class="runBtn green" onclick="addRun(6)">6</button>
 <button class="runBtn red" onclick="addWicket('W')">OUT</button>
 <button class="runBtn red" style="font-size: 16px; background: #8b0000;" onclick="addRunOut()">RUN<br>OUT</button>
 <br><br>
-<button class="blue" onclick="extraBall('WD')">WIDE</button>
-<button class="blue" onclick="extraBall('NB')">NO BALL</button>
-<button class="blue" style="background:#8e44ad;" onclick="addLegBye(4)">4 LEG BYE</button>
+<button class="blue" onclick="extraBall('WD')">WIDE (WD)</button>
+<button class="blue" onclick="extraBall('NB')">NO BALL (NB)</button>
+<button class="blue" onclick="addBye(4, '4LB')">4 LEG BYE</button>
 <button class="blue" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
 <button class="gold" onclick="undoBall()">UNDO LAST BALL</button>
 </div>
 
 <div class="card" style="text-align: center;">
 <h2>🏆 Match Winner Board</h2>
-<input id="winnerText" placeholder="Jaise: RCB WON BY 5 WICKETS">
-<button class="green" onclick="toggleFlag('showWinner', true)">Show Winner Banner</button>
-<button class="red" onclick="toggleFlag('showWinner', false)">Hide Banner</button>
+<input id="winnerText" placeholder="Jaise: TIGER STRIKERS WON BY 5 WICKETS">
+<button class="green" onclick="showWinnerBanner()">Show Winner Banner</button>
+<button class="red" onclick="hideWinnerBanner()">Hide Banner</button>
 </div>
 
 <div class="card" style="display:flex; justify-content:space-between;">
-<button class="green" style="width:48%; background:#007bff;" onclick="startSecondInnings()">🔄 AUTO-SWAP & 2ND INNINGS</button>
+<button class="green" style="width:48%;" onclick="startSecondInnings()">START 2ND INNINGS</button>
 <button class="red" style="width:48%; background:darkred;" onclick="hardReset()">RESET FULL MATCH</button>
 </div>
 
 </div>
 
 <script>
-// EXTREMELY NEW DB KEY TO KILL OLD BUGS
-const DB_KEY = "BPL_FINAL_BEAST_V11"; 
-let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
+const DB_KEY = "BPL_PRO_V5_FINAL"; 
+let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0, b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
@@ -112,13 +105,14 @@ function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); }
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
 function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; matchData.history.push(snap); if(matchData.history.length > 30) matchData.history.shift(); }
 function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
-function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
 
-// FLAWLESS 7TH BALL LOGIC (Bowler stats stay until NEXT over starts)
-function checkAndClearOver() {
+// Smart Bowler Memory - Clears ONLY when 7th ball is thrown
+function clearOverIfNeeded() {
     let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
-    if (legal >= 6) { matchData.thisOver = []; }
+    if (legal >= 6) matchData.thisOver = [];
 }
+
+function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
 
 function checkHatTrick() {
     let over = matchData.thisOver;
@@ -130,7 +124,7 @@ function checkHatTrick() {
 }
 
 function addRun(run) {
-    saveHistory(); checkAndClearOver(); run = parseInt(run);
+    saveHistory(); clearOverIfNeeded(); run = parseInt(run);
     matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run);
     if(matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls++; } else { matchData.b2Runs += run; matchData.b2Balls++; }
     if(run === 4 || run === 6) triggerAnimation(run);
@@ -140,7 +134,7 @@ function addRun(run) {
 }
 
 function addWicket(type) {
-    saveHistory(); checkAndClearOver();
+    saveHistory(); clearOverIfNeeded();
     matchData.wickets++; matchData.bowlerWickets++; matchData.balls++; matchData.thisOver.push("W");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("W");
@@ -148,9 +142,8 @@ function addWicket(type) {
     checkHatTrick(); updateUI();
 }
 
-// RUN OUT (No Bowler Wicket)
 function addRunOut() {
-    saveHistory(); checkAndClearOver();
+    saveHistory(); clearOverIfNeeded();
     matchData.wickets++; matchData.balls++; matchData.thisOver.push("RO");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("RO");
@@ -158,36 +151,32 @@ function addRunOut() {
     checkHatTrick(); updateUI();
 }
 
-// LEG BYE (Runs to Team, NOT to Bowler or Batsman)
-function addLegBye(runs) {
-    saveHistory(); checkAndClearOver(); runs = parseInt(runs);
-    matchData.score += runs; matchData.balls++; matchData.thisOver.push(runs + "LB");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation(4); 
-    if(runs % 2 !== 0) rotateStrike();
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
+function extraBall(type) { saveHistory(); clearOverIfNeeded(); matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); updateUI(); }
 
-function extraBall(type) { saveHistory(); checkAndClearOver(); matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); updateUI(); }
-function addBye(runs, type) { saveHistory(); checkAndClearOver(); matchData.score += runs; matchData.balls++; matchData.thisOver.push(type); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
+function addBye(runs, type) { 
+    saveHistory(); clearOverIfNeeded(); 
+    matchData.score += runs; 
+    matchData.balls++; 
+    matchData.thisOver.push(type);
+    // LB/Byes do not add to bowler runs or batsman runs. Ball is counted.
+    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
+    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
+    updateUI(); 
+}
 
 function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let oldA = matchData.teamALogo, oldB = matchData.teamBLogo; matchData = hist.pop(); matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.history = hist; updateUI(); }
 
 function startSecondInnings() { 
-    if(!confirm("Start 2nd Innings? Teams and scores will swap!")) return;
-    saveHistory();
-    let tA = matchData.teamA, tB = matchData.teamB, lA = matchData.teamALogo, lB = matchData.teamBLogo;
-    matchData.teamA = tB; matchData.teamB = tA; matchData.teamALogo = lB; matchData.teamBLogo = lA;
     matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0; 
     matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0; 
     matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; 
-    matchData.thisOver = []; matchData.showWinner = false; updateUI(); 
+    matchData.thisOver = []; matchData.history = []; matchData.showWinner = false; updateUI(); 
 }
 
 function setStrike(n) { matchData.onStrike = n; updateUI(); }
-function toggleFlag(flag, state) { matchData[flag] = state; updateUI(); }
-function hardReset() { if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.clear(); location.reload(); } }
+function showWinnerBanner() { matchData.showWinner = true; updateUI(); }
+function hideWinnerBanner() { matchData.showWinner = false; updateUI(); }
+function hardReset() { if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); location.reload(); } }
 
 function updateUI() {
     document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
@@ -195,10 +184,7 @@ function updateUI() {
     let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`);
     document.getElementById("thisOver").innerHTML = html;
     
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => { 
-        let el = document.getElementById(id); 
-        if(el && document.activeElement !== el) el.value = matchData[id] || ""; 
-    });
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => { let el = document.getElementById(id); if(el && document.activeElement !== el) el.value = matchData[id]; });
     
     document.getElementById("btnStrike1").className = matchData.onStrike===1 ? "badge active" : "badge";
     document.getElementById("btnStrike2").className = matchData.onStrike===2 ? "badge active" : "badge";
@@ -211,15 +197,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // HEAVY COMPRESSION TO AVOID STORAGE CRASH
+    // Auto compression - Zero Bug Photo Upload
     const handleImage = (id, key) => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
             const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
             reader.onload = ev => { const img = new Image(); img.onload = () => { 
-                const canvas = document.createElement("canvas"); let scale = 100 / img.width; if(scale > 1) scale = 1;
+                const canvas = document.createElement("canvas"); let scale = 120 / img.width; if(scale > 1) scale = 1;
                 canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL("image/webp", 0.6); saveData(); 
+                matchData[key] = canvas.toDataURL("image/webp", 0.7); saveData(); 
             }; img.src = ev.target.result; }; reader.readAsDataURL(file);
         });
     };
