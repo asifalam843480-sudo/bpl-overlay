@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium TV Overlay V7</title>
+<title>BPL Premium TV Overlay V8</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -35,7 +35,7 @@
     .ticker-content { white-space: nowrap; font-size: 15px; font-weight: 800; color: #ffd700; line-height: 32px; letter-spacing: 2px; animation: tickerMove 25s linear infinite; }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* Broadcast Animations for 4, 6, Wicket */
+    /* Clean Slide-Up Animations for Boundary & Wicket */
     #animation-container { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; overflow: hidden; }
     .anim-graphic { font-family: 'Bebas Neue', cursive; font-size: 80px; color: white; letter-spacing: 6px; padding: 10px 80px; border-radius: 12px; text-shadow: 0 5px 15px rgba(0,0,0,1); text-transform: uppercase; opacity: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
     @keyframes slideUpFade { 0% { transform: translateY(50px) scale(0.9); opacity: 0; filter: blur(5px); } 15% { transform: translateY(0px) scale(1); opacity: 1; filter: blur(0px); } 85% { transform: translateY(0px) scale(1.05); opacity: 1; filter: blur(0px); } 100% { transform: translateY(-50px) scale(1.1); opacity: 0; filter: blur(10px); } }
@@ -43,18 +43,19 @@
     .anim-6 { background: linear-gradient(90deg, #4c0519, #e11d48, #4c0519); border-bottom: 6px solid #fbbf24; color: #fcd34d; animation: slideUpFade 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
     .anim-w { background: #000; color: #ef4444; border-bottom: 6px solid #dc2626; animation: slideUpFade 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
     .anim-ro { background: #ef4444; color: #fff; font-size: 100px; animation: slideUpFade 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    
     @keyframes megaFlash { 0% { transform: scale(0.5); opacity: 0; } 10% { transform: scale(1.2); opacity: 1; } 90% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
     .anim-hw, .anim-h4 { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; animation: megaFlash 4s forwards; border-radius: 20px; padding: 30px 100px;}
     .anim-hw { background: #dc2626; color: #fff; box-shadow: 0 0 100px #dc2626; }
     .anim-h4 { background: linear-gradient(45deg, #f59e0b, #fbbf24); color: #000; box-shadow: 0 0 100px #fbbf24; }
 
-    /* Toss Banner - Flawless Drop */
+    /* Flawless Toss Banner */
     #tossBanner { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, #0f172a, #1e293b, #0f172a); border: 2px solid #ffd700; border-left: 10px solid #ffd700; border-right: 10px solid #ffd700; padding: 20px 60px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); z-index: 200; transition: top 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease; text-align: center; opacity: 0;}
     #tossBanner.active { top: 15%; opacity: 1; }
     #tossTitle { color: #8892b0; font-size: 18px; font-weight: 900; letter-spacing: 4px; margin-bottom: 5px; text-transform: uppercase; }
     #tossResult { color: #fff; font-size: 32px; font-family: 'Bebas Neue', cursive; letter-spacing: 2px; }
 
-    /* Winner Banner */
+    /* Flawless Winner Banner */
     #winnerBanner { display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #0f172a, #020617); border: 4px solid #ffd700; padding: 50px 100px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 50px rgba(255,215,0,0.1); text-align: center; z-index: 999; animation: dropIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
     @keyframes dropIn { 0% { transform: translate(-50%, -200%); opacity: 0; } 100% { transform: translate(-50%, -50%); opacity: 1; } }
     #winnerTitle { color: #ffd700; font-size: 30px; font-weight: 900; letter-spacing: 8px; margin-bottom: 10px; }
@@ -84,7 +85,8 @@
 </div>
 
 <script>
-let lastFlashId = 0; const DB_KEY = "BPL_PRO_V7_STABLE"; 
+let lastFlashId = 0; 
+const DB_KEY = "BPL_LIVE_FINAL_V8"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -99,24 +101,44 @@ function fireAnimation(type) {
     if(box.className) { container.appendChild(box); setTimeout(() => box.remove(), 4500); }
 }
 
-function setTxt(id, val) { let el = document.getElementById(id); if(el && el.innerText != val) el.innerText = val; }
-function setHtml(id, val) { let el = document.getElementById(id); if(el && el.innerHTML != val) el.innerHTML = val; }
-function setImg(id, val) { let el = document.getElementById(id); if(el && val && el.src != val) el.src = val; }
+// BULLETPROOF DOM SYNC
+function setTxt(id, val) { 
+    let el = document.getElementById(id); 
+    if(el) { let strVal = String(val || ""); if(el.innerText !== strVal) el.innerText = strVal; }
+}
+function setHtml(id, val) { 
+    let el = document.getElementById(id); 
+    if(el) { let strVal = String(val || ""); if(el.innerHTML !== strVal) el.innerHTML = strVal; }
+}
+function setImg(id, val) { 
+    let el = document.getElementById(id); 
+    if(el) { 
+        if(!val) el.style.display = "none"; 
+        else { el.style.display = "block"; if(el.src !== val) el.src = val; }
+    }
+}
 
 function loadData() {
-    let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
+    let data; 
+    try { 
+        let saved = localStorage.getItem(DB_KEY); 
+        // Fallback safety if empty
+        if(saved) data = JSON.parse(saved); 
+        else data = { teamA: "TEAM A", teamB: "TEAM B", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0 };
+    } catch(e) { return; } 
+    if(!data) return; 
     
     // Smooth Switches
     document.getElementById("winnerBanner").style.display = data.showWinner ? "block" : "none";
-    setTxt("winnerDisplayHtml", data.winnerText || "");
+    setTxt("winnerDisplayHtml", data.winnerText);
     
     document.getElementById("tossBanner").className = data.showToss ? "active" : "";
-    setTxt("tossResult", data.tossText || "");
+    setTxt("tossResult", data.tossText);
     
     // Triggers 4/6/W animation
     if (data.flashId && data.flashId !== lastFlashId) { fireAnimation(data.flashEvent); lastFlashId = data.flashId; }
     
-    // Core Engine Sync (Lag-Free)
+    // Core Engine
     setTxt("scoreLarge", data.score + "-" + data.wickets);
     setTxt("oversLarge", Math.floor(data.balls/6) + "." + (data.balls%6) + " OVERS");
     setTxt("team1Name", data.teamA); setTxt("team2Name", data.teamB);
