@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director Panel | Premium V6</title>
+<title>BPL Director Panel | Turbo V6.1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -31,15 +31,15 @@ button:active { transform: translateY(2px); }
 <div class="container">
 
 <div class="card">
-<h2>1. Pre-Match TV Graphics (NEW)</h2>
+<h2>1. Pre-Match TV Graphics</h2>
 <div class="grid">
     <div>
         <label>Captain A Name</label><input id="captAName" placeholder="Dhoni">
-        <label style="color:#00b85c;">Captain A Photo</label><input type="file" id="captAImg" accept="image/*">
+        <label style="color:#00b85c;">Captain A Photo (Auto-compress)</label><input type="file" id="captAImg" accept="image/*">
     </div>
     <div>
         <label>Captain B Name</label><input id="captBName" placeholder="Kohli">
-        <label style="color:#00b85c;">Captain B Photo</label><input type="file" id="captBImg" accept="image/*">
+        <label style="color:#00b85c;">Captain B Photo (Auto-compress)</label><input type="file" id="captBImg" accept="image/*">
     </div>
 </div>
 <div style="display:flex; justify-content:center; gap: 10px;">
@@ -148,27 +148,26 @@ function addRun(run) {
     matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run);
     if(matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls++; } else { matchData.b2Runs += run; matchData.b2Balls++; }
     if(run === 4 || run === 6) triggerAnimation(run);
-    if(run % 2 !== 0) rotateStrike(); if(matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
+    if(run % 2 !== 0) rotateStrike(); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
 }
 
 function addWicket(type) {
     saveHistory(); clearOverIfNeeded(); matchData.wickets++; matchData.bowlerWickets++; matchData.balls++; matchData.thisOver.push("W");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("W"); if(matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
+    triggerAnimation("W"); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
 }
 
 function addRunOut() {
     saveHistory(); clearOverIfNeeded(); matchData.wickets++; matchData.balls++; matchData.thisOver.push("RO");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("RO"); if(matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
+    triggerAnimation("RO"); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); checkHatTrick(); updateUI();
 }
 
 function extraBall(type) { saveHistory(); clearOverIfNeeded(); matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); updateUI(); }
-function addBye(runs, type) { saveHistory(); clearOverIfNeeded(); matchData.score += runs; matchData.balls++; matchData.thisOver.push(type); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
+function addBye(runs, type) { saveHistory(); clearOverIfNeeded(); matchData.score += runs; matchData.balls++; matchData.thisOver.push(type); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
 
 function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let oldImages = { al: matchData.teamALogo, bl: matchData.teamBLogo, ac: matchData.captAImg, bc: matchData.captBImg }; matchData = hist.pop(); matchData.teamALogo = oldImages.al; matchData.teamBLogo = oldImages.bl; matchData.captAImg = oldImages.ac; matchData.captBImg = oldImages.bc; matchData.history = hist; updateUI(); }
 
-// ADVANCED 2ND INNINGS SWAP
 function startSecondInnings() {
     if(!confirm("Start 2nd Innings? This will swap Team A and Team B and reset scores!")) return;
     saveHistory();
@@ -177,7 +176,7 @@ function startSecondInnings() {
     matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0;
     matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0;
     matchData.b1Name = ""; matchData.b2Name = ""; matchData.bowler = ""; matchData.bowlerRuns = 0; matchData.bowlerWickets = 0;
-    matchData.innings = 2; matchData.thisOver = []; matchData.showWinner = false; updateUI();
+    matchData.innings = 2; matchData.thisOver = []; matchData.showWinner = false; matchData.showToss = false; updateUI();
 }
 
 function setStrike(n) { matchData.onStrike = n; updateUI(); }
@@ -189,7 +188,13 @@ function updateUI() {
     document.getElementById("overs").innerText = getOvers() + " Overs";
     let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`); document.getElementById("thisOver").innerHTML = html;
     
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "captAName", "captBName", "tossText"].forEach(id => { let el = document.getElementById(id); if(el && document.activeElement !== el) el.value = matchData[id] || ""; });
+    // Smart Sync: Only update fields if user isn't typing in them
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "captAName", "captBName", "tossText"].forEach(id => { 
+        let el = document.getElementById(id); 
+        if(el && document.activeElement !== el && el.value !== String(matchData[id])) {
+            el.value = matchData[id] || ""; 
+        }
+    });
     
     document.getElementById("btnStrike1").className = matchData.onStrike===1 ? "badge active" : "badge";
     document.getElementById("btnStrike2").className = matchData.onStrike===2 ? "badge active" : "badge";
@@ -202,20 +207,22 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // Auto scale to prevent Chrome storage crash
-    const handleImage = (id, key, maxWidth, format="image/png") => {
+    // Heavy duty auto-compression so LocalStorage NEVER fails
+    const handleImage = (id, key, maxWidth, format="image/webp") => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
             const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
             reader.onload = ev => { const img = new Image(); img.onload = () => { 
                 const canvas = document.createElement("canvas"); let scale = maxWidth / img.width; if(scale > 1) scale = 1;
-                canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL(format, 0.85); saveData(); 
+                canvas.width = img.width * scale; canvas.height = img.height * scale; 
+                canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
+                matchData[key] = canvas.toDataURL(format, 0.7); // 70% quality WebP saves massive space
+                saveData(); 
             }; img.src = ev.target.result; }; reader.readAsDataURL(file);
         });
     };
-    handleImage("teamALogo", "teamALogo", 150); handleImage("teamBLogo", "teamBLogo", 150);
-    handleImage("captAImg", "captAImg", 400, "image/jpeg"); handleImage("captBImg", "captBImg", 400, "image/jpeg");
+    handleImage("teamALogo", "teamALogo", 120, "image/png"); handleImage("teamBLogo", "teamBLogo", 120, "image/png");
+    handleImage("captAImg", "captAImg", 350); handleImage("captBImg", "captBImg", 350);
 });
 </script>
 </body>
