@@ -108,6 +108,7 @@
 <script>
 let lastFlashId = 0; 
 const DB_KEY = "BPL_PRO_V5_FINAL"; 
+const syncChannel = new BroadcastChannel('bpl_live_sync'); // VIP Pipeline listener
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -127,15 +128,15 @@ function fireAnimation(type) {
     }
 }
 
-function setTxt(id, val) { let el = document.getElementById(id); if(el) el.innerText = val || ""; }
-function setHtml(id, val) { let el = document.getElementById(id); if(el) el.innerHTML = val || ""; }
+function setTxt(id, val) { let el = document.getElementById(id); if(el && el.innerText !== val) el.innerText = val || ""; }
+function setHtml(id, val) { let el = document.getElementById(id); if(el && el.innerHTML !== val) el.innerHTML = val || ""; }
 function setImg(id, val) { 
     let el = document.getElementById(id); 
-    if(el) { if(!val) el.style.display = "none"; else { el.style.display = "block"; el.src = val; } }
+    if(el) { if(!val) el.style.display = "none"; else { el.style.display = "block"; if(el.src !== val) el.src = val; } }
 }
 
-function loadData() {
-    let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
+function renderData(data) {
+    if(!data) return; 
     
     let wBanner = document.getElementById("winnerBanner");
     if(wBanner) { wBanner.style.display = data.showWinner ? "block" : "none"; setTxt("winnerDisplayHtml", data.winnerText); }
@@ -164,7 +165,15 @@ function loadData() {
         }); setHtml("thisOverBalls", html);
     }
 }
-window.addEventListener('storage', loadData); setInterval(loadData, 300); loadData();
+
+// Listen to Instant Push Pipeline
+syncChannel.onmessage = (event) => { renderData(event.data); };
+
+// Initial Load fallback
+function loadInitial() {
+    try { let saved = localStorage.getItem(DB_KEY); if(saved) renderData(JSON.parse(saved)); } catch(e) {}
+}
+loadInitial();
 </script>
 </body>
 </html>
