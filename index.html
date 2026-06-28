@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay V6 - Ultra Crisp Edition</title>
+<title>BPL Premium Overlay V7 - Broadcast Standard</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background: transparent; overflow: hidden; font-family: 'Montserrat', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     
-    /* --- PREMIUM BOTTOM BAR (UNCHANGED, ALREADY PERFECT) --- */
-    .bottom-scorebar { position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:95px; background: linear-gradient(180deg, #02060f, #040f24); border-top: 3px solid #00f0ff; border-bottom: 2px solid rgba(0, 240, 255, 0.2); display:flex; align-items:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); }
+    /* --- PREMIUM BOTTOM BAR --- */
+    .bottom-scorebar { position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:95px; background: linear-gradient(180deg, rgba(2, 6, 15, 0.95), rgba(4, 15, 36, 0.98)); border-top: 3px solid #00f0ff; border-bottom: 2px solid rgba(0, 240, 255, 0.2); display:flex; align-items:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); }
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.8)); display: none; }
     .team-name { font-size: 22px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px; }
@@ -41,60 +41,73 @@
     .ticker-content { white-space: nowrap; font-size: 15px; font-weight: 800; color: #ffd700; line-height: 32px; letter-spacing: 2px; animation: tickerMove 25s linear infinite; }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* --- ZERO BLUR, PURE CRISP IN-GAME ANIMATIONS --- */
-    #animation-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
+    /* --- ICC LEVEL LOWER-THIRD HYPER-BADGES --- */
+    /* Container ab pure screen par nahi hai, balki scorebar ke theek upar lock hai */
+    #animation-container { position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; justify-content: center; align-items: flex-end; width: 100%; pointer-events: none; }
     
-    .anim-graphic { position: absolute; font-family: 'Bebas Neue', cursive; text-transform: uppercase; line-height: 1; }
+    .anim-graphic { 
+        font-family: 'Bebas Neue', cursive; 
+        font-size: 75px; /* SHARP & COMPACT */
+        letter-spacing: 4px;
+        line-height: 1;
+        text-transform: uppercase;
+        padding: 12px 60px;
+        background: linear-gradient(90deg, rgba(5,10,20,0.95) 0%, rgba(15,20,35,0.9) 100%);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(8px);
+        clip-path: polygon(25px 0, 100% 0, calc(100% - 25px) 100%, 0 100%); /* Aggressive sports angle */
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
     
-    /* 4 - SHARP BLADE SLIDE */
-    .anim-4 { font-size: 220px; color: #00f0ff; text-shadow: 4px 4px 0px #000, 8px 8px 0px rgba(0, 240, 255, 0.5); border-left: 20px solid #fff; padding-left: 20px; animation: razorSlide 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-    @keyframes razorSlide { 
-        0% { transform: translateX(-150%) skewX(-15deg); opacity: 1; } 
+    /* 4 - CYAN BULLET */
+    .anim-4 { color: #00f0ff; border-left: 12px solid #00f0ff; text-shadow: 0 0 15px rgba(0,240,255,0.5); animation: bulletSlide 3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes bulletSlide { 
+        0% { transform: translateX(-200px) skewX(-15deg); opacity: 0; } 
         15% { transform: translateX(0) skewX(-15deg); opacity: 1; } 
         85% { transform: translateX(0) skewX(-15deg); opacity: 1; } 
-        100% { transform: translateX(150%) skewX(-15deg); opacity: 1; } 
+        100% { transform: translateX(200px) skewX(-15deg); opacity: 0; } 
     }
     
-    /* 6 - SOLID 3D GOLD EXTRUSION */
-    .anim-6 { font-size: 300px; color: #ffd700; text-shadow: 2px 2px 0 #b39700, 4px 4px 0 #b39700, 6px 6px 0 #b39700, 8px 8px 0 #b39700, 10px 10px 0 #b39700, 15px 15px 30px rgba(0,0,0,0.8); animation: solidPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes solidPop { 
-        0% { transform: scale(0); opacity: 1; } 
-        15% { transform: scale(1); opacity: 1; } 
-        85% { transform: scale(1.05); opacity: 1; } 
-        100% { transform: scale(0); opacity: 1; } 
-    }
-    
-    /* WICKET - THE RED SPLIT */
-    .anim-w { font-size: 250px; color: #ff0000; font-weight: 900; text-shadow: 5px 5px 0px #000; animation: redSplit 3.5s forwards; }
-    @keyframes redSplit { 
-        0% { transform: scale(3); opacity: 0; } 
-        10% { transform: scale(1); opacity: 1; } 
-        15% { clip-path: polygon(0 0, 100% 0, 100% 45%, 0 55%); transform: translateX(-10px); } 
-        20% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateX(0); } 
+    /* 6 - GOLD DROP */
+    .anim-6 { color: #ffd700; border-left: 12px solid #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.5); animation: goldDrop 3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    @keyframes goldDrop { 
+        0% { transform: translateY(-100px) scale(0.8); opacity: 0; } 
+        15% { transform: translateY(0) scale(1.1); opacity: 1; } 
+        25% { transform: scale(1); }
         85% { transform: scale(1); opacity: 1; } 
-        100% { transform: scale(0.5); opacity: 0; } 
+        100% { transform: translateY(50px) scale(0.9); opacity: 0; } 
+    }
+    
+    /* WICKET - RED GLITCH STRIKE */
+    .anim-w { color: #ff0000; border-left: 12px solid #ff0000; text-shadow: 2px 2px 0px #fff; background: rgba(20,0,0,0.95); animation: glitchStrike 3s forwards; }
+    @keyframes glitchStrike { 
+        0% { transform: scale(1.5); opacity: 0; clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); } 
+        10% { transform: scale(1); opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } 
+        15% { transform: translateX(-10px); } 
+        20% { transform: translateX(10px); } 
+        25% { transform: translateX(0); }
+        85% { opacity: 1; transform: scale(1); } 
+        100% { transform: scale(0.8); opacity: 0; } 
     }
 
-    /* --- VIP CINEMATIC WINNER BANNER (NO BLUR) --- */
-    #winnerBanner { display: none; position: fixed; inset: 0; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+    /* --- VIP CINEMATIC WINNER BANNER (PERFECTLY SCALED) --- */
+    #winnerBanner { display: none; position: fixed; inset: 0; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; pointer-events: none; }
     
-    /* The Movie Black Bars */
-    .cinema-top, .cinema-bottom { position: absolute; left: 0; width: 100%; height: 50%; background: #030812; z-index: 1; }
-    .cinema-top { top: 0; transform: translateY(-100%); border-bottom: 4px solid #ffd700; }
-    .cinema-bottom { bottom: 0; transform: translateY(100%); border-top: 4px solid #ffd700; }
-    .winner-active .cinema-top { animation: slideDown 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-    .winner-active .cinema-bottom { animation: slideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+    .cinema-top, .cinema-bottom { position: absolute; left: 0; width: 100%; height: 50%; background: rgba(3, 8, 18, 0.95); backdrop-filter: blur(5px); z-index: 1; }
+    .cinema-top { top: 0; transform: translateY(-100%); border-bottom: 3px solid #ffd700; }
+    .cinema-bottom { bottom: 0; transform: translateY(100%); border-top: 3px solid #ffd700; }
+    .winner-active .cinema-top { animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .winner-active .cinema-bottom { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     
     @keyframes slideDown { to { transform: translateY(0); } }
     @keyframes slideUp { to { transform: translateY(0); } }
 
-    /* The Text Reveal */
-    .winner-content { z-index: 2; text-align: center; opacity: 0; transform: scale(0.8); }
-    .winner-active .winner-content { animation: textReveal 1s 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .winner-content { z-index: 2; text-align: center; opacity: 0; transform: scale(0.9); }
+    .winner-active .winner-content { animation: textReveal 1s 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes textReveal { to { opacity: 1; transform: scale(1); } }
     
-    #winnerTitle { color: #fff; font-size: 35px; letter-spacing: 25px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; text-shadow: 2px 2px 0px #000; }
-    #winnerDisplayHtml { color: #ffd700; font-size: 140px; font-family: 'Bebas Neue', cursive; text-transform: uppercase; text-shadow: 4px 4px 0px #b39700, 8px 8px 0px #000; line-height: 1; }
+    #winnerTitle { color: #fff; font-size: 28px; letter-spacing: 15px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; text-shadow: 2px 2px 0px #000; }
+    #winnerDisplayHtml { color: #ffd700; font-size: 100px; font-family: 'Bebas Neue', cursive; text-transform: uppercase; text-shadow: 2px 2px 0px #b39700, 6px 6px 15px rgba(0,0,0,0.8); line-height: 1; background: linear-gradient(180deg, #fff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 </style>
 </head>
 <body>
@@ -106,7 +119,7 @@
         <div class="cinema-top"></div>
         <div class="cinema-bottom"></div>
         <div class="winner-content">
-            <div id="winnerTitle">MATCH CHAMPION</div>
+            <div id="winnerTitle">MATCH CHAMPIONS</div>
             <div id="winnerDisplayHtml">TEAM WON</div>
         </div>
     </div>
@@ -141,15 +154,16 @@ function fireAnimation(type) {
     container.innerHTML = ""; 
     const box = document.createElement("div");
     
+    // Yaha par content aur class set hoti hai
     if(type === 4 || type === "4") { box.className = "anim-graphic anim-4"; box.innerText = "BOUNDARY FOUR"; }
     else if(type === 6 || type === "6") { box.className = "anim-graphic anim-6"; box.innerText = "MAXIMUM SIX"; }
     else if(type === "W") { box.className = "anim-graphic anim-w"; box.innerText = "WICKET"; }
     else if(type === "RO") { box.className = "anim-graphic anim-w"; box.innerText = "RUN OUT"; }
-    else if(type === "HATRICK_W") { box.className = "anim-graphic anim-w"; box.innerText = "HAT-TRICK!"; box.style.color = "#ffd700"; }
+    else if(type === "HATRICK_W") { box.className = "anim-graphic anim-w"; box.innerText = "HAT-TRICK!"; box.style.color = "#ffd700"; box.style.borderColor = "#ffd700"; }
     
     if(box.className) {
         container.appendChild(box); 
-        setTimeout(() => { if(container.contains(box)) box.remove(); }, 3500); 
+        setTimeout(() => { if(container.contains(box)) box.remove(); }, 3000); // 3 seconds me clean removal
     }
 }
 
@@ -167,7 +181,6 @@ function renderData(data) {
     if(wBanner) { 
         if(data.showWinner) {
             wBanner.style.display = "flex";
-            // Timeout hack to re-trigger CSS animations perfectly
             setTimeout(() => { wBanner.classList.add("winner-active"); }, 50);
             setTxt("winnerDisplayHtml", data.winnerText); 
         } else {
