@@ -2,89 +2,99 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay V8 - Ultimate Glass Edition</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,600;0,800;1,800&display=swap" rel="stylesheet">
+<title>BPL Premium Overlay V9 - Titanium Clarity</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background: transparent; overflow: hidden; font-family: 'Montserrat', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     
-    /* --- GLASSMORPHISM PREMIUM SCOREBAR --- */
+    /* --- TITANIUM SOLID SCOREBAR (MAXIMUM CLARITY) --- */
     .bottom-scorebar { 
-        position:absolute; bottom:50px; left:50%; transform:translateX(-50%); width:92%; height:90px; 
-        background: rgba(10, 15, 30, 0.85); /* Semi-transparent sleek dark blue */
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-top: 2px solid rgba(255, 215, 0, 0.7); /* Premium Gold border */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-        border-radius: 12px 12px 4px 4px; /* Curved modern edges */
+        position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:100px; 
+        background: linear-gradient(90deg, #020612 0%, #0a142e 50%, #020612 100%); /* Solid Dark for extreme contrast */
+        border-top: 4px solid #00f0ff; 
+        border-bottom: 4px solid #000;
         display:flex; align-items:center; 
-        box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 2px 10px rgba(255, 215, 0, 0.1); 
+        box-shadow: 0 20px 50px rgba(0,0,0,1), 0 0 15px rgba(0,240,255,0.2); 
+        border-radius: 8px;
     }
     
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
-    .team-logo img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); display: none; }
-    .team-name { font-size: 20px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; }
+    .team-logo img { width: 75px; height: 75px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
+    .team-name { font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px 0px #000; }
     
-    .score-center { width: 240px; text-align: center; background: linear-gradient(180deg, rgba(255,215,0,0.1) 0%, transparent 100%); height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1); }
-    .score-large { font-family: 'Bebas Neue', cursive; font-size: 64px; color: #ffffff; line-height: 0.9; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
-    .overs-large { font-size: 15px; font-weight: 800; color: #ffd700; letter-spacing: 3px; }
+    /* Center Score with sweeping light animation */
+    .score-center { 
+        width: 250px; text-align: center; background: #000000; height: 100%; 
+        display: flex; flex-direction: column; justify-content: center; 
+        border-left: 2px solid #00f0ff; border-right: 2px solid #00f0ff; 
+        position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,240,255,0.2);
+    }
+    .score-center::after { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); animation: sweep 3s infinite; }
+    @keyframes sweep { 100% { left: 200%; } }
     
-    .batsman-panel, .bowler-panel { width: 280px; padding: 0 25px; }
-    .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; }
-    .batsman-name { font-size: 15px; font-weight: 600; text-transform: uppercase; display: flex; align-items: center; gap:8px; }
-    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 26px; letter-spacing: 1px; }
-    .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 13px; color: #a0aabf; font-weight: 600; }
-    .on-strike { color: #ffffff; } .on-strike .batsman-score { color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.4); }
-    .off-strike { color: #7885a0; } .off-strike .batsman-score { color: #7885a0; }
-    .striker-icon { color: #00f0ff; font-size: 12px; opacity: 0; } .on-strike .striker-icon { opacity: 1; }
+    .score-large { font-family: 'Bebas Neue', cursive; font-size: 75px; color: #ffffff; line-height: 0.85; text-shadow: 4px 4px 0px #000, 0 0 20px rgba(0,240,255,0.5); padding-top: 5px; }
+    .overs-large { font-size: 17px; font-weight: 900; color: #ffd700; letter-spacing: 4px; text-shadow: 2px 2px 0px #000; }
     
-    .bowler-name { font-size: 16px; font-weight: 800; color: #ffd700; text-transform: uppercase; }
-    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 30px; color: #ffffff; letter-spacing: 2px; }
+    .batsman-panel, .bowler-panel { width: 300px; padding: 0 30px; }
+    .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 5px 0; }
+    .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; text-shadow: 2px 2px 0px #000; }
+    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 0px #000; }
+    .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #b0c4de; font-weight: 900; }
+    
+    .on-strike { color: #ffffff; } .on-strike .batsman-score { color: #00f0ff; }
+    .off-strike { color: #8892b0; } .off-strike .batsman-score { color: #8892b0; }
+    
+    /* Animated Striker Icon */
+    .striker-icon { color: #00f0ff; font-size: 14px; opacity: 0; animation: pulse 1s infinite alternate; } 
+    .on-strike .striker-icon { opacity: 1; }
+    @keyframes pulse { from { transform: scale(1); opacity: 0.5; } to { transform: scale(1.3); opacity: 1; text-shadow: 0 0 10px #00f0ff; } }
+    
+    .bowler-name { font-size: 19px; font-weight: 900; color: #ffd700; text-transform: uppercase; text-shadow: 2px 2px 0px #000; }
+    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #ffffff; letter-spacing: 2px; text-shadow: 2px 2px 0px #000; }
     
     .this-over { display:flex; gap:6px; margin-top:5px; }
-    .ball { width: 22px; height: 22px; border-radius: 4px; background: rgba(0,0,0,0.5); color: #fff; display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 800; border: 1px solid rgba(255,255,255,0.1); }
-    .ball.run { background: rgba(0, 86, 179, 0.8); } .ball.four { background: #00b85c; color:#000; border:none; box-shadow: 0 0 5px #00b85c;} .ball.six { background: #9d4edd; border:none; box-shadow: 0 0 5px #9d4edd; } .ball.wicket { background: #e60000; color:#fff; border:none; } .ball.extra { background: rgba(230, 126, 34, 0.8); }
+    .ball { width: 26px; height: 26px; border-radius: 4px; background: #111; color: #fff; display:flex; align-items:center; justify-content:center; font-size: 14px; font-weight: 900; border: 1px solid #444; box-shadow: 2px 2px 0px #000; }
+    .ball.run { background: #0056b3; border-color: #003d82; } .ball.four { background: #00b85c; color:#000; border-color: #008a45; } .ball.six { background: #9d4edd; border-color: #7209b7; } .ball.wicket { background: #e60000; color:#fff; border-color: #8b0000; } .ball.extra { background: #e67e22; border-color: #a85112; }
     
-    .need-panel { width: 140px; text-align: center; background: rgba(255, 215, 0, 0.1); padding: 5px; border-radius: 6px; border: 1px solid rgba(255,215,0,0.3); margin: 0 10px; }
-    .need-title { font-size: 11px; font-weight: 800; color: #ffd700; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 36px; color: white; line-height: 1; }
+    .need-panel { width: 150px; text-align: center; background: #1a0000; padding: 5px; border-radius: 6px; border: 2px solid #ff0000; margin: 0 15px; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+    .need-title { font-size: 13px; font-weight: 900; color: #ff4136; letter-spacing: 1px; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 42px; color: white; line-height: 1; text-shadow: 2px 2px 0px #000; }
     
-    .ticker-bar { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); width:90%; height:28px; background: rgba(0,0,0,0.9); border-radius: 14px; border:1px solid rgba(255,255,255,0.1); overflow:hidden; z-index: 100;}
-    .ticker-content { white-space: nowrap; font-size: 13px; font-weight: 600; color: #a0aabf; line-height: 28px; letter-spacing: 1px; animation: tickerMove 25s linear infinite; }
-    .ticker-highlight { color: #ffd700; font-weight: 800; }
+    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:92%; height:32px; background: #000; border-radius: 4px; border:2px solid #222; overflow:hidden; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,1);}
+    .ticker-content { white-space: nowrap; font-size: 15px; font-weight: 900; color: #ffffff; line-height: 28px; letter-spacing: 2px; animation: tickerMove 20s linear infinite; }
+    .ticker-highlight { color: #ffd700; }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* --- SLEEK BROADCAST ANIMATIONS (NO MORE SCREEN HOGGING) --- */
-    #animation-container { position: fixed; bottom: 155px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; justify-content: center; align-items: flex-end; width: 100%; pointer-events: none; }
+    /* --- SHARP BROADCAST ALERTS (HIGH VISIBILITY) --- */
+    #animation-container { position: fixed; bottom: 170px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; justify-content: center; align-items: flex-end; width: 100%; pointer-events: none; }
     
     .anim-graphic { 
-        font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 45px; letter-spacing: 8px; line-height: 1; text-transform: uppercase;
-        padding: 15px 50px; background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(10px);
-        border-radius: 8px; box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-        display: flex; align-items: center; gap: 15px; opacity: 0;
+        font-family: 'Bebas Neue', cursive; font-size: 65px; letter-spacing: 6px; line-height: 1; text-transform: uppercase;
+        padding: 10px 60px; background: #000; border: 4px solid; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        display: flex; align-items: center; opacity: 0; transform-origin: bottom;
     }
     
-    /* Sleek 4 Boundary */
-    .anim-4 { color: #00f0ff; border: 1px solid rgba(0,240,255,0.3); border-bottom: 4px solid #00f0ff; animation: sleekPop 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    /* Premium Gold 6 */
-    .anim-6 { color: #ffd700; border: 1px solid rgba(255,215,0,0.3); border-bottom: 4px solid #ffd700; animation: sleekPop 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    /* Red Wicket Cut */
-    .anim-w { color: #ffffff; background: #e60000; border-bottom: 4px solid #8b0000; animation: sleekPop 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; box-shadow: 0 10px 30px rgba(230,0,0,0.4); }
+    .anim-4 { color: #00f0ff; border-color: #00f0ff; text-shadow: 3px 3px 0px #000; animation: hardPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .anim-6 { color: #ffd700; border-color: #ffd700; text-shadow: 3px 3px 0px #000; animation: hardPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .anim-w { color: #ffffff; border-color: #ff0000; background: #660000; text-shadow: 3px 3px 0px #000; animation: hardPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-    @keyframes sleekPop { 
-        0% { transform: translateY(40px) scale(0.9); opacity: 0; filter: blur(5px); } 
-        15% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); } 
-        85% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); } 
-        100% { transform: translateY(-40px) scale(1.05); opacity: 0; filter: blur(5px); } 
+    @keyframes hardPop { 
+        0% { transform: scaleY(0); opacity: 0; } 
+        15% { transform: scaleY(1); opacity: 1; } 
+        85% { transform: scaleY(1); opacity: 1; } 
+        100% { transform: scaleY(0); opacity: 0; } 
     }
 
-    /* --- LUXURY WINNER BANNER --- */
-    #winnerBanner { display: none; position: fixed; inset: 0; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, rgba(10,15,30,0.9) 0%, rgba(0,0,0,0.98) 100%); pointer-events: none; }
+    /* --- CINEMATIC SOLID WINNER BANNER --- */
+    #winnerBanner { display: none; position: fixed; inset: 0; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; background: #020612; pointer-events: none; }
+    #winnerBanner::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 10px, transparent 10px, transparent 20px); }
     
-    .winner-content { text-align: center; opacity: 0; transform: scale(0.95); animation: luxuryReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    @keyframes luxuryReveal { to { opacity: 1; transform: scale(1); } }
+    .winner-content { text-align: center; opacity: 0; z-index: 2; transform: scale(1.5); animation: slamDown 1s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+    @keyframes slamDown { to { opacity: 1; transform: scale(1); } }
     
-    #winnerTitle { color: #a0aabf; font-size: 20px; letter-spacing: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-    #winnerDisplayHtml { color: #ffd700; font-size: 85px; font-family: 'Bebas Neue', cursive; text-transform: uppercase; text-shadow: 0 10px 30px rgba(255,215,0,0.3); line-height: 1; letter-spacing: 2px; }
+    #winnerTitle { color: #ffffff; font-size: 35px; letter-spacing: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; text-shadow: 4px 4px 0px #000; }
+    #winnerDisplayHtml { color: #ffd700; font-size: 130px; font-family: 'Bebas Neue', cursive; text-transform: uppercase; text-shadow: 8px 8px 0px #000; line-height: 1; letter-spacing: 5px; }
 </style>
 </head>
 <body>
@@ -93,7 +103,7 @@
     
     <div id="winnerBanner">
         <div class="winner-content">
-            <div id="winnerTitle">MATCH CHAMPIONS</div>
+            <div id="winnerTitle">MATCH CHAMPION</div>
             <div id="winnerDisplayHtml">TEAM WON</div>
         </div>
     </div>
@@ -115,7 +125,7 @@
             <div class="team-logo"><img id="team2Logo" src=""></div>
         </div>
     </div>
-    <div class="ticker-bar"><div class="ticker-content"><span class="ticker-highlight">🏆 BHIKHANPUR PREMIUM LEAGUE LIVE 🏆</span> &nbsp;|&nbsp; POWERED BY DIGITAL PROMOTION &nbsp;|&nbsp; FOR INQUIRIES CALL: 8252001148 &nbsp;|&nbsp; SUBSCRIBE NOW FOR MORE ACTION!</div></div>
+    <div class="ticker-bar"><div class="ticker-content"><span class="ticker-highlight">🏆 BHIKHANPUR PREMIUM LEAGUE LIVE 🏆</span> &nbsp;|&nbsp; POWERED BY DIGITAL PROMOTION &nbsp;|&nbsp; FOR INQUIRIES CALL: 8252001148</div></div>
 </div>
 
 <script>
@@ -128,10 +138,10 @@ function fireAnimation(type) {
     container.innerHTML = ""; 
     const box = document.createElement("div");
     
-    if(type === 4 || type === "4") { box.className = "anim-graphic anim-4"; box.innerHTML = "FOUR RUNS"; }
-    else if(type === 6 || type === "6") { box.className = "anim-graphic anim-6"; box.innerHTML = "SIX RUNS"; }
-    else if(type === "W") { box.className = "anim-graphic anim-w"; box.innerHTML = "WICKET"; }
-    else if(type === "RO") { box.className = "anim-graphic anim-w"; box.innerHTML = "RUN OUT"; }
+    if(type === 4 || type === "4") { box.className = "anim-graphic anim-4"; box.innerHTML = "BOUNDARY FOUR"; }
+    else if(type === 6 || type === "6") { box.className = "anim-graphic anim-6"; box.innerHTML = "MAXIMUM SIX"; }
+    else if(type === "W") { box.className = "anim-graphic anim-w"; box.innerHTML = "WICKET!"; }
+    else if(type === "RO") { box.className = "anim-graphic anim-w"; box.innerHTML = "RUN OUT!"; }
     
     if(box.className) {
         container.appendChild(box); 
