@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Ultimate Pro V5</title>
+<title>BPL Scorer Panel | Pro Broadcast V8</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
 .container { max-width: 1200px; margin: auto; }
-.card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 h2 { margin-top: 0; color: #ffd700; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; }
-label { font-size: 12px; color: #8892b0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 8px; font-weight: bold; transition: 0.3s; box-sizing: border-box; }
-input:focus { outline: none; border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+label { font-size: 12px; color: #8892b0; text-transform: uppercase; font-weight: 700; }
+input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 8px; font-weight: bold; }
+input:focus { outline: none; border-color: #ffd700; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-button { padding: 12px; margin: 5px; font-size: 16px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-button:active { transform: translateY(2px); box-shadow: none; }
+button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; }
+button:active { transform: translateY(2px); }
 .runBtn { width: 70px; height: 60px; font-size: 24px; border-radius: 12px; }
 .green { background: linear-gradient(135deg, #00b09b, #96c93d); color: #000; }
 .red { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
@@ -23,7 +23,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 .gold { background: linear-gradient(135deg, #f12711, #f5af19); color: #fff; }
 .scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
 .badge { background: #1e293b; color: #8892b0; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-.badge.active { background: #ffd700; color: #000; box-shadow: 0 0 15px rgba(255,215,0,0.6); }
+.badge.active { background: #ffd700; color: #000; }
 .over-log { display: inline-block; padding: 5px 10px; background: #111; margin: 2px; border-radius: 5px; font-weight: bold; border: 1px solid #333; }
 </style>
 </head>
@@ -76,9 +76,11 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <br><br>
 <button class="blue" onclick="extraBall('WD')">WIDE (WD)</button>
 <button class="blue" onclick="extraBall('NB')">NO BALL (NB)</button>
-<button class="blue" onclick="addBye(4, '4LB')">4 LEG BYE</button>
-<button class="blue" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
-<button class="gold" onclick="undoBall()">UNDO LAST BALL</button>
+<button class="blue" onclick="addLegBye(1)">1 LEG BYE</button>
+<button class="blue" onclick="addLegBye(4)">4 LEG BYE</button>
+<button class="gold" onclick="addFiveBye()">5 BYE (WD+4)</button> 
+<br><br>
+<button class="gold" onclick="undoBall()" style="width: 200px;">UNDO LAST BALL</button>
 </div>
 
 <div class="card" style="text-align: center;">
@@ -96,25 +98,19 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-const DB_KEY = "BPL_PRO_V5_FINAL"; 
-const syncChannel = new BroadcastChannel('bpl_live_sync'); // VIP Pipleline
+const DB_KEY = "BPL_PRO_V8_FINAL"; 
+const syncChannel = new BroadcastChannel('bpl_live_sync');
 let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0, b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 
 try { 
     let saved = localStorage.getItem(DB_KEY); 
     matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); 
-} catch(e) { 
-    matchData = JSON.parse(JSON.stringify(defaultData)); 
-}
+} catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
 function saveData() { 
-    try {
-        localStorage.setItem(DB_KEY, JSON.stringify(matchData)); 
-    } catch(e) {
-        console.warn("LocalStorage Full! But SyncChannel will still push data.");
-    }
-    syncChannel.postMessage(matchData); // Instant Push 
+    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) {}
+    syncChannel.postMessage(matchData); 
 }
 
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
@@ -122,20 +118,11 @@ function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delet
 function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
 
 function clearOverIfNeeded() {
-    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
+    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB" && b !== "5WD").length;
     if (legal >= 6) matchData.thisOver = [];
 }
 
 function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
-
-function checkHatTrick() {
-    let over = matchData.thisOver;
-    if (over.length >= 3) {
-        let last3 = over.slice(-3);
-        if (last3.every(b => b === "W" || b === "RO")) triggerAnimation("HATRICK_W");
-        if (last3.every(b => b === 4 || b === "4")) triggerAnimation("HATRICK_4");
-    }
-}
 
 function addRun(run) {
     saveHistory(); clearOverIfNeeded(); run = parseInt(run);
@@ -144,7 +131,7 @@ function addRun(run) {
     if(run === 4 || run === 6) triggerAnimation(run);
     if(run % 2 !== 0) rotateStrike();
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
 function addWicket(type) {
@@ -153,7 +140,7 @@ function addWicket(type) {
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("W");
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
 function addRunOut() {
@@ -162,18 +149,34 @@ function addRunOut() {
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("RO");
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
-function extraBall(type) { saveHistory(); clearOverIfNeeded(); matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); updateUI(); }
+function extraBall(type) { 
+    saveHistory(); clearOverIfNeeded(); 
+    matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
+    updateUI(); 
+}
 
-function addBye(runs, type) { 
+function addLegBye(runs) { 
     saveHistory(); clearOverIfNeeded(); 
     matchData.score += runs; 
     matchData.balls++; 
-    matchData.thisOver.push(type);
+    matchData.thisOver.push(runs + "LB");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
+    if(runs % 2 !== 0) rotateStrike();
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
+    if(runs === 4) triggerAnimation(4); // Show boundary animation for 4LB
+    updateUI(); 
+}
+
+// BUG FIXED: WD + 4 Byes = Score increases by 5, Bowler runs +5, NO BALL COUNT ADDED.
+function addFiveBye() { 
+    saveHistory(); clearOverIfNeeded(); 
+    matchData.score += 5; 
+    matchData.bowlerRuns += 5; // Wide runs count against bowler
+    matchData.thisOver.push("5WD"); 
+    triggerAnimation(4); // Show boundary animation for effect
     updateUI(); 
 }
 
@@ -210,19 +213,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // Aggressive nanotech compression
     const handleImage = (id, key) => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
             const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
             reader.onload = ev => { const img = new Image(); img.onload = () => { 
-                const canvas = document.createElement("canvas"); 
-                let scale = 100 / img.width; // Hard scale down to save memory
-                if(scale > 1) scale = 1;
-                canvas.width = img.width * scale; canvas.height = img.height * scale; 
-                canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL("image/webp", 0.4); // 40% quality = zero crash
-                saveData(); 
+                const canvas = document.createElement("canvas"); let scale = 120 / img.width; if(scale > 1) scale = 1;
+                canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
+                matchData[key] = canvas.toDataURL("image/webp", 0.7); saveData(); 
             }; img.src = ev.target.result; }; reader.readAsDataURL(file);
         });
     };
