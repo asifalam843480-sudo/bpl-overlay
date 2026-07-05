@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | FIFA Broadcast V10</title>
+<title>BPL Scorer Panel | FIFA Broadcast V11</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -11,7 +11,7 @@ body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; 
 .card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 h2 { margin-top: 0; color: #00f0ff; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 10px; }
 label { font-size: 12px; color: #8892b0; text-transform: uppercase; font-weight: 900; }
-input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 4px; font-weight: bold; }
+input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
 input:focus { outline: none; border-color: #00f0ff; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: pointer; border: none; border-radius: 4px; text-transform: uppercase; transition: 0.2s; }
@@ -98,8 +98,10 @@ button:active { transform: translateY(2px); }
 </div>
 
 <script>
-const DB_KEY = "BPL_FIFA_V10"; 
-const syncChannel = new BroadcastChannel('bpl_live_sync');
+const DB_KEY = "BPL_FIFA_V11"; // New Key to flush GitHub cache
+let syncChannel;
+try { syncChannel = new BroadcastChannel('bpl_live_sync'); } catch(e) { console.warn("BroadcastChannel not supported."); }
+
 let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0, b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 
@@ -110,7 +112,7 @@ try {
 
 function saveData() { 
     try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) {}
-    syncChannel.postMessage(matchData); 
+    try { if(syncChannel) syncChannel.postMessage(matchData); } catch(e) {}
 }
 
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
@@ -155,7 +157,7 @@ function addRunOut() {
 function extraBall(type) { 
     saveHistory(); clearOverIfNeeded(); 
     matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
-    triggerAnimation(type); // ADDED: Now WD and NB trigger the FIFA overlay
+    triggerAnimation(type); 
     updateUI(); 
 }
 
