@@ -24,17 +24,19 @@
             font-family: 'Montserrat', sans-serif; font-weight: 700;
         }
         input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 10px rgba(212,175,55,0.2); }
-        .btn-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px; }
+        .btn-group { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 30px; }
         button {
             background: linear-gradient(45deg, #111, #222); color: #d4af37; border: 1px solid #d4af37;
-            padding: 15px; font-size: 14px; font-weight: 900; text-transform: uppercase;
+            padding: 15px 5px; font-size: 13px; font-weight: 900; text-transform: uppercase;
             border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
         }
         button:hover { background: #d4af37; color: #000; transform: translateY(-2px); }
-        button.update-btn { background: #d4af37; color: #000; font-size: 18px; margin-top: 20px; }
+        button.update-btn { background: #d4af37; color: #000; font-size: 18px; margin-top: 20px; grid-column: span 5;}
         button.update-btn:hover { background: #fff; border-color: #fff; }
         button.danger { border-color: #ff3333; color: #ff3333; }
         button.danger:hover { background: #ff3333; color: #000; }
+        button.extra { border-color: #00e5ff; color: #00e5ff; }
+        button.extra:hover { background: #00e5ff; color: #000; }
     </style>
 </head>
 <body>
@@ -71,13 +73,13 @@
     <div class="btn-group">
         <button onclick="triggerEvent('FOUR')">Four</button>
         <button onclick="triggerEvent('SIX')">Six</button>
-        <button onclick="triggerEvent('WIDE')">Wide</button>
+        <button class="extra" onclick="triggerEvent('WIDE')">Wide</button>
+        <button class="extra" onclick="triggerEvent('NO BALL')">No Ball</button>
         <button class="danger" onclick="triggerEvent('WICKET')">Wicket</button>
     </div>
 </div>
 
 <script>
-    // Initialize scoreboard on load
     function updateScore() {
         const data = {
             team1: document.getElementById('team1').value,
@@ -85,28 +87,30 @@
             runs: document.getElementById('runs').value,
             wickets: document.getElementById('wickets').value,
             overs: document.getElementById('overs').value,
-            timestamp: Date.now() // Forces event trigger
+            timestamp: Date.now() 
         };
         localStorage.setItem('cricket_score', JSON.stringify(data));
     }
 
     function triggerEvent(eventType) {
-        // Automatically add runs/wickets for convenience
         let runsInput = document.getElementById('runs');
         let wktsInput = document.getElementById('wickets');
         
         if(eventType === 'FOUR') runsInput.value = parseInt(runsInput.value) + 4;
         if(eventType === 'SIX') runsInput.value = parseInt(runsInput.value) + 6;
-        if(eventType === 'WIDE') runsInput.value = parseInt(runsInput.value) + 1;
+        if(eventType === 'WIDE' || eventType === 'NO BALL') runsInput.value = parseInt(runsInput.value) + 1;
         if(eventType === 'WICKET') wktsInput.value = parseInt(wktsInput.value) + 1;
         
-        updateScore(); // Update board simultaneously
+        updateScore(); 
 
-        // Trigger cinematic popup
-        localStorage.setItem('cricket_event', JSON.stringify({ type: eventType, timestamp: Date.now() }));
+        // Send visual trigger type
+        let visualTheme = 'GOLD'; // Default 4 and 6
+        if(eventType === 'WICKET') visualTheme = 'RED';
+        if(eventType === 'WIDE' || eventType === 'NO BALL') visualTheme = 'BLUE';
+
+        localStorage.setItem('cricket_event', JSON.stringify({ type: eventType, theme: visualTheme, timestamp: Date.now() }));
     }
 
-    // Push initial state
     updateScore();
 </script>
 
