@@ -1,233 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | FIFA Broadcast V11</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
-body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
-.container { max-width: 1200px; margin: auto; }
-.card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-h2 { margin-top: 0; color: #00f0ff; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 10px; }
-label { font-size: 12px; color: #8892b0; text-transform: uppercase; font-weight: 900; }
-input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
-input:focus { outline: none; border-color: #00f0ff; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: pointer; border: none; border-radius: 4px; text-transform: uppercase; transition: 0.2s; }
-button:active { transform: translateY(2px); }
-.runBtn { width: 70px; height: 60px; font-size: 24px; }
-.green { background: linear-gradient(135deg, #00b09b, #96c93d); color: #000; }
-.red { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
-.blue { background: linear-gradient(135deg, #36d1dc, #5b86e5); color: #fff; }
-.gold { background: linear-gradient(135deg, #f12711, #f5af19); color: #fff; }
-.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(0,240,255,0.4); }
-.badge { background: #1e293b; color: #8892b0; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-.badge.active { background: #00f0ff; color: #000; font-weight: 900; }
-.over-log { display: inline-block; padding: 5px 10px; background: #111; margin: 2px; border-radius: 4px; font-weight: bold; border: 1px solid #333; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPL Final - Admin Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #16213e; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: #e94560; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .box { background: #0f3460; padding: 15px; border-radius: 8px; border: 1px solid #e94560; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; border: none; border-radius: 5px; font-weight: bold; }
+        input, select { background: #fff; color: #333; }
+        button { background: #e94560; color: white; cursor: pointer; text-transform: uppercase; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #ff2a4b; transform: scale(1.02); }
+        .btn-green { background: #4caf50; } .btn-green:hover { background: #45a049; }
+        .btn-red { background: #f44336; } .btn-red:hover { background: #da190b; }
+        .title { font-size: 14px; color: #aaa; text-transform: uppercase; margin-bottom: 5px; display: block; }
+    </style>
 </head>
 <body>
+
 <div class="container">
+    <h1>BPL Season 4 - Master Control</h1>
+    
+    <div class="grid">
+        <!-- SCORE CONTROLS -->
+        <div class="box">
+            <span class="title">Main Score</span>
+            <input type="text" id="batTeam" placeholder="Batting Team Name" value="TEAM A">
+            <input type="number" id="runs" placeholder="Runs" value="0">
+            <input type="number" id="wickets" placeholder="Wickets" value="0">
+            <input type="number" id="overs" placeholder="Overs" value="0" step="0.1">
+            <button onclick="updateScore()">Update Score</button>
+        </div>
 
-<div class="card">
-<h2>1. Live Match Engine (FIFA Mode)</h2>
-<div class="grid">
-    <div><label>Team A Name</label><input id="teamA"><label style="color:#00b85c;">Team A Logo</label><input type="file" id="teamALogo" accept="image/*"></div>
-    <div><label>Team B Name</label><input id="teamB"><label style="color:#00b85c;">Team B Logo</label><input type="file" id="teamBLogo" accept="image/*"></div>
-</div>
-<div class="grid">
-    <div>
-        <label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">ON STRIKE (▶)</button></label>
-        <input id="b1Name">
-        <div style="display:flex; gap:10px;"><input id="b1Runs" type="number" placeholder="Runs"><input id="b1Balls" type="number" placeholder="Balls"></div>
+        <!-- CENTER STAGE ANIMATIONS -->
+        <div class="box">
+            <span class="title">Center Screen Events (Premium)</span>
+            <button class="btn-green" onclick="triggerEvent('FOUR!')">🔥 4 RUNS 🔥</button>
+            <button class="btn-green" onclick="triggerEvent('SIX!')">🚀 6 RUNS 🚀</button>
+            <button class="btn-red" onclick="triggerEvent('WICKET!')">💀 WICKET 💀</button>
+            <button onclick="clearEvent()">Clear Center Screen</button>
+        </div>
     </div>
-    <div>
-        <label>Batsman 2 <button id="btnStrike2" class="badge" onclick="setStrike(2)">SET STRIKE</button></label>
-        <input id="b2Name">
-        <div style="display:flex; gap:10px;"><input id="b2Runs" type="number" placeholder="Runs"><input id="b2Balls" type="number" placeholder="Balls"></div>
+
+    <!-- ADVANCED PLAYER PROFILE SENDER -->
+    <div class="box" style="margin-top: 20px;">
+        <span class="title">Advanced Player Profile (Live Popup)</span>
+        <div class="grid" style="margin-bottom: 0;">
+            <div>
+                <input type="text" id="playerName" placeholder="Player Name (e.g. Virat Kohli)">
+                <input type="text" id="playerRole" placeholder="Role (e.g. Right Hand Batter)">
+                <input type="text" id="playerStats" placeholder="Stats (e.g. 54 Runs | 32 Balls)">
+            </div>
+            <div>
+                <select id="animStyle">
+                    <option value="slide-bottom">Option 1: IPL Style (Slide Bottom)</option>
+                    <option value="fly-left">Option 2: Newsflash (Fly Left)</option>
+                    <option value="fade-center">Option 3: Cinematic (Fade Center)</option>
+                </select>
+                <button class="btn-green" onclick="showProfile()">Push Profile to Live</button>
+                <button class="btn-red" onclick="hideProfile()">Hide Profile</button>
+            </div>
+        </div>
     </div>
-</div>
-<div class="grid">
-    <div>
-        <label>Bowler Name</label><input id="bowler">
-        <div style="display:flex; gap:10px;"><input id="bowlerWickets" type="number" placeholder="Wickets"><input id="bowlerRuns" type="number" placeholder="Runs"></div>
-    </div>
-    <div><label>Target</label><input id="target" type="number"></div>
-</div>
-</div>
-
-<div class="card" style="text-align: center;">
-<div class="scoreBox" id="score">0/0</div>
-<div id="overs" style="font-size:26px; color:#8892b0; font-weight:bold;">0.0 Overs</div>
-<div id="thisOver" style="margin-top:15px; min-height: 40px;"></div>
-</div>
-
-<div class="card" style="text-align: center;">
-<h2>3. Action Room</h2>
-<button class="runBtn green" onclick="addRun(0)">0</button>
-<button class="runBtn green" onclick="addRun(1)">1</button>
-<button class="runBtn green" onclick="addRun(2)">2</button>
-<button class="runBtn green" onclick="addRun(3)">3</button>
-<button class="runBtn green" onclick="addRun(4)">4</button>
-<button class="runBtn green" onclick="addRun(6)">6</button>
-<button class="runBtn red" onclick="addWicket('W')">OUT</button>
-<button class="runBtn red" style="font-size: 16px; background: #8b0000;" onclick="addRunOut()">RUN<br>OUT</button>
-<br><br>
-<button class="blue" onclick="extraBall('WD')">WIDE (WD)</button>
-<button class="blue" onclick="extraBall('NB')">NO BALL (NB)</button>
-<button class="blue" onclick="addLegBye(1)">1 LEG BYE</button>
-<button class="blue" onclick="addLegBye(4)">4 LEG BYE</button>
-<button class="gold" onclick="addFiveBye()">5 BYE (WD+4)</button> 
-<br><br>
-<button class="gold" onclick="undoBall()" style="width: 200px;">UNDO LAST BALL</button>
-</div>
-
-<div class="card" style="text-align: center;">
-<h2>🏆 Match Winner Board</h2>
-<input id="winnerText" placeholder="Jaise: TIGER STRIKERS WON BY 5 WICKETS">
-<button class="green" onclick="showWinnerBanner()">Show Winner Banner</button>
-<button class="red" onclick="hideWinnerBanner()">Hide Banner</button>
-</div>
-
-<div class="card" style="display:flex; justify-content:space-between;">
-<button class="green" style="width:48%;" onclick="startSecondInnings()">START 2ND INNINGS</button>
-<button class="red" style="width:48%; background:darkred;" onclick="hardReset()">RESET FULL MATCH</button>
-</div>
-
 </div>
 
 <script>
-const DB_KEY = "BPL_FIFA_V11"; // New Key to flush GitHub cache
-let syncChannel;
-try { syncChannel = new BroadcastChannel('bpl_live_sync'); } catch(e) { console.warn("BroadcastChannel not supported."); }
+    // Machine Gun Polling Setup - Data saved instantly to local storage
+    const DB_KEY = 'BPL_V4_FINAL_PRO';
 
-let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BATSMAN 1", b1Runs: 0, b1Balls: 0, b2Name: "BATSMAN 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
-let matchData;
+    function init() {
+        let data = JSON.parse(localStorage.getItem(DB_KEY));
+        if(!data) {
+            data = { runs: 0, wickets: 0, overs: 0, batTeam: 'TEAM A', event: '', showProfile: false, pName: '', pRole: '', pStats: '', pAnim: 'slide-bottom' };
+            localStorage.setItem(DB_KEY, JSON.stringify(data));
+        }
+        document.getElementById('runs').value = data.runs;
+        document.getElementById('wickets').value = data.wickets;
+        document.getElementById('overs').value = data.overs;
+        document.getElementById('batTeam').value = data.batTeam;
+    }
 
-try { 
-    let saved = localStorage.getItem(DB_KEY); 
-    matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); 
-} catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
+    function updateScore() {
+        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+        data.runs = document.getElementById('runs').value;
+        data.wickets = document.getElementById('wickets').value;
+        data.overs = document.getElementById('overs').value;
+        data.batTeam = document.getElementById('batTeam').value;
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
 
-function saveData() { 
-    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) {}
-    try { if(syncChannel) syncChannel.postMessage(matchData); } catch(e) {}
-}
+    function triggerEvent(eventName) {
+        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+        data.event = eventName;
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+        setTimeout(clearEvent, 4000); // Auto clear after 4 seconds
+    }
 
-function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
-function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; matchData.history.push(snap); if(matchData.history.length > 30) matchData.history.shift(); }
-function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
+    function clearEvent() {
+        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+        data.event = '';
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
 
-function clearOverIfNeeded() {
-    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB" && b !== "5WD").length;
-    if (legal >= 6) matchData.thisOver = [];
-}
+    function showProfile() {
+        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+        data.pName = document.getElementById('playerName').value;
+        data.pRole = document.getElementById('playerRole').value;
+        data.pStats = document.getElementById('playerStats').value;
+        data.pAnim = document.getElementById('animStyle').value;
+        data.showProfile = true;
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
 
-function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
+    function hideProfile() {
+        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+        data.showProfile = false;
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
 
-function addRun(run) {
-    saveHistory(); clearOverIfNeeded(); run = parseInt(run);
-    matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run);
-    if(matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls++; } else { matchData.b2Runs += run; matchData.b2Balls++; }
-    if(run === 4 || run === 6) triggerAnimation(run);
-    if(run % 2 !== 0) rotateStrike();
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
-
-function addWicket(type) {
-    saveHistory(); clearOverIfNeeded();
-    matchData.wickets++; matchData.bowlerWickets++; matchData.balls++; matchData.thisOver.push("W");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("W");
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
-
-function addRunOut() {
-    saveHistory(); clearOverIfNeeded();
-    matchData.wickets++; matchData.balls++; matchData.thisOver.push("RO");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("RO");
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
-
-function extraBall(type) { 
-    saveHistory(); clearOverIfNeeded(); 
-    matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
-    triggerAnimation(type); 
-    updateUI(); 
-}
-
-function addLegBye(runs) { 
-    saveHistory(); clearOverIfNeeded(); 
-    matchData.score += runs; 
-    matchData.balls++; 
-    matchData.thisOver.push(runs + "LB");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    if(runs % 2 !== 0) rotateStrike();
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    if(runs === 4) triggerAnimation(4); 
-    updateUI(); 
-}
-
-function addFiveBye() { 
-    saveHistory(); clearOverIfNeeded(); 
-    matchData.score += 5; 
-    matchData.bowlerRuns += 5; 
-    matchData.thisOver.push("5WD"); 
-    triggerAnimation(4); 
-    updateUI(); 
-}
-
-function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let oldA = matchData.teamALogo, oldB = matchData.teamBLogo; matchData = hist.pop(); matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.history = hist; updateUI(); }
-
-function startSecondInnings() { 
-    matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0; 
-    matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0; 
-    matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; 
-    matchData.thisOver = []; matchData.history = []; matchData.showWinner = false; updateUI(); 
-}
-
-function setStrike(n) { matchData.onStrike = n; updateUI(); }
-function showWinnerBanner() { matchData.showWinner = true; updateUI(); }
-function hideWinnerBanner() { matchData.showWinner = false; updateUI(); }
-function hardReset() { if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.removeItem(DB_KEY); matchData = JSON.parse(JSON.stringify(defaultData)); updateUI(); } }
-
-function updateUI() {
-    document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
-    document.getElementById("overs").innerText = getOvers() + " Overs";
-    let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`);
-    document.getElementById("thisOver").innerHTML = html;
-    
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => { let el = document.getElementById(id); if(el && document.activeElement !== el) el.value = matchData[id]; });
-    
-    document.getElementById("btnStrike1").className = matchData.onStrike===1 ? "badge active" : "badge";
-    document.getElementById("btnStrike2").className = matchData.onStrike===2 ? "badge active" : "badge";
-    saveData();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    updateUI();
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => {
-        document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
-    });
-    
-    const handleImage = (id, key) => {
-        let el = document.getElementById(id); if(!el) return;
-        el.addEventListener("change", e => {
-            const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
-            reader.onload = ev => { const img = new Image(); img.onload = () => { 
-                const canvas = document.createElement("canvas"); let scale = 120 / img.width; if(scale > 1) scale = 1;
-                canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL("image/webp", 0.7); saveData(); 
-            }; img.src = ev.target.result; }; reader.readAsDataURL(file);
-        });
-    };
-    handleImage("teamALogo", "teamALogo"); handleImage("teamBLogo", "teamBLogo");
-});
+    init();
 </script>
 </body>
 </html>
