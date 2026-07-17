@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Titanium V12</title>
+<title>BPL Scorer Panel | FIFA Gold Edition V13</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
 .container { max-width: 1200px; margin: auto; }
-.card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-h2 { margin-top: 0; color: #ffd700; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; }
+.card { background: linear-gradient(145deg, #0a122c, #060b19); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+h2 { margin-top: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 10px; }
 label { font-size: 12px; color: #8892b0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
 input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #02060d; color: #fff; border: 1px solid #1e293b; border-radius: 8px; font-weight: bold; transition: 0.3s; box-sizing: border-box; }
-input:focus { outline: none; border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 button { padding: 12px; margin: 5px; font-size: 16px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 button:active { transform: translateY(2px); box-shadow: none; }
@@ -20,10 +20,10 @@ button:active { transform: translateY(2px); box-shadow: none; }
 .green { background: linear-gradient(135deg, #00b09b, #96c93d); color: #000; }
 .red { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
 .blue { background: linear-gradient(135deg, #36d1dc, #5b86e5); color: #fff; }
-.gold { background: linear-gradient(135deg, #f12711, #f5af19); color: #fff; }
-.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+.gold { background: linear-gradient(135deg, #d4af37, #aa8529); color: #000; }
+.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
 .badge { background: #1e293b; color: #8892b0; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; border: none; }
-.badge.active { background: #ffd700; color: #000; box-shadow: 0 0 15px rgba(255,215,0,0.6); }
+.badge.active { background: #d4af37; color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
 .over-log { display: inline-block; padding: 5px 10px; background: #111; margin: 2px; border-radius: 5px; font-weight: bold; border: 1px solid #333; }
 </style>
 </head>
@@ -70,7 +70,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <div class="card" style="text-align: center;">
-<h2>3. Action Room</h2>
+<h2>3. Action Room (FIFA Gold Edition)</h2>
 <button class="runBtn green" onclick="addRun(0)">0</button>
 <button class="runBtn green" onclick="addRun(1)">1</button>
 <button class="runBtn green" onclick="addRun(2)">2</button>
@@ -81,7 +81,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <button class="runBtn red" style="font-size: 16px; background: #8b0000;" onclick="addRunOut()">RUN<br>OUT</button>
 <br><br>
 <button class="blue" onclick="extraBall('WD')">WIDE</button>
-<button class="blue" onclick="extraBall('NB')">NO BALL</button>
+<button class="gold" style="color:#000;" onclick="extraBall('NB')">NO BALL</button>
 <button class="blue" style="background:#8e44ad;" onclick="addLegBye(4)">4 LEG BYE</button>
 <button class="blue" style="background:#d35400;" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
 <button class="gold" onclick="undoBall()">UNDO LAST BALL</button>
@@ -102,7 +102,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-const DB_KEY = "BPL_FINAL_BEAST_V12"; 
+// V13 - STRICTEST DB KEY
+const DB_KEY = "BPL_FIFA_GOLD_V13"; 
 let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
@@ -118,15 +119,6 @@ function checkAndClearOver() {
     if (legal >= 6) { matchData.thisOver = []; }
 }
 
-function checkHatTrick() {
-    let over = matchData.thisOver;
-    if (over.length >= 3) {
-        let last3 = over.slice(-3);
-        if (last3.every(b => b === "W" || b === "RO")) triggerAnimation("HATRICK_W");
-        if (last3.every(b => b === 4 || b === "4")) triggerAnimation("HATRICK_4");
-    }
-}
-
 function addRun(run) {
     saveHistory(); checkAndClearOver(); run = parseInt(run);
     matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run);
@@ -134,7 +126,7 @@ function addRun(run) {
     if(run === 4 || run === 6) triggerAnimation(run);
     if(run % 2 !== 0) rotateStrike();
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
 function addWicket(type) {
@@ -143,7 +135,7 @@ function addWicket(type) {
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("W");
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
 function addRunOut() {
@@ -152,14 +144,13 @@ function addRunOut() {
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     triggerAnimation("RO");
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    checkHatTrick(); updateUI();
+    updateUI();
 }
 
 function addLegBye(runs) {
     saveHistory(); checkAndClearOver(); runs = parseInt(runs);
     matchData.score += runs; matchData.balls++; matchData.thisOver.push(runs + "LB");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("LB"); 
     if(runs % 2 !== 0) rotateStrike();
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
     updateUI();
@@ -168,18 +159,14 @@ function addLegBye(runs) {
 function extraBall(type) { 
     saveHistory(); checkAndClearOver(); 
     matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
-    triggerAnimation(type); // Triggers Wide/NB animation
+    if(type === 'NB') triggerAnimation('NB'); // Only trigger NB for overlay
     updateUI(); 
 }
 
-// 💥 BUG FIXED: 5 BYE (WD+4) - Ball will NOT be added anymore!
 function addBye(runs, type) { 
     saveHistory(); checkAndClearOver(); 
     matchData.score += runs; 
-    // NO matchData.balls++ (Legal ball count remains same)
-    // NO Batsman ball count increment
     matchData.thisOver.push(type); 
-    triggerAnimation("WD4"); // Special animation for 5 Runs
     updateUI(); 
 }
 
