@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay V12</title>
+<title>BPL Premium Overlay | FIFA Gold Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background: transparent; overflow: hidden; font-family: 'Montserrat', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     
-    /* Bottom Bar */
-    .bottom-scorebar { position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:95px; background: linear-gradient(180deg, rgba(2, 6, 15, 0.95), rgba(4, 15, 36, 0.98)); border-top: 3px solid #d4af37; border-bottom: 2px solid rgba(212, 175, 55, 0.2); display:flex; align-items:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(212, 175, 55, 0.2); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); z-index:100;}
+    /* Bottom Bar - Gold Accents */
+    .bottom-scorebar { position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:95px; background: linear-gradient(180deg, rgba(5, 5, 5, 0.95), rgba(15, 15, 15, 0.98)); border-top: 3px solid #d4af37; border-bottom: 2px solid rgba(212, 175, 55, 0.2); display:flex; align-items:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(212, 175, 55, 0.2); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); z-index:100;}
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.8)); display: none; }
     .team-name { font-size: 22px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 4px 6px rgba(0,0,0,0.8); }
     
-    .score-center { width: 240px; text-align: center; background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 80%); height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(255,255,255,0.08); border-right: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
+    .score-center { width: 240px; text-align: center; background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 80%); height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(255,255,255,0.08); border-right: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
     .score-large { font-family: 'Bebas Neue', cursive; font-size: 68px; color: white; line-height: 0.9; text-shadow: 0 5px 15px rgba(0,0,0,1); transition: 0.3s; }
     .overs-large { font-size: 16px; font-weight: 900; color: #d4af37; letter-spacing: 3px; }
     
@@ -43,139 +43,85 @@
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
     /* =========================================
-       🎬 FULL HD CINEMATIC ANIMATIONS (PREMIUM)
+       🎮 FIFA GOLD PACK ANIMATION (4, 6, W, RO, NB)
        ========================================= */
     #animation-container { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
     
-    .anim-graphic { 
-        font-family: 'Bebas Neue', cursive; 
-        font-size: 150px; 
-        letter-spacing: 10px; 
-        padding: 30px 120px; 
-        border-radius: 12px; 
-        text-transform: uppercase; 
-        opacity: 0; 
-        box-shadow: 0 30px 60px rgba(0,0,0,0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .fifa-card {
+        position: relative;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1c1a15 100%);
+        border: 3px solid #d4af37;
+        padding: 30px 100px;
+        transform: skewX(-12deg);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(212, 175, 55, 0.3);
+        overflow: hidden;
+        animation: fifaReveal 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        display: flex; align-items: center; justify-content: center;
     }
     
-    /* Elegant Gold Pop for 4 */
-    @keyframes cinematicPop { 
-        0% { transform: scale(0.5) translateY(100px); opacity: 0; filter: blur(10px); } 
-        15% { transform: scale(1.1) translateY(0); opacity: 1; filter: blur(0px); } 
-        85% { transform: scale(1) translateY(0); opacity: 1; } 
-        100% { transform: scale(1.3) translateY(-50px); opacity: 0; filter: blur(5px); } 
-    }
-    .anim-4 { 
-        background: linear-gradient(135deg, #111, #2a2a2a); 
-        border-left: 10px solid #d4af37; 
-        color: #d4af37; 
-        animation: cinematicPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
-        text-shadow: 0 5px 20px rgba(212,175,55,0.5);
+    /* The Sweep Shine like unpacking a legendary player */
+    .fifa-card::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        transform: skewX(-20deg);
+        animation: fifaShine 2.5s infinite;
     }
     
-    /* Aggressive Shake for 6 */
-    @keyframes blastShake { 
-        0% { transform: scale(0.2); opacity: 0; } 
-        10% { transform: scale(1.2) rotate(3deg); opacity: 1; } 
-        15% { transform: scale(0.9) rotate(-3deg); } 
-        20% { transform: scale(1) rotate(0deg); } 
-        85% { transform: scale(1); opacity: 1; } 
-        100% { transform: scale(2); opacity: 0; filter: blur(15px); } 
-    }
-    .anim-6 { 
-        background: linear-gradient(135deg, #2b0000, #1a0000); 
-        border-left: 10px solid #ff3333; 
-        color: #ff3333; 
-        animation: blastShake 3.5s forwards; 
-        text-shadow: 0 10px 30px rgba(255,0,0,0.8);
+    .fifa-text {
+        transform: skewX(12deg); /* Straightens text inside skewed box */
+        font-family: 'Bebas Neue', cursive;
+        font-size: 140px;
+        background: linear-gradient(to bottom, #fcf6ba, #bf953f, #fbf5b7);
+        -webkit-background-clip: text; color: transparent;
+        text-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        margin: 0; letter-spacing: 10px;
     }
 
-    /* Glitch Impact for Wicket / Run Out */
-    @keyframes glitchFatal { 
-        0% { transform: scale(0.8) skewX(20deg); opacity: 0; } 
-        10% { transform: scale(1.1) skewX(-10deg); opacity: 1; filter: hue-rotate(90deg); } 
-        20% { transform: scale(1) skewX(0); } 
-        85% { transform: scale(1); opacity: 1; } 
-        100% { transform: translateY(100px); opacity: 0; } 
-    }
-    .anim-w { 
-        background: #050505; 
-        border: 4px solid #ff003c; 
-        color: #ff003c; 
-        animation: glitchFatal 3.5s forwards; 
-        box-shadow: 0 0 50px rgba(255,0,60,0.6), inset 0 0 20px rgba(255,0,60,0.3); 
-    }
-    .anim-ro { 
-        background: #fff; 
-        color: #ff0000; 
-        border-bottom: 15px solid #000; 
-        animation: glitchFatal 3.5s forwards; 
-        box-shadow: inset 0 0 50px #ff0000; 
-    }
+    /* Color variations inside FIFA style */
+    .fifa-card.danger { border-color: #ff1a1a; box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(255, 26, 26, 0.4); }
+    .fifa-card.danger .fifa-text { background: linear-gradient(to bottom, #ff4d4d, #990000); -webkit-background-clip: text; }
+    
+    .fifa-card.alert { border-color: #00ffff; box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(0, 255, 255, 0.3); }
+    .fifa-card.alert .fifa-text { background: linear-gradient(to bottom, #ccffff, #009999); -webkit-background-clip: text; }
 
-    /* Glassmorphism for Wide / Extras */
-    @keyframes smoothSlide { 
-        0% { transform: translateY(-50px); opacity: 0; } 
-        15% { transform: translateY(0); opacity: 1; } 
-        85% { transform: translateY(0); opacity: 1; } 
-        100% { transform: translateY(-50px); opacity: 0; } 
+    @keyframes fifaReveal { 
+        0% { transform: scale(0.4) skewX(-12deg) translateY(100px); opacity: 0; filter: contrast(200%); } 
+        15% { transform: scale(1.1) skewX(-12deg) translateY(0); opacity: 1; filter: contrast(100%); } 
+        85% { transform: scale(1) skewX(-12deg) translateY(0); opacity: 1; } 
+        100% { transform: scale(1.4) skewX(-12deg) translateY(-50px); opacity: 0; filter: blur(10px); } 
     }
-    .anim-wd { 
-        background: rgba(0, 240, 255, 0.1); 
-        backdrop-filter: blur(15px); 
-        -webkit-backdrop-filter: blur(15px); 
-        border: 2px solid #00ffff; 
-        color: #00ffff; 
-        animation: smoothSlide 3.5s forwards; 
-        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.4);
-    }
-    .anim-lb {
-        background: rgba(142, 68, 173, 0.1);
-        backdrop-filter: blur(15px);
-        border: 2px solid #8e44ad;
-        color: #d2b4de;
-        animation: smoothSlide 3.5s forwards;
-    }
+    @keyframes fifaShine { 0% { left: -100%; } 100% { left: 200%; } }
 
     /* =========================================
-       🏆 PREMIUM WINNER BOARD
+       🏆 ADVANCED MATCH WINNER BANNER
        ========================================= */
     #winnerBanner { 
         display: none; 
         position: fixed; 
-        top: 35%; 
-        left: 50%; 
-        transform: translate(-50%, -50%); 
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); 
-        border: 3px solid #d4af37; 
-        padding: 50px 100px; 
-        border-radius: 20px; 
-        box-shadow: 0 30px 80px rgba(0,0,0,0.9), inset 0 0 60px rgba(212,175,55,0.2); 
-        text-align: center; 
+        top: 40%; left: 50%; transform: translate(-50%, -50%); 
+        width: 100vw; text-align: center; 
+        background: linear-gradient(90deg, transparent, rgba(10, 8, 0, 0.95), rgba(10, 8, 0, 0.95), transparent); 
+        border-top: 5px solid #d4af37; border-bottom: 5px solid #d4af37; 
+        padding: 50px 0; 
         z-index: 999999; 
-        animation: winnerSweep 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        animation: epicDrop 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; 
         overflow: hidden; 
+        box-shadow: 0 0 100px rgba(212, 175, 55, 0.4);
     }
-    /* Gold sweeping shine */
-    #winnerBanner::after { 
-        content: ''; 
-        position: absolute; 
-        top: 0; 
-        left: -150%; 
-        width: 50%; 
-        height: 100%; 
-        background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent); 
-        transform: skewX(-25deg);
-        animation: sweepShine 3s infinite 2s; 
-    }
-    @keyframes sweepShine { 0% { left: -150%; } 100% { left: 200%; } }
-    @keyframes winnerSweep { 0% { transform: translate(-50%, 100px) scale(0.8); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
     
-    #winnerTitle { position: relative; color: #888; font-size: 25px; letter-spacing: 12px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif; font-weight:900; }
-    #winnerDisplayHtml { position: relative; color: #fff; font-size: 80px; font-family: 'Bebas Neue', cursive; text-shadow: 0 10px 30px rgba(255,255,255,0.4); text-transform: uppercase; }
+    /* Massive glowing orb behind text */
+    #winnerBanner::before {
+        content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 600px; height: 200px;
+        background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.5) 0%, transparent 70%);
+        z-index: -1; animation: pulseGlow 3s infinite alternate;
+    }
+    
+    #winnerTitle { position: relative; color: #d4af37; font-size: 28px; letter-spacing: 25px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif; font-weight:900; text-shadow: 0 5px 15px #000; text-transform: uppercase; }
+    #winnerDisplayHtml { position: relative; color: #fff; font-size: 100px; font-family: 'Bebas Neue', cursive; text-shadow: 0 10px 40px rgba(212, 175, 55, 0.9); text-transform: uppercase; letter-spacing: 5px; }
+    
+    @keyframes epicDrop { 0% { transform: translate(-50%, 200px) scale(0.8); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+    @keyframes pulseGlow { 0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } }
 </style>
 </head>
 <body>
@@ -205,25 +151,30 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_FINAL_BEAST_V12"; // UPGRADED KEY
+const DB_KEY = "BPL_FIFA_GOLD_V13"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
     container.innerHTML = ""; 
-    const box = document.createElement("div");
+    const card = document.createElement("div");
+    card.className = "fifa-card"; // Default Gold
     
-    if(type === 4 || type === "4") { box.className = "anim-graphic anim-4"; box.innerText = "FOUR RUNS"; }
-    else if(type === 6 || type === "6") { box.className = "anim-graphic anim-6"; box.innerText = "MASSIVE SIX"; }
-    else if(type === "W") { box.className = "anim-graphic anim-w"; box.innerText = "WICKET"; }
-    else if(type === "RO") { box.className = "anim-graphic anim-ro"; box.innerText = "RUN OUT"; }
-    else if(type === "WD") { box.className = "anim-graphic anim-wd"; box.innerText = "WIDE BALL"; }
-    else if(type === "LB") { box.className = "anim-graphic anim-lb"; box.innerText = "LEG BYE"; }
-    else if(type === "WD4") { box.className = "anim-graphic anim-wd"; box.innerText = "5 RUNS (WD+4)"; } // Bug fix extra
-    else if(type === "HATRICK_W") { box.className = "anim-graphic anim-w"; box.innerText = "HAT-TRICK!"; }
+    const txt = document.createElement("div");
+    txt.className = "fifa-text";
+
+    // ONLY SHOWING: 4, 6, WICKET, RUN OUT, NO BALL
+    let shouldShow = false;
     
-    if(box.className) {
-        container.appendChild(box); 
-        setTimeout(() => { if(container.contains(box)) box.remove(); }, 3500);
+    if(type === 4 || type === "4") { txt.innerText = "FOUR RUNS"; shouldShow = true; }
+    else if(type === 6 || type === "6") { txt.innerText = "MASSIVE SIX"; shouldShow = true; }
+    else if(type === "W") { txt.innerText = "WICKET"; card.classList.add("danger"); shouldShow = true; }
+    else if(type === "RO") { txt.innerText = "RUN OUT"; card.classList.add("danger"); shouldShow = true; }
+    else if(type === "NB") { txt.innerText = "NO BALL"; card.classList.add("alert"); shouldShow = true; }
+    
+    if(shouldShow) {
+        card.appendChild(txt);
+        container.appendChild(card); 
+        setTimeout(() => { if(container.contains(card)) card.remove(); }, 3500);
     }
 }
 
