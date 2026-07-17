@@ -3,125 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPL Final - Admin Dashboard</title>
+    <title>Cricket OBS Admin</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: #16213e; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { text-align: center; color: #e94560; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        body {
+            background: #0a0a0a; color: #d4af37; font-family: 'Montserrat', sans-serif;
+            margin: 0; padding: 40px; display: flex; justify-content: center;
+        }
+        .container {
+            width: 100%; max-width: 800px; background: #111; padding: 30px; 
+            border-radius: 12px; border: 1px solid #d4af37; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        h1 { text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #333; padding-bottom: 15px; margin-top: 0;}
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .box { background: #0f3460; padding: 15px; border-radius: 8px; border: 1px solid #e94560; }
-        input, select, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; border: none; border-radius: 5px; font-weight: bold; }
-        input, select { background: #fff; color: #333; }
-        button { background: #e94560; color: white; cursor: pointer; text-transform: uppercase; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #ff2a4b; transform: scale(1.02); }
-        .btn-green { background: #4caf50; } .btn-green:hover { background: #45a049; }
-        .btn-red { background: #f44336; } .btn-red:hover { background: #da190b; }
-        .title { font-size: 14px; color: #aaa; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .full-width { grid-column: span 2; }
+        label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: #aaa; }
+        input {
+            width: 100%; background: #000; border: 1px solid #333; color: #fff;
+            padding: 12px; font-size: 16px; border-radius: 6px; box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+        }
+        input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 10px rgba(212,175,55,0.2); }
+        .btn-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px; }
+        button {
+            background: linear-gradient(45deg, #111, #222); color: #d4af37; border: 1px solid #d4af37;
+            padding: 15px; font-size: 14px; font-weight: 900; text-transform: uppercase;
+            border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
+        }
+        button:hover { background: #d4af37; color: #000; transform: translateY(-2px); }
+        button.update-btn { background: #d4af37; color: #000; font-size: 18px; margin-top: 20px; }
+        button.update-btn:hover { background: #fff; border-color: #fff; }
+        button.danger { border-color: #ff3333; color: #ff3333; }
+        button.danger:hover { background: #ff3333; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>BPL Season 4 - Master Control</h1>
+    <h1>Match Controller</h1>
     
     <div class="grid">
-        <!-- SCORE CONTROLS -->
-        <div class="box">
-            <span class="title">Main Score</span>
-            <input type="text" id="batTeam" placeholder="Batting Team Name" value="TEAM A">
-            <input type="number" id="runs" placeholder="Runs" value="0">
-            <input type="number" id="wickets" placeholder="Wickets" value="0">
-            <input type="number" id="overs" placeholder="Overs" value="0" step="0.1">
-            <button onclick="updateScore()">Update Score</button>
+        <div>
+            <label>Batting Team (e.g. IND)</label>
+            <input type="text" id="team1" value="TEAM A">
         </div>
-
-        <!-- CENTER STAGE ANIMATIONS -->
-        <div class="box">
-            <span class="title">Center Screen Events (Premium)</span>
-            <button class="btn-green" onclick="triggerEvent('FOUR!')">🔥 4 RUNS 🔥</button>
-            <button class="btn-green" onclick="triggerEvent('SIX!')">🚀 6 RUNS 🚀</button>
-            <button class="btn-red" onclick="triggerEvent('WICKET!')">💀 WICKET 💀</button>
-            <button onclick="clearEvent()">Clear Center Screen</button>
+        <div>
+            <label>Bowling Team (e.g. AUS)</label>
+            <input type="text" id="team2" value="TEAM B">
+        </div>
+        <div>
+            <label>Runs</label>
+            <input type="number" id="runs" value="0">
+        </div>
+        <div>
+            <label>Wickets</label>
+            <input type="number" id="wickets" value="0">
+        </div>
+        <div class="full-width">
+            <label>Overs (e.g. 14.2)</label>
+            <input type="number" step="0.1" id="overs" value="0.0">
         </div>
     </div>
 
-    <!-- ADVANCED PLAYER PROFILE SENDER -->
-    <div class="box" style="margin-top: 20px;">
-        <span class="title">Advanced Player Profile (Live Popup)</span>
-        <div class="grid" style="margin-bottom: 0;">
-            <div>
-                <input type="text" id="playerName" placeholder="Player Name (e.g. Virat Kohli)">
-                <input type="text" id="playerRole" placeholder="Role (e.g. Right Hand Batter)">
-                <input type="text" id="playerStats" placeholder="Stats (e.g. 54 Runs | 32 Balls)">
-            </div>
-            <div>
-                <select id="animStyle">
-                    <option value="slide-bottom">Option 1: IPL Style (Slide Bottom)</option>
-                    <option value="fly-left">Option 2: Newsflash (Fly Left)</option>
-                    <option value="fade-center">Option 3: Cinematic (Fade Center)</option>
-                </select>
-                <button class="btn-green" onclick="showProfile()">Push Profile to Live</button>
-                <button class="btn-red" onclick="hideProfile()">Hide Profile</button>
-            </div>
-        </div>
+    <button class="update-btn full-width" onclick="updateScore()">Update Scoreboard</button>
+
+    <h3 style="margin-top: 40px; text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">Cinematic Triggers</h3>
+    <div class="btn-group">
+        <button onclick="triggerEvent('FOUR')">Four</button>
+        <button onclick="triggerEvent('SIX')">Six</button>
+        <button onclick="triggerEvent('WIDE')">Wide</button>
+        <button class="danger" onclick="triggerEvent('WICKET')">Wicket</button>
     </div>
 </div>
 
 <script>
-    // Machine Gun Polling Setup - Data saved instantly to local storage
-    const DB_KEY = 'BPL_V4_FINAL_PRO';
-
-    function init() {
-        let data = JSON.parse(localStorage.getItem(DB_KEY));
-        if(!data) {
-            data = { runs: 0, wickets: 0, overs: 0, batTeam: 'TEAM A', event: '', showProfile: false, pName: '', pRole: '', pStats: '', pAnim: 'slide-bottom' };
-            localStorage.setItem(DB_KEY, JSON.stringify(data));
-        }
-        document.getElementById('runs').value = data.runs;
-        document.getElementById('wickets').value = data.wickets;
-        document.getElementById('overs').value = data.overs;
-        document.getElementById('batTeam').value = data.batTeam;
-    }
-
+    // Initialize scoreboard on load
     function updateScore() {
-        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-        data.runs = document.getElementById('runs').value;
-        data.wickets = document.getElementById('wickets').value;
-        data.overs = document.getElementById('overs').value;
-        data.batTeam = document.getElementById('batTeam').value;
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
+        const data = {
+            team1: document.getElementById('team1').value,
+            team2: document.getElementById('team2').value,
+            runs: document.getElementById('runs').value,
+            wickets: document.getElementById('wickets').value,
+            overs: document.getElementById('overs').value,
+            timestamp: Date.now() // Forces event trigger
+        };
+        localStorage.setItem('cricket_score', JSON.stringify(data));
     }
 
-    function triggerEvent(eventName) {
-        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-        data.event = eventName;
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-        setTimeout(clearEvent, 4000); // Auto clear after 4 seconds
+    function triggerEvent(eventType) {
+        // Automatically add runs/wickets for convenience
+        let runsInput = document.getElementById('runs');
+        let wktsInput = document.getElementById('wickets');
+        
+        if(eventType === 'FOUR') runsInput.value = parseInt(runsInput.value) + 4;
+        if(eventType === 'SIX') runsInput.value = parseInt(runsInput.value) + 6;
+        if(eventType === 'WIDE') runsInput.value = parseInt(runsInput.value) + 1;
+        if(eventType === 'WICKET') wktsInput.value = parseInt(wktsInput.value) + 1;
+        
+        updateScore(); // Update board simultaneously
+
+        // Trigger cinematic popup
+        localStorage.setItem('cricket_event', JSON.stringify({ type: eventType, timestamp: Date.now() }));
     }
 
-    function clearEvent() {
-        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-        data.event = '';
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-    }
-
-    function showProfile() {
-        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-        data.pName = document.getElementById('playerName').value;
-        data.pRole = document.getElementById('playerRole').value;
-        data.pStats = document.getElementById('playerStats').value;
-        data.pAnim = document.getElementById('animStyle').value;
-        data.showProfile = true;
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-    }
-
-    function hideProfile() {
-        let data = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-        data.showProfile = false;
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-    }
-
-    init();
+    // Push initial state
+    updateScore();
 </script>
+
 </body>
 </html>
