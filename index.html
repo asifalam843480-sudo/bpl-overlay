@@ -14,7 +14,7 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* ----- SCOREBOARD LOWER THIRD ----- */
+        /* ----- SCOREBOARD LOWER THIRD (UNTOUCHED) ----- */
         .scoreboard-container {
             position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: stretch;
@@ -23,24 +23,19 @@
             border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.15);
             color: #fff; width: 1200px; height: 90px; overflow: hidden;
         }
-
         .team-box {
             flex: 1; display: flex; align-items: center; justify-content: center;
             font-size: 42px; font-weight: 900; letter-spacing: 3px;
             background: linear-gradient(90deg, #111, #1a1a1a);
         }
-        
         .vs { font-size: 20px; color: #d4af37; font-weight: 700; margin: 0 15px; opacity: 0.7;}
-
         .score-box {
             padding: 0 50px; background: #d4af37; color: #0a0a0a;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
         }
-
         .runs-wickets { font-size: 50px; font-weight: 900; line-height: 1; }
         .runs-wickets span { font-size: 30px; font-weight: 700; }
-        
         .overs-box {
             padding: 0 40px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; background: #0a0a0a;
@@ -48,49 +43,119 @@
         .overs-text { font-size: 14px; color: #d4af37; text-transform: uppercase; letter-spacing: 2px;}
         .overs-val { font-size: 36px; font-weight: 700; }
 
-        /* ----- CENTER CINEMATIC POPUPS ----- */
+        /* ----- ADVANCED CENTER CINEMATICS ----- */
         .event-canvas {
             position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
             display: flex; justify-content: center; align-items: center; pointer-events: none;
+            perspective: 1000px; /* For 3D rotation */
+        }
+
+        .event-plate {
+            position: relative;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(25px);
+            padding: 40px 120px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            opacity: 0;
+            transform: scale(0.8) rotateX(40deg);
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+        }
+
+        /* Sweeping Light Glare */
+        .event-plate::after {
+            content: ''; position: absolute; top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: skewX(-30deg);
         }
 
         .cinematic-text {
-            font-size: 200px; font-weight: 900; letter-spacing: 15px; text-transform: uppercase;
-            background: linear-gradient(45deg, #FFDF73, #D4AF37, #997A15, #FFDF73);
+            font-size: 160px; font-weight: 900; letter-spacing: 20px; text-transform: uppercase;
+            margin: 0; line-height: 1; text-align: center;
             background-size: 200% auto;
             color: transparent; -webkit-background-clip: text; background-clip: text;
-            opacity: 0; transform: scale(0.5) translateY(100px);
-            filter: drop-shadow(0 0 30px rgba(212,175,55,0.4));
         }
 
-        /* The 'Ekdam Premium' Animation */
-        .cinematic-text.trigger {
-            animation: cinematicBlast 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* --- THEMES --- */
+        /* 1. GOLD (FOUR / SIX) */
+        .theme-gold .event-plate {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 80px rgba(212, 175, 55, 0.3), inset 0 0 40px rgba(212, 175, 55, 0.1);
+        }
+        .theme-gold .cinematic-text {
+            background-image: linear-gradient(45deg, #FFDF73, #D4AF37, #997A15, #FFDF73);
+            filter: drop-shadow(0 0 30px rgba(212,175,55,0.6));
         }
 
-        .cinematic-text.trigger.wicket {
-            background: linear-gradient(45deg, #ff4d4d, #cc0000, #ff4d4d);
-            -webkit-background-clip: text;
-            filter: drop-shadow(0 0 40px rgba(204,0,0,0.6));
+        /* 2. RED (WICKET) */
+        .theme-red .event-plate {
+            border-color: rgba(255, 30, 30, 0.6);
+            box-shadow: 0 0 100px rgba(255, 30, 30, 0.4), inset 0 0 50px rgba(255, 30, 30, 0.2);
+        }
+        .theme-red .cinematic-text {
+            background-image: linear-gradient(45deg, #ff6b6b, #cc0000, #800000, #ff6b6b);
+            filter: drop-shadow(0 0 40px rgba(204,0,0,0.8));
         }
 
-        @keyframes cinematicBlast {
-            0% { opacity: 0; transform: scale(0.3) translateY(200px); filter: blur(20px); }
-            10% { opacity: 1; transform: scale(1.1) translateY(0); filter: blur(0); }
-            20% { transform: scale(1); background-position: 100% center; filter: drop-shadow(0 0 60px rgba(212,175,55,0.8)); }
-            80% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
-            100% { opacity: 0; transform: scale(1.3) translateY(-50px); filter: blur(15px); }
+        /* 3. BLUE (WIDE / NO BALL) */
+        .theme-blue .event-plate {
+            border-color: rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 80px rgba(0, 229, 255, 0.3), inset 0 0 40px rgba(0, 229, 255, 0.1);
+        }
+        .theme-blue .cinematic-text {
+            background-image: linear-gradient(45deg, #80ffff, #00e5ff, #0088cc, #80ffff);
+            filter: drop-shadow(0 0 30px rgba(0,229,255,0.6));
+            font-size: 130px; /* Slightly smaller to fit long words */
+        }
+
+        /* --- MASTER ANIMATION --- */
+        .trigger .event-plate {
+            animation: broadcastCrash 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .trigger .event-plate::after {
+            animation: lightSweep 4s ease-in-out forwards;
+        }
+        .trigger.theme-red .event-plate {
+            animation: wicketCrash 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes broadcastCrash {
+            0% { opacity: 0; transform: scale(0.4) rotateX(60deg) translateY(200px); filter: blur(20px); }
+            10% { opacity: 1; transform: scale(1.1) rotateX(-10deg) translateY(0); filter: blur(0); }
+            15% { transform: scale(1) rotateX(0deg); }
+            85% { opacity: 1; transform: scale(1.05) rotateX(0deg); filter: blur(0); }
+            100% { opacity: 0; transform: scale(1.4) rotateX(30deg) translateY(-100px); filter: blur(15px); }
+        }
+
+        @keyframes wicketCrash {
+            0% { opacity: 0; transform: scale(2) translateY(-200px); filter: blur(20px); }
+            10% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+            12% { transform: translateX(-10px) rotate(-1deg); }
+            14% { transform: translateX(10px) rotate(1deg); }
+            16% { transform: translateX(-5px) rotate(0deg); }
+            85% { opacity: 1; transform: scale(1.05); filter: blur(0); }
+            100% { opacity: 0; transform: scale(0.5) translateY(100px); filter: blur(20px); }
+        }
+
+        @keyframes lightSweep {
+            0% { left: -150%; }
+            20% { left: 150%; }
+            100% { left: 150%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Center Cinematic Popups -->
-    <div class="event-canvas">
-        <div id="eventPopup" class="cinematic-text"></div>
+    <!-- Center Cinematic Popups (Advanced Geometry) -->
+    <div class="event-canvas" id="canvasWrapper">
+        <div class="event-plate" id="eventPlate">
+            <h1 id="eventPopup" class="cinematic-text"></h1>
+        </div>
     </div>
 
-    <!-- Lower Third Scoreboard -->
+    <!-- Lower Third Scoreboard (Untouched) -->
     <div class="scoreboard-container">
         <div class="team-box">
             <span id="displayTeam1">TEAM A</span>
@@ -122,11 +187,11 @@
             // Cinematic Popup Triggers
             if (e.key === 'cricket_event' && e.newValue) {
                 const eventData = JSON.parse(e.newValue);
-                fireCinematicEvent(eventData.type);
+                fireCinematicEvent(eventData.type, eventData.theme);
             }
         });
 
-        // Load initial state if available
+        // Load initial state
         window.onload = () => {
             const initialScore = localStorage.getItem('cricket_score');
             if(initialScore) {
@@ -139,25 +204,26 @@
         }
 
         let animationTimeout;
-        function fireCinematicEvent(type) {
+        function fireCinematicEvent(type, theme) {
+            const canvasWrapper = document.getElementById('canvasWrapper');
             const popup = document.getElementById('eventPopup');
             
-            // Reset state to allow rapid triggering
-            popup.classList.remove('trigger', 'wicket');
-            void popup.offsetWidth; // Trigger reflow to restart animation instantly
+            // Clean slate for instant re-trigger
+            canvasWrapper.className = 'event-canvas'; 
+            void canvasWrapper.offsetWidth; // Reflow hack
             
-            // Set Text and Special Classes
+            // Apply text and correct color theme
             popup.innerText = type;
-            if(type === 'WICKET') popup.classList.add('wicket');
+            canvasWrapper.classList.add(`theme-${theme.toLowerCase()}`);
             
-            // Fire Animation
-            popup.classList.add('trigger');
+            // Ignite the animation
+            canvasWrapper.classList.add('trigger');
 
-            // Clear after 3.5 seconds (matches CSS duration)
+            // Reset after 4 seconds
             clearTimeout(animationTimeout);
             animationTimeout = setTimeout(() => {
-                popup.classList.remove('trigger', 'wicket');
-            }, 3500);
+                canvasWrapper.className = 'event-canvas'; // removes all classes
+            }, 4000);
         }
     </script>
 </body>
