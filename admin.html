@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Titanium V11</title>
+<title>BPL Scorer Panel | Titanium V12</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -83,7 +83,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <button class="blue" onclick="extraBall('WD')">WIDE</button>
 <button class="blue" onclick="extraBall('NB')">NO BALL</button>
 <button class="blue" style="background:#8e44ad;" onclick="addLegBye(4)">4 LEG BYE</button>
-<button class="blue" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
+<button class="blue" style="background:#d35400;" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
 <button class="gold" onclick="undoBall()">UNDO LAST BALL</button>
 </div>
 
@@ -102,8 +102,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// EXTREMELY NEW DB KEY TO KILL OLD BUGS
-const DB_KEY = "BPL_FINAL_BEAST_V11"; 
+const DB_KEY = "BPL_FINAL_BEAST_V12"; 
 let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
@@ -114,9 +113,8 @@ function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delet
 function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
 function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
 
-// FLAWLESS 7TH BALL LOGIC (Bowler stats stay until NEXT over starts)
 function checkAndClearOver() {
-    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB").length;
+    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB" && b !== "5B").length;
     if (legal >= 6) { matchData.thisOver = []; }
 }
 
@@ -148,7 +146,6 @@ function addWicket(type) {
     checkHatTrick(); updateUI();
 }
 
-// RUN OUT (No Bowler Wicket)
 function addRunOut() {
     saveHistory(); checkAndClearOver();
     matchData.wickets++; matchData.balls++; matchData.thisOver.push("RO");
@@ -158,19 +155,33 @@ function addRunOut() {
     checkHatTrick(); updateUI();
 }
 
-// LEG BYE (Runs to Team, NOT to Bowler or Batsman)
 function addLegBye(runs) {
     saveHistory(); checkAndClearOver(); runs = parseInt(runs);
     matchData.score += runs; matchData.balls++; matchData.thisOver.push(runs + "LB");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation(4); 
+    triggerAnimation("LB"); 
     if(runs % 2 !== 0) rotateStrike();
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
     updateUI();
 }
 
-function extraBall(type) { saveHistory(); checkAndClearOver(); matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); updateUI(); }
-function addBye(runs, type) { saveHistory(); checkAndClearOver(); matchData.score += runs; matchData.balls++; matchData.thisOver.push(type); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
+function extraBall(type) { 
+    saveHistory(); checkAndClearOver(); 
+    matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
+    triggerAnimation(type); // Triggers Wide/NB animation
+    updateUI(); 
+}
+
+// 💥 BUG FIXED: 5 BYE (WD+4) - Ball will NOT be added anymore!
+function addBye(runs, type) { 
+    saveHistory(); checkAndClearOver(); 
+    matchData.score += runs; 
+    // NO matchData.balls++ (Legal ball count remains same)
+    // NO Batsman ball count increment
+    matchData.thisOver.push(type); 
+    triggerAnimation("WD4"); // Special animation for 5 Runs
+    updateUI(); 
+}
 
 function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let oldA = matchData.teamALogo, oldB = matchData.teamBLogo; matchData = hist.pop(); matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.history = hist; updateUI(); }
 
@@ -211,7 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // HEAVY COMPRESSION TO AVOID STORAGE CRASH
     const handleImage = (id, key) => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
