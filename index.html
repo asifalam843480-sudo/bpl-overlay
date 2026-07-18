@@ -2,120 +2,137 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay | Titanium Edition V14</title>
+<title>BPL Premium Overlay | Broadcast Pro V15</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background: transparent; overflow: hidden; font-family: 'Montserrat', sans-serif; }
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     
-    /* Bottom Bar - Gold Accents */
-    .bottom-scorebar { position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:94%; height:95px; background: linear-gradient(180deg, rgba(5, 5, 5, 0.95), rgba(15, 15, 15, 0.98)); border-top: 3px solid #d4af37; border-bottom: 2px solid rgba(212, 175, 55, 0.2); display:flex; align-items:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(212, 175, 55, 0.2); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); z-index:100;}
-    .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
-    .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.8)); display: none; }
-    .team-name { font-size: 22px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 4px 6px rgba(0,0,0,0.8); }
+    /* =========================================
+       📊 HIGH-CONTRAST PROFESSIONAL SCOREBOARD
+       ========================================= */
+    .bottom-scorebar { 
+        position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
+        width:94%; height:95px; 
+        /* Deep slate/navy gradient for maximum readability */
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1)); 
+        border-top: 4px solid #d4af37; 
+        border-bottom: 2px solid rgba(212, 175, 55, 0.3); 
+        display:flex; align-items:center; 
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(212, 175, 55, 0.2); 
+        clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
+        z-index:100;
+    }
     
-    .score-center { width: 240px; text-align: center; background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 80%); height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(255,255,255,0.08); border-right: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden; }
-    .score-large { font-family: 'Bebas Neue', cursive; font-size: 68px; color: white; line-height: 0.9; text-shadow: 0 5px 15px rgba(0,0,0,1); transition: 0.3s; }
-    .overs-large { font-size: 16px; font-weight: 900; color: #d4af37; letter-spacing: 3px; }
+    .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
+    .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
+    /* Pure white text with deep shadow for extreme clarity */
+    .team-name { font-size: 24px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 4px 6px rgba(0,0,0,1); }
+    
+    .score-center { 
+        width: 240px; text-align: center; 
+        background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 80%); 
+        height: 100%; display: flex; flex-direction: column; justify-content: center; 
+        border-left: 2px solid rgba(255,255,255,0.1); border-right: 2px solid rgba(255,255,255,0.1); 
+    }
+    .score-large { font-family: 'Bebas Neue', cursive; font-size: 72px; color: #ffffff; line-height: 0.9; text-shadow: 3px 5px 15px rgba(0,0,0,1); transition: 0.3s; }
+    .overs-large { font-size: 17px; font-weight: 900; color: #d4af37; letter-spacing: 4px; text-shadow: 1px 2px 5px rgba(0,0,0,0.8); }
     
     .batsman-panel, .bowler-panel { width: 280px; padding: 0 25px; }
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; }
-    .batsman-name { font-size: 16px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #fff;}
-    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 1px; color:#fff;}
-    .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #888; }
-    .on-strike { text-shadow: 0 0 12px rgba(212, 175, 55, 0.5); } .on-strike .batsman-score { color: #d4af37; }
-    .off-strike { opacity: 0.7; } 
-    .striker-icon { color: #d4af37; font-size: 14px; opacity: 0; } .on-strike .striker-icon { opacity: 1; }
+    .batsman-name { font-size: 16px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #f8fafc; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 30px; letter-spacing: 1px; color:#ffffff; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
+    .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #94a3b8; font-weight: 700; }
+    .on-strike { background: rgba(212, 175, 55, 0.1); border-radius: 4px; padding: 0 5px; } 
+    .on-strike .batsman-score { color: #d4af37; }
+    .off-strike { opacity: 0.8; } 
+    .striker-icon { color: #d4af37; font-size: 14px; opacity: 0; text-shadow: 0 0 5px #d4af37; } .on-strike .striker-icon { opacity: 1; }
     
-    .bowler-name { font-size: 18px; font-weight: 900; color: #d4af37; text-transform: uppercase; }
-    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 32px; color: white; letter-spacing: 2px; }
+    .bowler-name { font-size: 19px; font-weight: 900; color: #d4af37; text-transform: uppercase; text-shadow: 1px 2px 5px rgba(0,0,0,0.9); }
+    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 34px; color: #ffffff; letter-spacing: 2px; text-shadow: 2px 2px 8px rgba(0,0,0,1); }
     
     .this-over { display:flex; gap:6px; margin-top:5px; }
-    .ball { width: 24px; height: 24px; border-radius: 50%; background: #111; color: white; display:flex; align-items:center; justify-content:center; font-size: 13px; font-weight: 900; border: 1px solid #333; }
-    .ball.run { background: #0056b3; } .ball.four { background: #d4af37; color:#000; box-shadow: 0 0 8px #d4af37; } .ball.six { background: #9d4edd; box-shadow: 0 0 8px #9d4edd; } .ball.wicket { background: #e60000; color:#fff; box-shadow: 0 0 8px #e60000; } .ball.extra { background: #e67e22; } .ball.lb { background: #8e44ad; color:white; }
+    .ball { width: 26px; height: 26px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 14px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+    .ball.run { background: #2563eb; } .ball.four { background: #d4af37; color:#000; box-shadow: 0 0 10px #d4af37; } .ball.six { background: #9333ea; box-shadow: 0 0 10px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 10px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
     
-    .need-panel { width: 140px; text-align: center; background: rgba(212, 175, 55, 0.1); padding: 5px; border-radius: 8px; border: 1px solid #d4af37; margin: 0 10px; }
-    .need-title { font-size: 12px; font-weight: 900; color: #d4af37; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 40px; color: white; line-height: 1; }
+    .need-panel { width: 140px; text-align: center; background: rgba(212, 175, 55, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #d4af37; margin: 0 10px; }
+    .need-title { font-size: 13px; font-weight: 900; color: #d4af37; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 42px; color: white; line-height: 1; text-shadow: 2px 2px 5px #000; }
     
-    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:92%; height:32px; background: #000; border-radius: 4px; border:1px solid #222; overflow:hidden; z-index:100;}
+    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:92%; height:32px; background: #020617; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100;}
     .ticker-content { white-space: nowrap; font-size: 15px; font-weight: 800; color: #d4af37; line-height: 32px; letter-spacing: 2px; animation: tickerMove 25s linear infinite; }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
     /* =========================================
-       🎮 CRISP 3D ANIMATIONS (NO BLUR!)
+       🚀 EXACTLY 3 SECONDS OVERLAY (NO BLUR, FULL HD)
        ========================================= */
-    #animation-container { perspective: 1000px; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
+    #animation-container { perspective: 1200px; position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
     
-    .fifa-card {
+    .pro-banner {
         position: relative;
-        background: linear-gradient(135deg, #0a0a0a 0%, #1c1a15 100%);
-        border: 4px solid #d4af37;
-        padding: 30px 100px;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(212, 175, 55, 0.4);
-        overflow: hidden;
-        /* ZERO BLUR ANIMATION */
-        animation: crisp3DReveal 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        background: linear-gradient(90deg, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 0.98) 100%);
+        border: 4px solid #fff;
+        padding: 30px 120px;
+        box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 40px rgba(255,255,255,0.1);
+        border-radius: 12px;
+        /* THE EXACT 3 SECONDS ANIMATION (0.5s IN, 2.0s HOLD, 0.5s OUT) */
+        animation: exactlyThreeSeconds 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         display: flex; align-items: center; justify-content: center;
-        border-radius: 10px;
+        overflow: hidden;
     }
     
-    /* The Sweep Shine */
-    .fifa-card::before {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    /* Rapid sweeping gloss */
+    .pro-banner::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 40%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
         transform: skewX(-25deg);
-        animation: fifaShine 2.5s infinite;
+        animation: rapidShine 1.5s infinite;
     }
     
-    .fifa-text {
+    .pro-text {
         font-family: 'Bebas Neue', cursive;
-        font-size: 150px;
-        background: linear-gradient(to bottom, #fcf6ba, #bf953f, #fbf5b7);
-        -webkit-background-clip: text; color: transparent;
-        text-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        margin: 0; letter-spacing: 12px;
+        font-size: 160px;
+        color: #fff;
+        text-shadow: 0 10px 30px rgba(0,0,0,1);
+        margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase;
     }
 
-    /* Red/Danger state */
-    .fifa-card.danger { border-color: #ff003c; box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 40px rgba(255, 0, 60, 0.5); }
-    .fifa-card.danger .fifa-text { background: linear-gradient(to bottom, #ff4d4d, #990000); -webkit-background-clip: text; text-shadow: 0 10px 30px rgba(255,0,0,0.8); }
-    
-    /* Blue/Alert state */
-    .fifa-card.alert { border-color: #00ffff; box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 40px rgba(0, 255, 255, 0.5); }
-    .fifa-card.alert .fifa-text { background: linear-gradient(to bottom, #ccffff, #009999); -webkit-background-clip: text; text-shadow: 0 10px 30px rgba(0,255,255,0.6); }
+    /* Professional Color Coding */
+    .pro-banner.four { border-color: #00e5ff; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(0, 229, 255, 0.3); }
+    .pro-banner.four .pro-text { color: #00e5ff; text-shadow: 0 10px 40px rgba(0,229,255,0.8); }
 
-    /* NO BLUR - 3D Clean Slide Out */
-    @keyframes crisp3DReveal { 
-        0% { transform: scale(0.5) rotateY(-90deg); opacity: 0; } 
-        15% { transform: scale(1.1) rotateY(0deg); opacity: 1; } 
-        20% { transform: scale(1); } 
-        85% { transform: scale(1); opacity: 1; } 
-        100% { transform: scale(1.2) translateX(250px) rotateY(45deg); opacity: 0; } /* Clean sharp exit */
+    .pro-banner.six { border-color: #d4af37; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(212, 175, 55, 0.3); }
+    .pro-banner.six .pro-text { color: #d4af37; text-shadow: 0 10px 40px rgba(212,175,55,0.8); }
+
+    .pro-banner.danger { border-color: #ff003c; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(255, 0, 60, 0.4); }
+    .pro-banner.danger .pro-text { color: #ff003c; text-shadow: 0 10px 40px rgba(255,0,60,0.9); }
+
+    .pro-banner.alert { border-color: #ffaa00; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(255, 170, 0, 0.4); }
+    .pro-banner.alert .pro-text { color: #ffaa00; text-shadow: 0 10px 40px rgba(255,170,0,0.9); }
+
+    /* NO BLUR - Sharp Snap-in and Drop-out */
+    @keyframes exactlyThreeSeconds { 
+        0% { transform: scale(0.3) translateY(200px) rotateX(45deg); opacity: 0; } 
+        15% { transform: scale(1) translateY(0) rotateX(0deg); opacity: 1; } /* 0.45s IN */
+        85% { transform: scale(1) translateY(0) rotateX(0deg); opacity: 1; } /* 2.1s HOLD */
+        100% { transform: scale(1.3) translateY(-150px) rotateX(-45deg); opacity: 0; } /* 0.45s OUT */
     }
-    @keyframes fifaShine { 0% { left: -100%; } 100% { left: 200%; } }
+    @keyframes rapidShine { 0% { left: -100%; } 100% { left: 200%; } }
 
     /* =========================================
        🏆 ULTIMATE CINEMATIC MATCH WINNER
        ========================================= */
     #winnerBanner { 
-        display: none; 
-        position: fixed; 
-        top: 45%; left: 50%; transform: translate(-50%, -50%); 
+        display: none; position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%); 
         width: 100vw; text-align: center; 
-        /* Deep frosted cinematic background */
-        background: rgba(5, 5, 5, 0.95); 
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        background: rgba(2, 6, 23, 0.98); 
         border-top: 8px solid #d4af37; border-bottom: 8px solid #d4af37; 
-        padding: 60px 0; 
-        z-index: 999999; 
-        /* Heavy slam animation */
+        padding: 60px 0; z-index: 999999; 
         animation: ultimateSlam 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
         overflow: hidden; 
         box-shadow: 0 0 100px rgba(212, 175, 55, 0.7), inset 0 0 50px rgba(212, 175, 55, 0.2);
     }
     
-    /* Massive sweeping laser beam across the full width */
     #winnerBanner::before {
         content: ''; position: absolute; top: 0; left: -100%; width: 30%; height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
@@ -123,15 +140,9 @@
     }
     
     #winnerTitle { position: relative; color: #fff; font-size: 35px; letter-spacing: 30px; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-weight:900; text-shadow: 0 5px 20px #000; text-transform: uppercase; }
-    
     #winnerDisplayHtml { position: relative; color: #d4af37; font-size: 130px; font-family: 'Bebas Neue', cursive; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(212,175,55,0.6); text-transform: uppercase; letter-spacing: 8px; line-height: 1; }
     
-    /* The Slam and Lock Animation */
-    @keyframes ultimateSlam { 
-        0% { transform: translate(-50%, -200%) scale(1.5); opacity: 0; filter: contrast(200%); } 
-        60% { transform: translate(-50%, -50%) scale(0.9); opacity: 1; filter: contrast(100%); } 
-        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 
-    }
+    @keyframes ultimateSlam { 0% { transform: translate(-50%, -200%) scale(1.5); opacity: 0; } 60% { transform: translate(-50%, -50%) scale(0.9); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
     @keyframes winnerLaser { 0% { left: -100%; } 100% { left: 200%; } }
 </style>
 </head>
@@ -162,21 +173,21 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_TITANIUM_V14"; 
+const DB_KEY = "BPL_PRO_V15"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
     container.innerHTML = ""; 
     const card = document.createElement("div");
-    card.className = "fifa-card"; 
+    card.className = "pro-banner"; 
     
     const txt = document.createElement("div");
-    txt.className = "fifa-text";
+    txt.className = "pro-text";
 
     let shouldShow = false;
     
-    if(type === 4 || type === "4") { txt.innerText = "FOUR RUNS"; shouldShow = true; }
-    else if(type === 6 || type === "6") { txt.innerText = "MASSIVE SIX"; shouldShow = true; }
+    if(type === 4 || type === "4") { txt.innerText = "FOUR RUNS"; card.classList.add("four"); shouldShow = true; }
+    else if(type === 6 || type === "6") { txt.innerText = "MASSIVE SIX"; card.classList.add("six"); shouldShow = true; }
     else if(type === "W") { txt.innerText = "WICKET"; card.classList.add("danger"); shouldShow = true; }
     else if(type === "RO") { txt.innerText = "RUN OUT"; card.classList.add("danger"); shouldShow = true; }
     else if(type === "NB") { txt.innerText = "NO BALL"; card.classList.add("alert"); shouldShow = true; }
@@ -184,7 +195,8 @@ function fireAnimation(type) {
     if(shouldShow) {
         card.appendChild(txt);
         container.appendChild(card); 
-        setTimeout(() => { if(container.contains(card)) card.remove(); }, 3500);
+        // STRICTLY 3 SECONDS DELETION TIMER TO MATCH CSS
+        setTimeout(() => { if(container.contains(card)) card.remove(); }, 3000);
     }
 }
 
