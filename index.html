@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay | Broadcast Pro V15</title>
+<title>BPL Premium Overlay | Ultimate V16</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -10,114 +10,119 @@
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     
     /* =========================================
-       📊 HIGH-CONTRAST PROFESSIONAL SCOREBOARD
+       📊 DEEP CONTRAST SCOREBOARD
        ========================================= */
     .bottom-scorebar { 
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
         width:94%; height:95px; 
-        /* Deep slate/navy gradient for maximum readability */
         background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1)); 
-        border-top: 4px solid #d4af37; 
-        border-bottom: 2px solid rgba(212, 175, 55, 0.3); 
+        border-top: 4px solid #00e5ff; 
+        border-bottom: 2px solid rgba(0, 229, 255, 0.3); 
         display:flex; align-items:center; 
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(212, 175, 55, 0.2); 
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(0, 229, 255, 0.2); 
         clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
         z-index:100;
     }
     
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
-    /* Pure white text with deep shadow for extreme clarity */
     .team-name { font-size: 24px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 4px 6px rgba(0,0,0,1); }
     
     .score-center { 
         width: 240px; text-align: center; 
-        background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 80%); 
+        background: radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 80%); 
         height: 100%; display: flex; flex-direction: column; justify-content: center; 
         border-left: 2px solid rgba(255,255,255,0.1); border-right: 2px solid rgba(255,255,255,0.1); 
     }
     .score-large { font-family: 'Bebas Neue', cursive; font-size: 72px; color: #ffffff; line-height: 0.9; text-shadow: 3px 5px 15px rgba(0,0,0,1); transition: 0.3s; }
-    .overs-large { font-size: 17px; font-weight: 900; color: #d4af37; letter-spacing: 4px; text-shadow: 1px 2px 5px rgba(0,0,0,0.8); }
+    .overs-large { font-size: 17px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; text-shadow: 1px 2px 5px rgba(0,0,0,0.8); }
     
     .batsman-panel, .bowler-panel { width: 280px; padding: 0 25px; }
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; }
     .batsman-name { font-size: 16px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #f8fafc; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
     .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 30px; letter-spacing: 1px; color:#ffffff; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
     .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #94a3b8; font-weight: 700; }
-    .on-strike { background: rgba(212, 175, 55, 0.1); border-radius: 4px; padding: 0 5px; } 
-    .on-strike .batsman-score { color: #d4af37; }
+    .on-strike { background: rgba(0, 229, 255, 0.1); border-radius: 4px; padding: 0 5px; } 
+    .on-strike .batsman-score { color: #00e5ff; }
     .off-strike { opacity: 0.8; } 
-    .striker-icon { color: #d4af37; font-size: 14px; opacity: 0; text-shadow: 0 0 5px #d4af37; } .on-strike .striker-icon { opacity: 1; }
+    .striker-icon { color: #00e5ff; font-size: 14px; opacity: 0; text-shadow: 0 0 5px #00e5ff; } .on-strike .striker-icon { opacity: 1; }
     
-    .bowler-name { font-size: 19px; font-weight: 900; color: #d4af37; text-transform: uppercase; text-shadow: 1px 2px 5px rgba(0,0,0,0.9); }
+    .bowler-name { font-size: 19px; font-weight: 900; color: #00e5ff; text-transform: uppercase; text-shadow: 1px 2px 5px rgba(0,0,0,0.9); }
     .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 34px; color: #ffffff; letter-spacing: 2px; text-shadow: 2px 2px 8px rgba(0,0,0,1); }
     
     .this-over { display:flex; gap:6px; margin-top:5px; }
     .ball { width: 26px; height: 26px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 14px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); }
     .ball.run { background: #2563eb; } .ball.four { background: #d4af37; color:#000; box-shadow: 0 0 10px #d4af37; } .ball.six { background: #9333ea; box-shadow: 0 0 10px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 10px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
     
-    .need-panel { width: 140px; text-align: center; background: rgba(212, 175, 55, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #d4af37; margin: 0 10px; }
-    .need-title { font-size: 13px; font-weight: 900; color: #d4af37; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 42px; color: white; line-height: 1; text-shadow: 2px 2px 5px #000; }
+    .need-panel { width: 140px; text-align: center; background: rgba(0, 229, 255, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #00e5ff; margin: 0 10px; }
+    .need-title { font-size: 13px; font-weight: 900; color: #00e5ff; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 42px; color: white; line-height: 1; text-shadow: 2px 2px 5px #000; }
     
-    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:92%; height:32px; background: #020617; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100;}
-    .ticker-content { white-space: nowrap; font-size: 15px; font-weight: 800; color: #d4af37; line-height: 32px; letter-spacing: 2px; animation: tickerMove 25s linear infinite; }
+    /* =========================================
+       🚀 NEW BARAHPURA PREMIUM TICKER
+       ========================================= */
+    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:92%; height:32px; background: #020617; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100; box-shadow: 0 0 15px rgba(0,0,0,0.8);}
+    .ticker-content { white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; color: #00e5ff; line-height: 32px; letter-spacing: 3px; animation: tickerMove 25s linear infinite; text-shadow: 0 0 8px rgba(0, 229, 255, 0.4); text-transform: uppercase;}
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
     /* =========================================
-       🚀 EXACTLY 3 SECONDS OVERLAY (NO BLUR, FULL HD)
+       ⚡ CYBER-HOLO OVERLAY (STRICTLY 2 SECONDS)
        ========================================= */
     #animation-container { perspective: 1200px; position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
     
-    .pro-banner {
+    .holo-banner {
         position: relative;
-        background: linear-gradient(90deg, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 0.98) 100%);
-        border: 4px solid #fff;
-        padding: 30px 120px;
-        box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 40px rgba(255,255,255,0.1);
-        border-radius: 12px;
-        /* THE EXACT 3 SECONDS ANIMATION (0.5s IN, 2.0s HOLD, 0.5s OUT) */
-        animation: exactlyThreeSeconds 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        /* Sleek Glassmorphism + Dark Gradient */
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+        padding: 40px 140px;
+        /* Blade cut design */
+        clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+        border-left: 8px solid #fff;
+        border-right: 8px solid #fff;
+        box-shadow: 0 40px 100px rgba(0,0,0,1), inset 0 0 60px rgba(255,255,255,0.1);
+        /* STRICTLY 2 SECONDS ANIMATION */
+        animation: exactlyTwoSeconds 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         display: flex; align-items: center; justify-content: center;
         overflow: hidden;
     }
     
-    /* Rapid sweeping gloss */
-    .pro-banner::before {
+    /* Rapid sweeping laser */
+    .holo-banner::before {
         content: ''; position: absolute; top: 0; left: -100%; width: 40%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
         transform: skewX(-25deg);
-        animation: rapidShine 1.5s infinite;
+        animation: laserShine 1s infinite;
     }
     
-    .pro-text {
+    .holo-text {
         font-family: 'Bebas Neue', cursive;
-        font-size: 160px;
+        font-size: 170px;
         color: #fff;
-        text-shadow: 0 10px 30px rgba(0,0,0,1);
+        text-shadow: 0 10px 40px rgba(0,0,0,1);
         margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase;
+        transform: skewX(5deg); /* Counter-balance the clip-path skew visually */
     }
 
-    /* Professional Color Coding */
-    .pro-banner.four { border-color: #00e5ff; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(0, 229, 255, 0.3); }
-    .pro-banner.four .pro-text { color: #00e5ff; text-shadow: 0 10px 40px rgba(0,229,255,0.8); }
+    /* Professional Cyber Color Coding */
+    .holo-banner.four { border-color: #00e5ff; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(0, 229, 255, 0.4); }
+    .holo-banner.four .holo-text { color: #00e5ff; text-shadow: 0 10px 50px rgba(0,229,255,0.9); }
 
-    .pro-banner.six { border-color: #d4af37; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(212, 175, 55, 0.3); }
-    .pro-banner.six .pro-text { color: #d4af37; text-shadow: 0 10px 40px rgba(212,175,55,0.8); }
+    .holo-banner.six { border-color: #d4af37; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(212, 175, 55, 0.4); }
+    .holo-banner.six .holo-text { color: #d4af37; text-shadow: 0 10px 50px rgba(212,175,55,0.9); }
 
-    .pro-banner.danger { border-color: #ff003c; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(255, 0, 60, 0.4); }
-    .pro-banner.danger .pro-text { color: #ff003c; text-shadow: 0 10px 40px rgba(255,0,60,0.9); }
+    .holo-banner.danger { border-color: #ff003c; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(255, 0, 60, 0.5); }
+    .holo-banner.danger .holo-text { color: #ff003c; text-shadow: 0 10px 50px rgba(255,0,60,1); }
 
-    .pro-banner.alert { border-color: #ffaa00; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 50px rgba(255, 170, 0, 0.4); }
-    .pro-banner.alert .pro-text { color: #ffaa00; text-shadow: 0 10px 40px rgba(255,170,0,0.9); }
+    .holo-banner.alert { border-color: #ffaa00; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(255, 170, 0, 0.4); }
+    .holo-banner.alert .holo-text { color: #ffaa00; text-shadow: 0 10px 50px rgba(255,170,0,0.9); }
 
-    /* NO BLUR - Sharp Snap-in and Drop-out */
-    @keyframes exactlyThreeSeconds { 
-        0% { transform: scale(0.3) translateY(200px) rotateX(45deg); opacity: 0; } 
-        15% { transform: scale(1) translateY(0) rotateX(0deg); opacity: 1; } /* 0.45s IN */
-        85% { transform: scale(1) translateY(0) rotateX(0deg); opacity: 1; } /* 2.1s HOLD */
-        100% { transform: scale(1.3) translateY(-150px) rotateX(-45deg); opacity: 0; } /* 0.45s OUT */
+    /* NO BLUR - 2 SECONDS SHARP */
+    @keyframes exactlyTwoSeconds { 
+        0% { transform: scale(0.2) translateY(300px); opacity: 0; } 
+        15% { transform: scale(1) translateY(0); opacity: 1; } /* 0.3s IN */
+        85% { transform: scale(1) translateY(0); opacity: 1; } /* 1.4s HOLD */
+        100% { transform: scale(1.4) translateY(-200px); opacity: 0; } /* 0.3s OUT - SHARP */
     }
-    @keyframes rapidShine { 0% { left: -100%; } 100% { left: 200%; } }
+    @keyframes laserShine { 0% { left: -100%; } 100% { left: 200%; } }
 
     /* =========================================
        🏆 ULTIMATE CINEMATIC MATCH WINNER
@@ -126,11 +131,11 @@
         display: none; position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%); 
         width: 100vw; text-align: center; 
         background: rgba(2, 6, 23, 0.98); 
-        border-top: 8px solid #d4af37; border-bottom: 8px solid #d4af37; 
+        border-top: 10px solid #00e5ff; border-bottom: 10px solid #00e5ff; 
         padding: 60px 0; z-index: 999999; 
         animation: ultimateSlam 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
         overflow: hidden; 
-        box-shadow: 0 0 100px rgba(212, 175, 55, 0.7), inset 0 0 50px rgba(212, 175, 55, 0.2);
+        box-shadow: 0 0 100px rgba(0, 229, 255, 0.7), inset 0 0 50px rgba(0, 229, 255, 0.2);
     }
     
     #winnerBanner::before {
@@ -140,7 +145,7 @@
     }
     
     #winnerTitle { position: relative; color: #fff; font-size: 35px; letter-spacing: 30px; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-weight:900; text-shadow: 0 5px 20px #000; text-transform: uppercase; }
-    #winnerDisplayHtml { position: relative; color: #d4af37; font-size: 130px; font-family: 'Bebas Neue', cursive; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(212,175,55,0.6); text-transform: uppercase; letter-spacing: 8px; line-height: 1; }
+    #winnerDisplayHtml { position: relative; color: #00e5ff; font-size: 130px; font-family: 'Bebas Neue', cursive; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 40px rgba(0, 229, 255, 0.8); text-transform: uppercase; letter-spacing: 8px; line-height: 1; }
     
     @keyframes ultimateSlam { 0% { transform: translate(-50%, -200%) scale(1.5); opacity: 0; } 60% { transform: translate(-50%, -50%) scale(0.9); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
     @keyframes winnerLaser { 0% { left: -100%; } 100% { left: 200%; } }
@@ -168,21 +173,27 @@
             <div class="team-logo"><img id="team2Logo" src=""></div>
         </div>
     </div>
-    <div class="ticker-bar"><div class="ticker-content">🏆 BHIKHANPUR PREMIUM LEAGUE LIVE 🏆 | POWERED BY DIGITAL PROMOTION | CALL: 8252001148 | SUBSCRIBE NOW!</div></div>
+    
+    <!-- 💥 UPDATED BARAHPURA PREMIER LEAGUE TICKER -->
+    <div class="ticker-bar">
+        <div class="ticker-content">
+            🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 | POWERED BY A2 SERIES | CONTACT NUMBER: 8252001148 | LIKE, SUBSCRIBE AND SHARE 🏆
+        </div>
+    </div>
 </div>
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_PRO_V15"; 
+const DB_KEY = "BPL_ULTIMATE_V16"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
     container.innerHTML = ""; 
     const card = document.createElement("div");
-    card.className = "pro-banner"; 
+    card.className = "holo-banner"; 
     
     const txt = document.createElement("div");
-    txt.className = "pro-text";
+    txt.className = "holo-text";
 
     let shouldShow = false;
     
@@ -195,8 +206,8 @@ function fireAnimation(type) {
     if(shouldShow) {
         card.appendChild(txt);
         container.appendChild(card); 
-        // STRICTLY 3 SECONDS DELETION TIMER TO MATCH CSS
-        setTimeout(() => { if(container.contains(card)) card.remove(); }, 3000);
+        // 💥 STRICTLY 2 SECONDS DELETION TIMER TO MATCH CSS
+        setTimeout(() => { if(container.contains(card)) card.remove(); }, 2000);
     }
 }
 
