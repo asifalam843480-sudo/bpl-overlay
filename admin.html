@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | Pro Edition V15</title>
+<title>BPL Scorer Panel | Ultimate V16</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
 .container { max-width: 1200px; margin: auto; }
-.card { background: linear-gradient(145deg, #0f172a, #020617); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-h2 { margin-top: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 10px; }
+.card { background: linear-gradient(145deg, #0f172a, #020617); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 229, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+h2 { margin-top: 0; color: #00e5ff; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0, 229, 255, 0.3); padding-bottom: 10px; }
 label { font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
 input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 8px; font-weight: bold; transition: 0.3s; box-sizing: border-box; }
-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+input:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 button { padding: 12px; margin: 5px; font-size: 16px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 button:active { transform: translateY(2px); box-shadow: none; }
@@ -21,9 +21,9 @@ button:active { transform: translateY(2px); box-shadow: none; }
 .red { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
 .blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
 .gold { background: linear-gradient(135deg, #d4af37, #b48608); color: #000; }
-.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); }
 .badge { background: #1e293b; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; border: none; }
-.badge.active { background: #d4af37; color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
+.badge.active { background: #00e5ff; color: #000; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
 .over-log { display: inline-block; padding: 5px 10px; background: #000; margin: 2px; border-radius: 5px; font-weight: bold; border: 1px solid #334155; }
 </style>
 </head>
@@ -31,7 +31,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <div class="container">
 
 <div class="card">
-<h2>1. Live Match Engine</h2>
+<h2>1. Live Match Engine (Barahpura Edition)</h2>
 <div class="grid">
     <div>
         <label>Team A Name</label><input id="teamA">
@@ -70,7 +70,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <div class="card" style="text-align: center;">
-<h2>3. Action Room (Broadcast Pro)</h2>
+<h2>3. Action Room (2-Second Lightning Engine)</h2>
 <button class="runBtn green" onclick="addRun(0)">0</button>
 <button class="runBtn green" onclick="addRun(1)">1</button>
 <button class="runBtn green" onclick="addRun(2)">2</button>
@@ -102,8 +102,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// V15 - BROADCAST PRO SYNC KEY
-const DB_KEY = "BPL_PRO_V15"; 
+// V16 - ULTIMATE DB KEY
+const DB_KEY = "BPL_ULTIMATE_V16"; 
 let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
