@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay | World Edition V18</title>
+<title>BPL Premium Overlay | V19 Compact Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -26,7 +26,6 @@
     
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
-    
     .team-name { font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px 6px rgba(0,0,0,1); }
     
     .score-center { 
@@ -66,18 +65,19 @@
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
     /* =========================================
-       ⚡ MINIMAL HOLO OVERLAY (2 SECONDS)
+       ⚡ MINIMAL COMPACT OVERLAY (2 SECONDS)
        ========================================= */
     #animation-container { perspective: 1200px; position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; }
     
     .holo-banner {
         position: relative;
         background: linear-gradient(135deg, rgba(8, 12, 18, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
-        padding: 30px 100px; 
+        /* 💥 COMPACT SIZE PADDING */
+        padding: 15px 70px; 
         clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
-        border-left: 8px solid #fff;
-        border-right: 8px solid #fff;
-        box-shadow: 0 40px 100px rgba(0,0,0,1), inset 0 0 60px rgba(255,255,255,0.1);
+        border-left: 6px solid #fff;
+        border-right: 6px solid #fff;
+        box-shadow: 0 20px 50px rgba(0,0,0,1), inset 0 0 30px rgba(255,255,255,0.1);
         animation: exactlyTwoSeconds 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         display: flex; align-items: center; justify-content: center;
         overflow: hidden;
@@ -90,28 +90,32 @@
     }
     
     .holo-text {
-        font-family: 'Bebas Neue', cursive; font-size: 200px; color: #fff;
-        text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9);
-        margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase; transform: skewX(5deg); 
+        font-family: 'Bebas Neue', cursive; 
+        /* 💥 REDUCED FONT SIZE FOR COMPACT LOOK */
+        font-size: 110px; 
+        color: #fff;
+        text-shadow: 0 8px 25px rgba(0,0,0,1), 0 0 15px rgba(0,0,0,0.9);
+        margin: 0; letter-spacing: 12px; line-height: 1; text-transform: uppercase; transform: skewX(5deg); 
     }
 
-    .holo-banner.four { border-color: #00e5ff; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(0, 229, 255, 0.4); }
-    .holo-banner.four .holo-text { color: #00e5ff; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(0,229,255,0.7); }
+    .holo-banner.four { border-color: #00e5ff; box-shadow: 0 20px 50px rgba(0,0,0,1), inset 0 0 40px rgba(0, 229, 255, 0.4); }
+    .holo-banner.four .holo-text { color: #00e5ff; text-shadow: 0 10px 30px rgba(0,0,0,1), 0 0 20px rgba(0,229,255,0.7); }
 
-    .holo-banner.six { border-color: #facc15; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(250, 204, 21, 0.4); }
-    .holo-banner.six .holo-text { color: #facc15; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(250,204,21,0.7); }
+    .holo-banner.six { border-color: #facc15; box-shadow: 0 20px 50px rgba(0,0,0,1), inset 0 0 40px rgba(250, 204, 21, 0.4); }
+    .holo-banner.six .holo-text { color: #facc15; text-shadow: 0 10px 30px rgba(0,0,0,1), 0 0 20px rgba(250,204,21,0.7); }
 
-    .holo-banner.danger { border-color: #ff003c; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(255, 0, 60, 0.5); }
-    .holo-banner.danger .holo-text { color: #ff003c; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(255,0,60,0.7); }
+    .holo-banner.danger { border-color: #ff003c; box-shadow: 0 20px 50px rgba(0,0,0,1), inset 0 0 40px rgba(255, 0, 60, 0.5); }
+    .holo-banner.danger .holo-text { color: #ff003c; text-shadow: 0 10px 30px rgba(0,0,0,1), 0 0 20px rgba(255,0,60,0.7); }
 
-    .holo-banner.alert { border-color: #ffaa00; box-shadow: 0 30px 80px rgba(0,0,0,1), inset 0 0 80px rgba(255, 170, 0, 0.4); }
-    .holo-banner.alert .holo-text { color: #ffaa00; text-shadow: 0 15px 50px rgba(0,0,0,1), 0 0 30px rgba(255,170,0,0.7); }
+    .holo-banner.alert { border-color: #ffaa00; box-shadow: 0 20px 50px rgba(0,0,0,1), inset 0 0 40px rgba(255, 170, 0, 0.4); }
+    .holo-banner.alert .holo-text { color: #ffaa00; text-shadow: 0 10px 30px rgba(0,0,0,1), 0 0 20px rgba(255,170,0,0.7); }
 
+    /* SMOOTH, NON-INTRUSIVE ANIMATION */
     @keyframes exactlyTwoSeconds { 
-        0% { transform: scale(0.3) translateY(300px); opacity: 0; } 
-        10% { transform: scale(1) translateY(0); opacity: 1; } 
-        90% { transform: scale(1) translateY(0); opacity: 1; } 
-        100% { transform: scale(1.4) translateY(-200px); opacity: 0; } 
+        0% { transform: scale(0.4) translateY(200px); opacity: 0; } 
+        10% { transform: scale(0.9) translateY(0); opacity: 1; } 
+        90% { transform: scale(0.9) translateY(0); opacity: 1; } 
+        100% { transform: scale(1.1) translateY(-150px); opacity: 0; } 
     }
     @keyframes laserShine { 0% { left: -100%; } 100% { left: 200%; } }
 
@@ -119,38 +123,19 @@
        🔥 PURE SCREEN CHAMPIONSHIP TAKEOVER 🔥
        ========================================= */
     #winnerBanner { 
-        display: none; /* Controlled via JS Flex */
-        position: fixed; 
-        top: 0; left: 0; 
-        width: 100vw; height: 100vh; /* FULL SCREEN BLACKOUT */
+        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: radial-gradient(circle at center, rgba(30, 25, 0, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%); 
-        backdrop-filter: blur(8px);
-        z-index: 999999; 
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        overflow: hidden; 
-        animation: screenTakeover 0.5s ease-out forwards;
+        backdrop-filter: blur(8px); z-index: 999999; flex-direction: column; justify-content: center;
+        align-items: center; text-align: center; overflow: hidden; animation: screenTakeover 0.5s ease-out forwards;
     }
 
-    /* Spinning Cinematic Light Rays */
     .ray-container {
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 200vw; height: 200vh;
-        transform: translate(-50%, -50%);
+        position: absolute; top: 50%; left: 50%; width: 200vw; height: 200vh; transform: translate(-50%, -50%);
         background: conic-gradient(from 0deg, transparent 0%, rgba(250, 204, 21, 0.15) 5%, transparent 10%, transparent 40%, rgba(250, 204, 21, 0.15) 45%, transparent 50%);
-        animation: spinRays 20s linear infinite;
-        z-index: 1;
-        pointer-events: none;
+        animation: spinRays 20s linear infinite; z-index: 1; pointer-events: none;
     }
 
-    .winner-content {
-        position: relative;
-        z-index: 10;
-        animation: epicSlam 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
+    .winner-content { position: relative; z-index: 10; animation: epicSlam 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
     #winnerTitle { 
         color: #fff; font-size: 35px; letter-spacing: 35px; margin-right: -35px; 
@@ -158,28 +143,16 @@
         text-shadow: 0 5px 20px rgba(250, 204, 21, 0.5); text-transform: uppercase; margin-bottom: 20px;
     }
 
-    /* Massive 3D Metallic Gold Text */
     #winnerDisplayHtml { 
-        background: linear-gradient(to bottom, #fffdee, #facc15, #854d0e);
-        -webkit-background-clip: text;
-        color: transparent;
-        font-size: 180px; 
-        font-family: 'Bebas Neue', cursive; 
-        text-shadow: 
-            0px 4px 0px #713f12,
-            0px 8px 0px #422006,
-            0px 15px 40px rgba(0,0,0,0.9), 
-            0px 0px 60px rgba(250,204,21,0.6); 
+        background: linear-gradient(to bottom, #fffdee, #facc15, #854d0e); -webkit-background-clip: text; color: transparent;
+        font-size: 180px; font-family: 'Bebas Neue', cursive; 
+        text-shadow: 0px 4px 0px #713f12, 0px 8px 0px #422006, 0px 15px 40px rgba(0,0,0,0.9), 0px 0px 60px rgba(250,204,21,0.6); 
         text-transform: uppercase; letter-spacing: 10px; line-height: 1.1; 
     }
     
     @keyframes screenTakeover { 0% { opacity: 0; } 100% { opacity: 1; } }
     @keyframes spinRays { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    @keyframes epicSlam { 
-        0% { transform: scale(3) translateZ(200px); opacity: 0; filter: blur(20px); } 
-        40% { transform: scale(0.9); opacity: 1; filter: blur(0px); } 
-        100% { transform: scale(1); opacity: 1; filter: blur(0px); } 
-    }
+    @keyframes epicSlam { 0% { transform: scale(3) translateZ(200px); opacity: 0; filter: blur(20px); } 40% { transform: scale(0.9); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; filter: blur(0px); } }
 </style>
 </head>
 <body>
@@ -222,7 +195,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_WORLD_V18"; 
+const DB_KEY = "BPL_WORLD_V19"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -260,7 +233,6 @@ function loadData() {
     
     let wBanner = document.getElementById("winnerBanner");
     if(wBanner) { 
-        // 💥 USING 'FLEX' TO CENTER THE MASSIVE PURE-SCREEN BANNER 💥
         wBanner.style.display = data.showWinner ? "flex" : "none"; 
         setTxt("winnerDisplayHtml", data.winnerText); 
     }
