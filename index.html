@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Premium Overlay | V22 GitHub Edition</title>
+<title>BPL Premium Overlay | V23 IPL Standard</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -16,7 +16,7 @@
     .bottom-scorebar { 
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
         width:96%; max-width: 1500px; height:95px; 
-        background: linear-gradient(180deg, rgba(5, 10, 20, 0.98), rgba(0, 0, 0, 1)); 
+        background: linear-gradient(180deg, rgba(8, 12, 20, 0.98), rgba(0, 0, 0, 1)); 
         border-top: 4px solid #00e5ff; 
         border-bottom: 2px solid rgba(0, 229, 255, 0.3); 
         display:flex; align-items:center; 
@@ -42,7 +42,14 @@
     .overs-large { font-size: 18px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
     
     .batsman-panel { width: 300px; padding: 0 25px; }
-    .bowler-panel { width: 340px; padding: 0 25px; } 
+    
+    /* 💥 BUG FIX: STRICT BOWLER PANEL WIDTH WITH OVERFLOW HIDDEN */
+    .bowler-panel { 
+        width: 350px; 
+        max-width: 350px; 
+        padding: 0 25px; 
+        overflow: hidden; /* Prevents long names/balls from breaking layout */
+    } 
     
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; }
     .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,1); }
@@ -56,9 +63,14 @@
     .bowler-name { font-size: 20px; font-weight: 900; color: #00e5ff; text-transform: uppercase; text-shadow: 2px 2px 5px rgba(0,0,0,1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #ffffff; letter-spacing: 2px; text-shadow: 3px 3px 10px rgba(0,0,0,1); }
     
-    .this-over { display:flex; gap:6px; margin-top:5px; }
-    .ball { width: 26px; height: 26px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 14px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-    .ball.run { background: #2563eb; } .ball.four { background: #facc15; color:#000; box-shadow: 0 0 10px #facc15; } .ball.six { background: #9333ea; box-shadow: 0 0 10px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 10px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
+    /* 💥 BUG FIX: THIS OVER PANEL WRAP/FLEX LOGIC */
+    .this-over { 
+        display:flex; gap:5px; margin-top:5px; 
+        overflow: hidden; white-space: nowrap; max-width: 100%;
+    }
+    
+    .ball { width: 24px; height: 24px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); flex-shrink: 0; }
+    .ball.run { background: #2563eb; } .ball.four { background: #facc15; color:#000; box-shadow: 0 0 8px #facc15; } .ball.six { background: #9333ea; box-shadow: 0 0 8px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 8px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
     
     .need-panel { width: 140px; text-align: center; background: rgba(0, 229, 255, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #00e5ff; margin: 0 10px; }
     .need-title { font-size: 14px; font-weight: 900; color: #00e5ff; text-shadow: 1px 1px 3px #000; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 45px; color: white; line-height: 1; text-shadow: 3px 3px 8px #000; }
@@ -83,91 +95,99 @@
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
     /* =========================================
-       ⚡ MASSIVE 3D MOTION GRAPHICS OVERLAY
+       ⚡ IPL STYLE SHARP MOTION GRAPHICS (NO BLUR, MEDIUM SIZE)
        ========================================= */
-    #animation-container { perspective: 1500px; position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; width: 100%;}
+    #animation-container { position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; width: 100%;}
     
     .holo-banner {
         position: relative;
-        background: linear-gradient(135deg, rgba(8, 12, 18, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
-        padding: 40px 150px; 
-        clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-        border-left: 10px solid #fff;
-        border-right: 10px solid #fff;
-        box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 80px rgba(255,255,255,0.1);
-        animation: epic3DIn 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        background: #050b14;
+        /* PERFECT MEDIUM SIZE PADDING */
+        padding: 20px 80px; 
+        border-left: 8px solid #fff;
+        border-right: 8px solid #fff;
+        /* CRISP DIAGONAL SHAPE */
+        transform: skewX(-15deg);
+        /* SOLID SHADOW - ZERO BLUR */
+        box-shadow: 15px 15px 0px rgba(0,0,0,0.8);
+        /* FAST, SHARP IPL SLIDE */
+        animation: iplSlide 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         display: flex; align-items: center; justify-content: center;
         overflow: hidden;
     }
     
-    .holo-banner::before {
-        content: ''; position: absolute; top: 0; left: -100%; width: 40%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-        transform: skewX(-25deg); animation: laserShine 1.5s infinite;
+    .holo-banner::after {
+        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: glare 1.5s infinite;
     }
     
     .holo-text {
-        font-family: 'Bebas Neue', cursive; font-size: 190px; color: #fff;
-        text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.9);
-        margin: 0; letter-spacing: 18px; line-height: 1; text-transform: uppercase; transform: skewX(10deg); 
+        font-family: 'Bebas Neue', cursive; 
+        /* PERFECT MEDIUM FONT SIZE */
+        font-size: 130px; 
+        color: #fff;
+        /* SOLID SHADOW - ZERO BLUR */
+        text-shadow: 5px 5px 0px #000;
+        margin: 0; letter-spacing: 12px; line-height: 1; text-transform: uppercase; 
+        /* COUNTER-SKEW TO KEEP TEXT STRAIGHT */
+        transform: skewX(15deg); 
         white-space: nowrap;
     }
 
-    .holo-banner.four { border-color: #00e5ff; box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 100px rgba(0, 229, 255, 0.4); }
-    .holo-banner.four .holo-text { color: #00e5ff; text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 40px rgba(0,229,255,0.8); }
+    .holo-banner.four { border-color: #00e5ff; }
+    .holo-banner.four .holo-text { color: #00e5ff; }
 
-    .holo-banner.six { border-color: #facc15; box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 100px rgba(250, 204, 21, 0.4); }
-    .holo-banner.six .holo-text { color: #facc15; text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 40px rgba(250,204,21,0.8); }
+    .holo-banner.six { border-color: #facc15; }
+    .holo-banner.six .holo-text { color: #facc15; }
 
-    .holo-banner.danger { border-color: #ff003c; box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 100px rgba(255, 0, 60, 0.5); }
-    .holo-banner.danger .holo-text { color: #ff003c; text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 40px rgba(255,0,60,0.8); }
+    .holo-banner.danger { border-color: #ff003c; }
+    .holo-banner.danger .holo-text { color: #ff003c; }
 
-    .holo-banner.alert { border-color: #ffaa00; box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 100px rgba(255, 170, 0, 0.4); }
-    .holo-banner.alert .holo-text { color: #ffaa00; text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 40px rgba(255,170,0,0.8); }
+    .holo-banner.alert { border-color: #ffaa00; }
+    .holo-banner.alert .holo-text { color: #ffaa00; }
 
-    @keyframes epic3DIn { 
-        0% { transform: scale(0.1) rotateX(90deg) translateY(300px); opacity: 0; } 
-        10% { transform: scale(1.1) rotateX(-10deg) translateY(0); opacity: 1; } 
-        15% { transform: scale(1) rotateX(0deg); opacity: 1; } 
-        85% { transform: scale(1) rotateX(0deg); opacity: 1; } 
-        100% { transform: scale(1.5) rotateX(45deg) translateY(-300px); opacity: 0; filter: blur(10px); } 
+    /* SHARP SLIDE ANIMATION - ABSOLUTELY ZERO BLUR */
+    @keyframes iplSlide { 
+        0% { transform: translateX(-100vw) skewX(-15deg); opacity: 1; } 
+        10% { transform: translateX(0) skewX(-15deg); opacity: 1; } 
+        90% { transform: translateX(0) skewX(-15deg); opacity: 1; } 
+        100% { transform: translateX(100vw) skewX(-15deg); opacity: 1; } 
     }
-    @keyframes laserShine { 0% { left: -100%; } 100% { left: 200%; } }
+    @keyframes glare { 0% { left: -100%; } 100% { left: 200%; } }
 
     /* =========================================
-       🔥 PURE SCREEN CHAMPIONSHIP TAKEOVER 🔥
+       🔥 PURE SCREEN CHAMPIONSHIP TAKEOVER (PREMIUM GOLD) 🔥
        ========================================= */
     #winnerBanner { 
         display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: radial-gradient(circle at center, rgba(15, 25, 35, 0.98) 0%, rgba(0, 0, 0, 1) 100%); 
-        backdrop-filter: blur(15px); z-index: 999999; flex-direction: column; justify-content: center;
-        align-items: center; text-align: center; overflow: hidden; animation: screenTakeover 0.5s ease-out forwards;
+        background: linear-gradient(135deg, #0a0f1a 0%, #000000 100%); 
+        z-index: 999999; flex-direction: column; justify-content: center;
+        align-items: center; text-align: center; overflow: hidden; 
+        animation: screenWipe 0.5s ease-out forwards;
     }
 
-    .ray-container {
-        position: absolute; top: 50%; left: 50%; width: 200vw; height: 200vh; transform: translate(-50%, -50%);
-        background: conic-gradient(from 0deg, transparent 0%, rgba(0, 229, 255, 0.15) 5%, transparent 10%, transparent 40%, rgba(0, 229, 255, 0.15) 45%, transparent 50%);
-        animation: spinRays 20s linear infinite; z-index: 1; pointer-events: none;
-    }
-
-    .winner-content { position: relative; z-index: 10; animation: epicSlam 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .winner-content { position: relative; z-index: 10; animation: winnerPop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     
     #winnerTitle { 
-        color: #fff; font-size: 35px; letter-spacing: 35px; margin-right: -35px; 
+        color: #94a3b8; font-size: 30px; letter-spacing: 25px; margin-right: -25px; 
         font-family: 'Montserrat', sans-serif; font-weight:900; 
-        text-shadow: 0 5px 20px rgba(0, 229, 255, 0.6); text-transform: uppercase; margin-bottom: 20px;
+        text-transform: uppercase; margin-bottom: 10px;
     }
 
+    /* Cinematic Premium Metallic Text */
     #winnerDisplayHtml { 
-        background: linear-gradient(to bottom, #ffffff, #00e5ff, #005f73); -webkit-background-clip: text; color: transparent;
-        font-size: 190px; font-family: 'Bebas Neue', cursive; 
-        text-shadow: 0px 4px 0px #003a47, 0px 8px 0px #001920, 0px 15px 50px rgba(0,0,0,0.9), 0px 0px 60px rgba(0,229,255,0.7); 
-        text-transform: uppercase; letter-spacing: 12px; line-height: 1.1; 
+        background: linear-gradient(to bottom, #fffdee, #facc15, #854d0e); -webkit-background-clip: text; color: transparent;
+        font-size: 160px; font-family: 'Bebas Neue', cursive; 
+        text-shadow: 4px 4px 0px rgba(0,0,0,1); 
+        text-transform: uppercase; letter-spacing: 10px; line-height: 1.1; 
+        padding: 0 40px;
+        border-top: 4px solid #facc15;
+        border-bottom: 4px solid #facc15;
     }
     
-    @keyframes screenTakeover { 0% { opacity: 0; } 100% { opacity: 1; } }
-    @keyframes spinRays { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    @keyframes epicSlam { 0% { transform: scale(3) translateZ(200px); opacity: 0; filter: blur(20px); } 40% { transform: scale(0.9); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; filter: blur(0px); } }
+    @keyframes screenWipe { 0% { opacity: 0; transform: scaleY(0); } 100% { opacity: 1; transform: scaleY(1); } }
+    @keyframes winnerPop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 </style>
 </head>
 <body>
@@ -176,7 +196,6 @@
     
     <!-- FULL SCREEN WINNER -->
     <div id="winnerBanner">
-        <div class="ray-container"></div>
         <div class="winner-content">
             <div id="winnerTitle">MATCH CHAMPIONS</div>
             <div id="winnerDisplayHtml">TEAM WON</div>
@@ -215,7 +234,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_GITHUB_V22"; 
+const DB_KEY = "BPL_IPL_V23"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -241,7 +260,7 @@ function fireAnimation(type) {
     if(shouldShow) {
         card.appendChild(txt);
         container.appendChild(card); 
-        setTimeout(() => { if(container.contains(card)) card.remove(); }, 3500);
+        setTimeout(() => { if(container.contains(card)) card.remove(); }, 2500); // Matched with CSS timing
     }
 }
 
@@ -255,12 +274,14 @@ function setImg(id, val) {
 function loadData() {
     let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
     
+    // WINNER CONTROL
     let wBanner = document.getElementById("winnerBanner");
     if(wBanner) { 
         wBanner.style.display = data.showWinner ? "flex" : "none"; 
         setTxt("winnerDisplayHtml", data.winnerText); 
     }
 
+    // SCOREBOARD & TICKER TOGGLE (Smooth sliding)
     let sBar = document.getElementById("scoreBarEl");
     let tBar = document.getElementById("tickerBarEl");
     if(data.showScoreboard) {
@@ -271,8 +292,10 @@ function loadData() {
         tBar.classList.add("hidden-board");
     }
 
+    // LIVE TICKER UPDATE
     setTxt("tickerTextDisplay", data.tickerText);
     
+    // EVENT OVERLAYS
     if (data.flashId && data.flashId !== lastFlashId) { fireAnimation(data.flashEvent); lastFlashId = data.flashId; }
     
     setTxt("scoreLarge", data.score + "-" + data.wickets);
@@ -289,9 +312,13 @@ function loadData() {
     const tb = document.getElementById("targetBox");
     if(tb) { tb.style.display = (data.innings === 2 && data.target > 0) ? "block" : "none"; setTxt("needRuns", data.target); }
     
+    // 💥 BUG FIX: PREVENTING OVERFLOW OF "THIS OVER" BALLS 💥
     let tob = document.getElementById("thisOverBalls");
     if(tob) {
-        let html = ""; (data.thisOver || []).forEach(ball => {
+        let html = ""; 
+        // Only slice and show the LAST 8 events to keep the layout absolutely unbreakable
+        let displayBalls = (data.thisOver || []).slice(-8); 
+        displayBalls.forEach(ball => {
             let cls = "ball"; 
             if(ball === 4 || ball === "4") cls += " four"; 
             else if(ball === 6 || ball === "6") cls += " six"; 
@@ -300,7 +327,8 @@ function loadData() {
             else if(String(ball).includes("WD") || String(ball).includes("NB") || String(ball).includes("B")) cls += " extra"; 
             else cls += " run";
             html += `<span class="${cls}">${ball}</span>`;
-        }); setHtml("thisOverBalls", html);
+        }); 
+        setHtml("thisOverBalls", html);
     }
 }
 
