@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director Panel | V21 Flawless</title>
+<title>BPL Director Panel | V22 GitHub Edition</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -33,15 +33,15 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <div class="container">
 
 <div class="card">
-<h2>1. Live Match Engine</h2>
+<h2>1. Live Match Engine (GitHub Safe)</h2>
 <div class="grid">
     <div>
         <label>Team A Name</label><input id="teamA">
-        <label style="color:#10b981;">Team A Logo</label><input type="file" id="teamALogo" accept="image/*">
+        <label style="color:#10b981;">Team A Logo (Max 2MB)</label><input type="file" id="teamALogo" accept="image/*">
     </div>
     <div>
         <label>Team B Name</label><input id="teamB">
-        <label style="color:#10b981;">Team B Logo</label><input type="file" id="teamBLogo" accept="image/*">
+        <label style="color:#10b981;">Team B Logo (Max 2MB)</label><input type="file" id="teamBLogo" accept="image/*">
     </div>
 </div>
 <div class="grid">
@@ -72,7 +72,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <div class="card">
-<h2>3. Advanced Action Room (Runs & Wickets)</h2>
+<h2>3. Advanced Action Room</h2>
 <div style="text-align: center; margin-bottom: 20px;">
     <button class="runBtn green" onclick="addRun(0)">0</button>
     <button class="runBtn green" onclick="addRun(1)">1</button>
@@ -123,7 +123,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <div class="card">
-<h2>📺 Broadcast Controls (Ticker & Displays)</h2>
+<h2>📺 Broadcast Controls</h2>
 <div class="grid">
     <div>
         <label>Live Ticker Message</label>
@@ -149,7 +149,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-const DB_KEY = "BPL_FLAWLESS_V21"; 
+// V22 GITHUB BULLETPROOF KEY
+const DB_KEY = "BPL_GITHUB_V22"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
@@ -161,7 +162,13 @@ let defaultData = {
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
-function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); }
+function saveData() { 
+    try {
+        localStorage.setItem(DB_KEY, JSON.stringify(matchData)); 
+    } catch(e) {
+        alert("GitHub Storage Full! Try clearing browser cache or uploading smaller logos.");
+    }
+}
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
 function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; matchData.history.push(snap); if(matchData.history.length > 30) matchData.history.shift(); }
 function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1; }
@@ -268,6 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
+    // GITHUB SAFE COMPRESSION: Reduced quality to 0.3 to prevent quota crash
     const handleImage = (id, key) => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
@@ -275,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.onload = ev => { const img = new Image(); img.onload = () => { 
                 const canvas = document.createElement("canvas"); let scale = 100 / img.width; if(scale > 1) scale = 1;
                 canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL("image/webp", 0.6); saveData(); 
+                matchData[key] = canvas.toDataURL("image/jpeg", 0.3); saveData(); 
             }; img.src = ev.target.result; }; reader.readAsDataURL(file);
         });
     };
