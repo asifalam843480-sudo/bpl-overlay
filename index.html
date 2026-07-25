@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay | V21 Flawless</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPL Premium Overlay | V22 GitHub Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -10,7 +11,7 @@
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow: hidden;}
     
     /* =========================================
-       📊 ULTRA-CLEAR SCOREBOARD (WIDE PANEL)
+       📊 ULTRA-CLEAR SCOREBOARD
        ========================================= */
     .bottom-scorebar { 
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
@@ -22,11 +23,9 @@
         box-shadow: 0 -15px 50px rgba(0,0,0,0.9), 0 0 20px rgba(0, 229, 255, 0.2); 
         clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
         z-index:100;
-        /* 🎬 SMOOTH LIQUID TOGGLE TRANSITION */
         transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
     }
     
-    /* Toggle Class applied via JS */
     .bottom-scorebar.hidden-board { transform: translate(-50%, 150px) scale(0.95); opacity: 0; }
     
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
@@ -42,7 +41,6 @@
     .score-large { font-family: 'Bebas Neue', cursive; font-size: 75px; color: #ffffff; line-height: 0.9; text-shadow: 4px 6px 15px rgba(0,0,0,1); transition: 0.3s; }
     .overs-large { font-size: 18px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
     
-    /* 🏏 EXPANDED PANELS FOR LONG NAMES */
     .batsman-panel { width: 300px; padding: 0 25px; }
     .bowler-panel { width: 340px; padding: 0 25px; } 
     
@@ -55,7 +53,6 @@
     .off-strike { opacity: 0.8; } 
     .striker-icon { color: #00e5ff; font-size: 15px; opacity: 0; text-shadow: 0 0 5px #00e5ff; } .on-strike .striker-icon { opacity: 1; }
     
-    /* Bowler Name Shrink-to-fit logic visually */
     .bowler-name { font-size: 20px; font-weight: 900; color: #00e5ff; text-transform: uppercase; text-shadow: 2px 2px 5px rgba(0,0,0,1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #ffffff; letter-spacing: 2px; text-shadow: 3px 3px 10px rgba(0,0,0,1); }
     
@@ -112,7 +109,7 @@
     .holo-text {
         font-family: 'Bebas Neue', cursive; font-size: 190px; color: #fff;
         text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.9);
-        margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase; transform: skewX(10deg); 
+        margin: 0; letter-spacing: 18px; line-height: 1; text-transform: uppercase; transform: skewX(10deg); 
         white-space: nowrap;
     }
 
@@ -218,7 +215,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_FLAWLESS_V21"; 
+const DB_KEY = "BPL_GITHUB_V22"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -235,7 +232,6 @@ function fireAnimation(type) {
     else if(type === 6 || type === "6") { txt.innerText = "SIX"; card.classList.add("six"); shouldShow = true; }
     else if(type === "WIDE") { txt.innerText = "WIDE"; card.classList.add("alert"); shouldShow = true; }
     else if(type === "NO BALL") { txt.innerText = "NO BALL"; card.classList.add("alert"); shouldShow = true; }
-    // 🔥 DYNAMIC WICKET TEXT BASED ON ADMIN SELECTION
     else if(["BOWLED", "CAUGHT", "CAUGHT BEHIND", "C & B", "LBW", "STUMPED", "RUN OUT", "RETIRED HURT"].includes(type)) { 
         txt.innerText = type; 
         card.classList.add("danger"); 
@@ -259,14 +255,12 @@ function setImg(id, val) {
 function loadData() {
     let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
     
-    // WINNER CONTROL
     let wBanner = document.getElementById("winnerBanner");
     if(wBanner) { 
         wBanner.style.display = data.showWinner ? "flex" : "none"; 
         setTxt("winnerDisplayHtml", data.winnerText); 
     }
 
-    // SCOREBOARD & TICKER TOGGLE (Smooth sliding)
     let sBar = document.getElementById("scoreBarEl");
     let tBar = document.getElementById("tickerBarEl");
     if(data.showScoreboard) {
@@ -277,10 +271,8 @@ function loadData() {
         tBar.classList.add("hidden-board");
     }
 
-    // LIVE TICKER UPDATE
     setTxt("tickerTextDisplay", data.tickerText);
     
-    // EVENT OVERLAYS
     if (data.flashId && data.flashId !== lastFlashId) { fireAnimation(data.flashEvent); lastFlashId = data.flashId; }
     
     setTxt("scoreLarge", data.score + "-" + data.wickets);
