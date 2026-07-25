@@ -3,36 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Scorer Panel | V19 Compact Pro</title>
+<title>BPL Director Panel | Ultra V20</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
 .container { max-width: 1200px; margin: auto; }
-.card { background: linear-gradient(145deg, #0b1120, #030712); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-h2 { margin-top: 0; color: #facc15; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); padding-bottom: 10px; }
+.card { background: linear-gradient(145deg, #0b1120, #030712); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 229, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+h2 { margin-top: 0; color: #00e5ff; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0, 229, 255, 0.2); padding-bottom: 10px; font-size: 18px; }
 label { font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 8px; font-weight: bold; transition: 0.3s; box-sizing: border-box; }
-input:focus { outline: none; border-color: #facc15; box-shadow: 0 0 15px rgba(250, 204, 21, 0.3); }
+input, select { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 8px; font-weight: bold; transition: 0.3s; box-sizing: border-box; font-family: 'Montserrat', sans-serif;}
+input:focus, select:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-button { padding: 12px; margin: 5px; font-size: 16px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: pointer; border: none; border-radius: 8px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 button:active { transform: translateY(2px); box-shadow: none; }
-.runBtn { width: 70px; height: 60px; font-size: 24px; border-radius: 12px; }
+.runBtn { width: 65px; height: 55px; font-size: 22px; border-radius: 10px; }
 .green { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
 .red { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
 .blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
-.purple { background: linear-gradient(135deg, #a855f7, #7e22ce); color: #fff; }
 .gold { background: linear-gradient(135deg, #facc15, #ca8a04); color: #000; }
-.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(250, 204, 21, 0.6); }
+.scoreBox { font-size: 55px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); }
 .badge { background: #1e293b; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; border: none; }
-.badge.active { background: #facc15; color: #000; box-shadow: 0 0 15px rgba(250, 204, 21, 0.6); }
+.badge.active { background: #00e5ff; color: #000; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
 .over-log { display: inline-block; padding: 5px 10px; background: #000; margin: 2px; border-radius: 5px; font-weight: bold; border: 1px solid #334155; }
+.flex-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.flex-row input { margin: 0; width: 80px; text-align: center; font-size: 18px; }
 </style>
 </head>
 <body>
 <div class="container">
 
 <div class="card">
-<h2>1. Live Match Engine (Barahpura Edition)</h2>
+<h2>1. Live Match Engine</h2>
 <div class="grid">
     <div>
         <label>Team A Name</label><input id="teamA">
@@ -70,32 +72,76 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <div id="thisOver" style="margin-top:15px; min-height: 40px;"></div>
 </div>
 
-<div class="card" style="text-align: center;">
-<h2>3. Action Room (Compact 2-Second Engine)</h2>
-<button class="runBtn green" onclick="addRun(0)">0</button>
-<button class="runBtn green" onclick="addRun(1)">1</button>
-<button class="runBtn green" onclick="addRun(2)">2</button>
-<button class="runBtn green" onclick="addRun(3)">3</button>
-<button class="runBtn gold" style="font-size: 30px;" onclick="addRun(4)">4</button>
-<!-- NEW 5 RUNS BUTTON ADDED HERE -->
-<button class="runBtn purple" style="font-size: 26px;" onclick="addRun(5)">5</button>
-<button class="runBtn gold" style="font-size: 30px;" onclick="addRun(6)">6</button>
-
-<button class="runBtn red" onclick="addWicket('W')">OUT</button>
-<button class="runBtn red" style="font-size: 16px; background: #7f1d1d;" onclick="addRunOut()">RUN<br>OUT</button>
-<br><br>
-<button class="blue" onclick="extraBall('WD')">WIDE</button>
-<button class="gold" onclick="extraBall('NB')">NO BALL</button>
-<button class="blue" style="background:#7e22ce;" onclick="addLegBye(4)">4 LEG BYE</button>
-<button class="blue" style="background:#ea580c;" onclick="addBye(5, '5B')">5 BYE (WD+4)</button>
-<button class="gold" onclick="undoBall()">UNDO LAST BALL</button>
+<div class="card">
+<h2>3. Advanced Action Room (Runs & Wickets)</h2>
+<div style="text-align: center; margin-bottom: 20px;">
+    <button class="runBtn green" onclick="addRun(0)">0</button>
+    <button class="runBtn green" onclick="addRun(1)">1</button>
+    <button class="runBtn green" onclick="addRun(2)">2</button>
+    <button class="runBtn green" onclick="addRun(3)">3</button>
+    <button class="runBtn gold" onclick="addRun(4)">4</button>
+    <button class="runBtn blue" onclick="addRun(5)">5</button>
+    <button class="runBtn gold" onclick="addRun(6)">6</button>
+    <button class="runBtn blue" style="width:auto; padding: 0 20px;" onclick="undoBall()">UNDO BALL</button>
 </div>
 
-<div class="card" style="text-align: center;">
-<h2>🏆 Ultimate Match Winner Takeover</h2>
-<input id="winnerText" placeholder="Jaise: RCB WON BY 5 WICKETS">
-<button class="green" onclick="toggleFlag('showWinner', true)">🔥 TRIGGER FULL SCREEN WINNER</button>
-<button class="red" onclick="toggleFlag('showWinner', false)">Hide Banner</button>
+<div class="grid">
+    <!-- Custom Extras Engine -->
+    <div style="background: #020617; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;">
+        <label style="color:#00e5ff;">🛠️ Custom Extras Engine</label><br><br>
+        <div class="flex-row">
+            <button class="blue" style="width: 120px;" onclick="addSmartExtra('WD')">WIDE +</button>
+            <input type="number" id="inWD" value="0" min="0"> RUNS
+        </div>
+        <div class="flex-row">
+            <button class="gold" style="width: 120px;" onclick="addSmartExtra('NB')">NO BALL +</button>
+            <input type="number" id="inNB" value="0" min="0"> RUNS
+        </div>
+        <div class="flex-row">
+            <button class="blue" style="background:#7e22ce; width: 120px;" onclick="addSmartExtra('B')">BYE +</button>
+            <input type="number" id="inB" value="1" min="1"> RUNS
+        </div>
+        <div class="flex-row">
+            <button class="blue" style="background:#ea580c; width: 120px;" onclick="addSmartExtra('LB')">LEG BYE +</button>
+            <input type="number" id="inLB" value="1" min="1"> RUNS
+        </div>
+    </div>
+    
+    <!-- Advanced Wicket Engine -->
+    <div style="background: #020617; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;">
+        <label style="color:#ef4444;">🔴 Advanced Wicket Engine</label><br><br>
+        <select id="wicketTypeBox" style="font-size: 16px; padding: 10px;">
+            <option value="BOWLED">Bowled</option>
+            <option value="CAUGHT">Caught</option>
+            <option value="CAUGHT BEHIND">Caught Behind</option>
+            <option value="C & B">Caught & Bowled</option>
+            <option value="LBW">LBW</option>
+            <option value="STUMPED">Stumped</option>
+            <option value="RUN OUT">Run Out</option>
+            <option value="RETIRED HURT">Retired Hurt</option>
+        </select>
+        <button class="red" style="width: 100%; font-size: 20px; padding: 15px; margin-top: 10px;" onclick="processWicket()">🚨 OUT!</button>
+    </div>
+</div>
+</div>
+
+<div class="card">
+<h2>📺 Broadcast Controls (Ticker, Winner, Display)</h2>
+<div class="grid">
+    <div>
+        <label>Live Ticker Message (Bottom Bar)</label>
+        <input id="tickerText" placeholder="Type breaking news or sponsors here...">
+    </div>
+    <div>
+        <label>Match Winner Team Text</label>
+        <input id="winnerText" placeholder="E.g., RCB WON BY 5 WICKETS">
+    </div>
+</div>
+<div style="display:flex; justify-content:space-between; flex-wrap: wrap; gap:10px;">
+    <button class="blue" style="flex:1; background:#0f766e;" onclick="toggleScoreboard()">👁️ HIDE/SHOW SCOREBOARD</button>
+    <button class="gold" style="flex:1;" onclick="toggleFlag('showWinner', true)">🏆 SHOW FULL SCREEN WINNER</button>
+    <button class="red" style="flex:1;" onclick="toggleFlag('showWinner', false)">❌ HIDE WINNER</button>
+</div>
 </div>
 
 <div class="card" style="display:flex; justify-content:space-between;">
@@ -106,9 +152,17 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// V19 - COMPACT DB KEY
-const DB_KEY = "BPL_WORLD_V19"; 
-let defaultData = { teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, winnerText: "", showWinner: false };
+// V20 ULTRA MATRIX KEY
+const DB_KEY = "BPL_ULTRA_V20"; 
+let defaultData = { 
+    teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
+    score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
+    b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, 
+    bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, 
+    winnerText: "", showWinner: false, 
+    showScoreboard: true, // New smooth toggle
+    tickerText: "🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 | POWERED BY A2 SERIES | CONTACT: 8252001148 🏆" 
+};
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
@@ -119,7 +173,8 @@ function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1;
 function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
 
 function checkAndClearOver() {
-    let legal = matchData.thisOver.filter(b => b !== "WD" && b !== "NB" && b !== "5B").length;
+    // Exclude extras that don't count as balls from over cleanup trigger logic
+    let legal = matchData.thisOver.filter(b => !String(b).includes("WD") && !String(b).includes("NB")).length;
     if (legal >= 6) { matchData.thisOver = []; }
 }
 
@@ -133,43 +188,63 @@ function addRun(run) {
     updateUI();
 }
 
-function addWicket(type) {
+// 🎯 ADVANCED WICKET PROCESSOR
+function processWicket() {
     saveHistory(); checkAndClearOver();
-    matchData.wickets++; matchData.bowlerWickets++; matchData.balls++; matchData.thisOver.push("W");
+    let wType = document.getElementById("wicketTypeBox").value; // e.g., "BOWLED", "RUN OUT"
+    
+    matchData.wickets++; 
+    matchData.balls++; 
+    matchData.thisOver.push("W");
+    
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("W");
+    
+    // Credit bowler unless it's Run Out or Retired Hurt
+    if(wType !== "RUN OUT" && wType !== "RETIRED HURT") {
+        matchData.bowlerWickets++;
+    }
+    
+    triggerAnimation(wType); // Send specific wicket text to overlay!
+    
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
     updateUI();
 }
 
-function addRunOut() {
+// 🛠️ SMART EXTRAS ENGINE
+function addSmartExtra(type) {
     saveHistory(); checkAndClearOver();
-    matchData.wickets++; matchData.balls++; matchData.thisOver.push("RO");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    triggerAnimation("RO");
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
+    let extraRuns = parseInt(document.getElementById("in" + type).value) || 0;
+    
+    if(type === 'WD') {
+        let total = 1 + extraRuns;
+        matchData.score += total; matchData.bowlerRuns += total; 
+        matchData.thisOver.push(extraRuns > 0 ? `WD+${extraRuns}` : `WD`);
+        if(extraRuns % 2 !== 0) rotateStrike();
+        triggerAnimation('WIDE');
+    } 
+    else if(type === 'NB') {
+        let total = 1 + extraRuns;
+        matchData.score += total; matchData.bowlerRuns += total; 
+        matchData.thisOver.push(extraRuns > 0 ? `NB+${extraRuns}` : `NB`);
+        // Note: Batsman runs from NB are usually scored via normal run buttons, keeping it simple here
+        if(extraRuns % 2 !== 0) rotateStrike();
+        triggerAnimation('NO BALL');
+    }
+    else if(type === 'B') {
+        matchData.score += extraRuns; matchData.balls++; 
+        matchData.thisOver.push(`${extraRuns}B`);
+        if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
+        if(extraRuns % 2 !== 0) rotateStrike();
+        if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
+    }
+    else if(type === 'LB') {
+        matchData.score += extraRuns; matchData.balls++; 
+        matchData.thisOver.push(`${extraRuns}LB`);
+        if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
+        if(extraRuns % 2 !== 0) rotateStrike();
+        if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
+    }
     updateUI();
-}
-
-function addLegBye(runs) {
-    saveHistory(); checkAndClearOver(); runs = parseInt(runs);
-    matchData.score += runs; matchData.balls++; matchData.thisOver.push(runs + "LB");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    if(runs % 2 !== 0) rotateStrike();
-    if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
-
-function extraBall(type) { 
-    saveHistory(); checkAndClearOver(); 
-    matchData.score++; matchData.bowlerRuns++; matchData.thisOver.push(type); 
-    if(type === 'NB') triggerAnimation('NB'); 
-    updateUI(); 
-}
-
-function addBye(runs, type) { 
-    saveHistory(); checkAndClearOver(); 
-    matchData.score += runs; matchData.thisOver.push(type); updateUI(); 
 }
 
 function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let oldA = matchData.teamALogo, oldB = matchData.teamBLogo; matchData = hist.pop(); matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.history = hist; updateUI(); }
@@ -187,6 +262,7 @@ function startSecondInnings() {
 
 function setStrike(n) { matchData.onStrike = n; updateUI(); }
 function toggleFlag(flag, state) { matchData[flag] = state; updateUI(); }
+function toggleScoreboard() { matchData.showScoreboard = !matchData.showScoreboard; updateUI(); }
 function hardReset() { if(confirm("Sab clear ho jayega. Pakka?")) { localStorage.clear(); location.reload(); } }
 
 function updateUI() {
@@ -195,7 +271,7 @@ function updateUI() {
     let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`);
     document.getElementById("thisOver").innerHTML = html;
     
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => { 
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText"].forEach(id => { 
         let el = document.getElementById(id); 
         if(el && document.activeElement !== el) el.value = matchData[id] || ""; 
     });
@@ -207,7 +283,7 @@ function updateUI() {
 
 document.addEventListener("DOMContentLoaded", () => {
     updateUI();
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText"].forEach(id => {
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText"].forEach(id => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
