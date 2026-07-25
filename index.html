@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BPL Premium Overlay | Ultra V20</title>
+<title>BPL Premium Overlay | V21 Flawless</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -14,7 +14,6 @@
        ========================================= */
     .bottom-scorebar { 
         position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
-        /* Made slightly wider to perfectly fit long bowler names */
         width:96%; max-width: 1500px; height:95px; 
         background: linear-gradient(180deg, rgba(5, 10, 20, 0.98), rgba(0, 0, 0, 1)); 
         border-top: 4px solid #00e5ff; 
@@ -28,10 +27,7 @@
     }
     
     /* Toggle Class applied via JS */
-    .bottom-scorebar.hidden-board {
-        transform: translate(-50%, 150px) scale(0.95);
-        opacity: 0;
-    }
+    .bottom-scorebar.hidden-board { transform: translate(-50%, 150px) scale(0.95); opacity: 0; }
     
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
@@ -48,7 +44,7 @@
     
     /* 🏏 EXPANDED PANELS FOR LONG NAMES */
     .batsman-panel { width: 300px; padding: 0 25px; }
-    .bowler-panel { width: 340px; padding: 0 25px; } /* Increased from 280 to 340px */
+    .bowler-panel { width: 340px; padding: 0 25px; } 
     
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 4px 0; }
     .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,1); }
@@ -116,7 +112,7 @@
     .holo-text {
         font-family: 'Bebas Neue', cursive; font-size: 190px; color: #fff;
         text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.9);
-        margin: 0; letter-spacing: 18px; line-height: 1; text-transform: uppercase; transform: skewX(10deg); 
+        margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase; transform: skewX(10deg); 
         white-space: nowrap;
     }
 
@@ -132,7 +128,6 @@
     .holo-banner.alert { border-color: #ffaa00; box-shadow: 0 50px 150px rgba(0,0,0,1), inset 0 0 100px rgba(255, 170, 0, 0.4); }
     .holo-banner.alert .holo-text { color: #ffaa00; text-shadow: 0 20px 60px rgba(0,0,0,1), 0 0 40px rgba(255,170,0,0.8); }
 
-    /* Epic 3D Advanced Motion Graphic Transition */
     @keyframes epic3DIn { 
         0% { transform: scale(0.1) rotateX(90deg) translateY(300px); opacity: 0; } 
         10% { transform: scale(1.1) rotateX(-10deg) translateY(0); opacity: 1; } 
@@ -223,7 +218,7 @@
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_ULTRA_V20"; 
+const DB_KEY = "BPL_FLAWLESS_V21"; 
 
 function fireAnimation(type) {
     const container = document.getElementById("animation-container"); 
@@ -250,7 +245,6 @@ function fireAnimation(type) {
     if(shouldShow) {
         card.appendChild(txt);
         container.appendChild(card); 
-        // 3.5 Seconds matching the epic3DIn CSS animation
         setTimeout(() => { if(container.contains(card)) card.remove(); }, 3500);
     }
 }
