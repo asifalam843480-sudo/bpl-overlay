@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director Panel | V22 GitHub Edition</title>
+<title>BPL Director Panel | V23 IPL Standard</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -33,15 +33,15 @@ button:active { transform: translateY(2px); box-shadow: none; }
 <div class="container">
 
 <div class="card">
-<h2>1. Live Match Engine (GitHub Safe)</h2>
+<h2>1. Live Match Engine</h2>
 <div class="grid">
     <div>
         <label>Team A Name</label><input id="teamA">
-        <label style="color:#10b981;">Team A Logo (Max 2MB)</label><input type="file" id="teamALogo" accept="image/*">
+        <label style="color:#10b981;">Team A Logo</label><input type="file" id="teamALogo" accept="image/*">
     </div>
     <div>
         <label>Team B Name</label><input id="teamB">
-        <label style="color:#10b981;">Team B Logo (Max 2MB)</label><input type="file" id="teamBLogo" accept="image/*">
+        <label style="color:#10b981;">Team B Logo</label><input type="file" id="teamBLogo" accept="image/*">
     </div>
 </div>
 <div class="grid">
@@ -149,8 +149,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// V22 GITHUB BULLETPROOF KEY
-const DB_KEY = "BPL_GITHUB_V22"; 
+// V23 IPL BROADCAST STANDARD KEY
+const DB_KEY = "BPL_IPL_V23"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
@@ -166,7 +166,7 @@ function saveData() {
     try {
         localStorage.setItem(DB_KEY, JSON.stringify(matchData)); 
     } catch(e) {
-        alert("GitHub Storage Full! Try clearing browser cache or uploading smaller logos.");
+        alert("System Storage Full! Please use smaller team logos (Max 1MB).");
     }
 }
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
