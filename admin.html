@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director Panel | V23 IPL Standard</title>
+<title>BPL Director Panel | V24 Elite</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -149,8 +149,8 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// V23 IPL BROADCAST STANDARD KEY
-const DB_KEY = "BPL_IPL_V23"; 
+// V24 ELITE KEY
+const DB_KEY = "BPL_ELITE_V24"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
@@ -163,11 +163,7 @@ let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
 function saveData() { 
-    try {
-        localStorage.setItem(DB_KEY, JSON.stringify(matchData)); 
-    } catch(e) {
-        alert("System Storage Full! Please use smaller team logos (Max 1MB).");
-    }
+    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) {}
 }
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
 function saveHistory() { let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; matchData.history.push(snap); if(matchData.history.length > 30) matchData.history.shift(); }
@@ -195,7 +191,10 @@ function processWicket() {
     matchData.wickets++; matchData.balls++; matchData.thisOver.push("W");
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     if(wType !== "RUN OUT" && wType !== "RETIRED HURT") { matchData.bowlerWickets++; }
+    
+    // Send the exact wicket type selected by admin
     triggerAnimation(wType); 
+    
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
     updateUI();
 }
@@ -275,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // GITHUB SAFE COMPRESSION: Reduced quality to 0.3 to prevent quota crash
     const handleImage = (id, key) => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => {
@@ -283,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.onload = ev => { const img = new Image(); img.onload = () => { 
                 const canvas = document.createElement("canvas"); let scale = 100 / img.width; if(scale > 1) scale = 1;
                 canvas.width = img.width * scale; canvas.height = img.height * scale; canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height); 
-                matchData[key] = canvas.toDataURL("image/jpeg", 0.3); saveData(); 
+                matchData[key] = canvas.toDataURL("image/jpeg", 0.4); saveData(); 
             }; img.src = ev.target.result; }; reader.readAsDataURL(file);
         });
     };
