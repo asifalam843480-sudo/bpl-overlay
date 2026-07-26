@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director Panel | V24 Elite</title>
+<title>BPL Director Panel | V25 Ultra</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; padding: 20px; margin: 0; }
@@ -149,8 +149,7 @@ button:active { transform: translateY(2px); box-shadow: none; }
 </div>
 
 <script>
-// V24 ELITE KEY
-const DB_KEY = "BPL_ELITE_V24"; 
+const DB_KEY = "BPL_ULTRA_V25"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
@@ -192,7 +191,6 @@ function processWicket() {
     if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
     if(wType !== "RUN OUT" && wType !== "RETIRED HURT") { matchData.bowlerWickets++; }
     
-    // Send the exact wicket type selected by admin
     triggerAnimation(wType); 
     
     if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
@@ -208,7 +206,7 @@ function addSmartExtra(type) {
         matchData.score += total; matchData.bowlerRuns += total; 
         matchData.thisOver.push(extraRuns > 0 ? `WD+${extraRuns}` : `WD`);
         if(extraRuns % 2 !== 0) rotateStrike();
-        triggerAnimation('WIDE');
+        triggerAnimation('WIDE'); // Event sent, but frontend will IGNORE it for full screen popup
     } 
     else if(type === 'NB') {
         let total = 1 + extraRuns;
