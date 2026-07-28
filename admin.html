@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director | V30 HD Infinity</title>
+<title>BPL Director | V31 God-Mode</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; margin: 0; padding: 0; }
@@ -162,7 +162,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             <div><button class="blue" onclick="toggleFlag('showProfile', true)">SHOW PROFILE</button><button class="red" onclick="toggleFlag('showProfile', false)">HIDE</button></div>
         </div>
         
-        <!-- 💥 SPLIT DUAL DROPDOWNS FOR AUTO FETCH 💥 -->
+        <!-- DUAL DROPDOWNS -->
         <div class="auto-fetch-box grid">
             <div>
                 <label style="color:#00e5ff; font-size:14px;">⚡ FETCH FROM TEAM A ⚡</label>
@@ -224,26 +224,25 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 </div>
 
 <script>
-const DB_KEY = "BPL_HD_V30"; 
+// 💥 THE FIX: Both Files Now Use EXACTLY The Same Key 💥
+const DB_KEY = "BPL_ULTRA_V31"; 
+
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
     b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, 
     bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, 
     winnerText: "", showWinner: false, winnerTheme: "gold", showScoreboard: true, tickerText: "🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 🏆",
-    
     showXiA: false, showXiB: false, xiTopText: "TEAM PLAYING XI",
     xiA: Array(11).fill({name: "", img: ""}), xiB: Array(11).fill({name: "", img: ""}),
-    
     showProfile: false, profName: "BABAR", profImg: "", profS1L: "MATCHES", profS1V: "0", profS2L: "RUNS", profS2V: "0", profS3L: "STRIKE RATE", profS3V: "0",
-    
     showVs: false, vsTitle: "CAPTAINS", vsTeamLName: "", vsLogoL: "", vsLeftName: "", vsLeftImg: "", vsTeamRName: "", vsLogoR: "", vsRightName: "", vsRightImg: ""
 };
 
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
-function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 ERROR: Storage Full!"); } }
+function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 ERROR: Storage Full! Restart browser if issue persists."); } }
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -253,7 +252,6 @@ function switchTab(tabId) {
     if(tabId === 'tab-profile') populateProfileDropdown();
 }
 
-// 💥 DUAL DROPDOWN LOGIC 💥
 function populateProfileDropdown() {
     let selA = document.getElementById("autoPlayerSelectA");
     let htmlA = `<option value="">-- SELECT TEAM A PLAYER --</option>`;
@@ -270,21 +268,20 @@ function autoFillProfile(index, team) {
     if(index === "") return;
     let player = (team === 'A') ? matchData.xiA[index] : matchData.xiB[index];
     if(player) {
-        matchData.profName = player.name;
-        matchData.profImg = player.img; 
+        matchData.profName = player.name; matchData.profImg = player.img; 
         document.getElementById("profName").value = player.name;
         saveData();
     }
 }
 
-// 💥 RESOLUTION UPGRADED FOR HD QUALITY 💥
+// HD Image Compression (600px Max)
 function compressImage(file, callback, maxSize=600) {
     const reader = new FileReader(); reader.onload = (e) => {
         const img = new Image(); img.onload = () => {
             const canvas = document.createElement("canvas"); let w = img.width, h = img.height;
             if(w > h && w > maxSize) { h *= maxSize / w; w = maxSize; } else if (h > maxSize) { w *= maxSize / h; h = maxSize; }
             canvas.width = w; canvas.height = h; canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-            callback(canvas.toDataURL("image/webp", 0.85)); // High Quality WebP
+            callback(canvas.toDataURL("image/webp", 0.85)); // 85% Quality WebP
         }; img.src = e.target.result;
     }; reader.readAsDataURL(file);
 }
@@ -297,11 +294,11 @@ function renderXiInputs() {
     });
 }
 function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); }
-// XI Images compressed a bit more to save space
 function handleXiImg(input, team, index) { if(input.files[0]) compressImage(input.files[0], (base64) => { updateXi(team, index, 'img', base64); }, 300); }
 
 function saveHistory() { 
     let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 
+    // Strip heavy images from history to prevent crash
     snap.xiA = []; snap.xiB = []; snap.profImg = ""; snap.vsLeftImg = ""; snap.vsRightImg = ""; snap.teamALogo = ""; snap.teamBLogo = ""; snap.vsLogoL = ""; snap.vsLogoR = "";
     matchData.history.push(snap); if(matchData.history.length > 8) matchData.history.shift(); 
 }
@@ -342,7 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // HD IMAGE SIZES (600px)
     ["teamALogo", "teamBLogo", "profImg", "vsLeftImg", "vsRightImg", "vsLogoL", "vsLogoR"].forEach(id => {
         let el = document.getElementById(id); if(!el) return;
         el.addEventListener("change", e => { if(e.target.files[0]) compressImage(e.target.files[0], base64 => { matchData[id] = base64; saveData(); }, 600); });
