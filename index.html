@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Premium Overlay | V27 Titan</title>
+<title>BPL Premium Overlay | V28 Mastery</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -11,71 +11,42 @@
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow: hidden;}
     
     /* =========================================
-       📊 RESTORED V25: ULTRA-CLEAR SCOREBOARD
+       📊 BASE SCOREBOARD
        ========================================= */
     .bottom-scorebar { 
-        position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
-        width:96%; max-width: 1500px; height:95px; 
-        background: linear-gradient(180deg, rgba(5, 8, 15, 0.98), rgba(0, 0, 0, 1)); 
-        border-top: 4px solid #00e5ff; border-bottom: 2px solid rgba(0, 229, 255, 0.3); 
-        display:flex; align-items:center; 
-        box-shadow: 0 -15px 50px rgba(0,0,0,0.9), 0 0 20px rgba(0, 229, 255, 0.2); 
-        clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
-        z-index:100; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
+        position:absolute; bottom:55px; left:50%; transform:translateX(-50%); width:96%; max-width: 1500px; height:95px; 
+        background: linear-gradient(180deg, rgba(5, 8, 15, 0.98), rgba(0, 0, 0, 1)); border-top: 4px solid #00e5ff; border-bottom: 2px solid rgba(0, 229, 255, 0.3); 
+        display:flex; align-items:center; box-shadow: 0 -15px 50px rgba(0,0,0,0.9), 0 0 20px rgba(0, 229, 255, 0.2); 
+        clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); z-index:100; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
     }
     .bottom-scorebar.hidden-board { transform: translate(-50%, 150px) scale(0.95); opacity: 0; }
-    
     .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
     .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
     .team-name { font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px 6px rgba(0,0,0,1); }
-    
     .score-center { width: 250px; text-align: center; background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 80%); height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 2px solid rgba(255,255,255,0.15); border-right: 2px solid rgba(255,255,255,0.15); }
     .score-large { font-family: 'Bebas Neue', cursive; font-size: 75px; color: #ffffff; line-height: 0.9; text-shadow: 4px 6px 15px rgba(0,0,0,1); }
     .overs-large { font-size: 18px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
-    
     .batsman-panel, .bowler-panel { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 25px; }
     .batsman-panel { width: 300px; } .bowler-panel { width: 350px; max-width: 350px; overflow: hidden; } 
-    
     .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 2px 0; }
     .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,1); }
     .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 1px; color:#ffffff; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
     .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #cbd5e1; font-weight: 700; }
     .on-strike { background: rgba(0, 229, 255, 0.1); border-radius: 4px; padding: 0 5px; } .on-strike .batsman-score { color: #00e5ff; } .off-strike { opacity: 0.8; } 
     .striker-icon { color: #00e5ff; font-size: 15px; opacity: 0; text-shadow: 0 0 5px #00e5ff; } .on-strike .striker-icon { opacity: 1; }
-    
     .bowler-name { font-size: 20px; font-weight: 900; color: #00e5ff; text-transform: uppercase; text-shadow: 2px 2px 5px rgba(0,0,0,1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #ffffff; letter-spacing: 2px; text-shadow: 3px 3px 10px rgba(0,0,0,1); }
-    
     .this-over { display:flex; gap:5px; margin-top:3px; overflow: hidden; white-space: nowrap; max-width: 100%; }
     .ball { width: 24px; height: 24px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); flex-shrink: 0; }
     .ball.run { background: #2563eb; } .ball.four { background: #facc15; color:#000; box-shadow: 0 0 8px #facc15; } .ball.six { background: #9333ea; box-shadow: 0 0 8px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 8px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
     
-    /* =========================================
-       🚀 RESTORED V25: DYNAMIC CUSTOM TICKER
-       ========================================= */
-    .ticker-bar { 
-        position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:94%; max-width: 1500px; height:32px; 
-        background: #000000; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100; box-shadow: 0 0 20px rgba(0,0,0,0.9);
-        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
-    }
+    .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:94%; max-width: 1500px; height:32px; background: #000000; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100; box-shadow: 0 0 20px rgba(0,0,0,0.9); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out; }
     .ticker-bar.hidden-board { transform: translate(-50%, 150px); opacity: 0; }
-    
-    .ticker-content { 
-        white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; color: #facc15; 
-        line-height: 32px; letter-spacing: 3px; animation: tickerMove 25s linear infinite; text-shadow: 1px 1px 5px rgba(0,0,0,1); text-transform: uppercase;
-    }
+    .ticker-content { white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; color: #facc15; line-height: 32px; letter-spacing: 3px; animation: tickerMove 25s linear infinite; text-shadow: 1px 1px 5px rgba(0,0,0,1); text-transform: uppercase; }
     @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-    /* =========================================
-       ⚡ RESTORED V25: FAST EVENT GRAPHICS
-       ========================================= */
     #animation-container { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; width: 100%;}
-    
-    .pro-event {
-        position: relative; background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(15px); border-top: 4px solid; border-bottom: 4px solid;
-        padding: 10px 100px; box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center;
-        animation: snapInOut 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; overflow: hidden; border-radius: 8px;
-    }
+    .pro-event { position: relative; background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(15px); border-top: 4px solid; border-bottom: 4px solid; padding: 10px 100px; box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; animation: snapInOut 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; overflow: hidden; border-radius: 8px; }
     .pro-text { font-family: 'Bebas Neue', cursive; font-size: 150px; color: #fff; margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase; text-shadow: 0 15px 25px rgba(0,0,0,1); white-space: nowrap; }
     .pro-event.four { border-color: #00e5ff; box-shadow: 0 20px 50px rgba(0, 229, 255, 0.2); } .pro-event.four .pro-text { color: #00e5ff; }
     .pro-event.six { border-color: #facc15; box-shadow: 0 20px 50px rgba(250, 204, 21, 0.2); } .pro-event.six .pro-text { color: #facc15; }
@@ -84,93 +55,127 @@
     @keyframes snapInOut { 0% { transform: scale(0) translateY(100px); opacity: 0; filter: blur(10px); } 15% { transform: scale(1.1) translateY(0); opacity: 1; filter: blur(0); } 25% { transform: scale(1); opacity: 1; } 85% { transform: scale(1); opacity: 1; filter: blur(0); } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; filter: blur(15px); } }
 
     /* =========================================
-       🔥 RESTORED V25: HOLLYWOOD WINNER SCREEN 🔥
+       🚀 3-OPTION CINEMATIC WINNER BOARD 🚀
        ========================================= */
     #winnerBanner { 
-        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #0b1120 0%, #000000 100%); 
-        z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; animation: cinematicFade 0.5s ease-out forwards;
+        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; animation: cinematicFade 0.5s ease-out forwards;
     }
-    .god-rays { position: absolute; top: 50%; left: 50%; width: 250vw; height: 250vh; transform: translate(-50%, -50%); background: repeating-conic-gradient(from 0deg, transparent 0deg, rgba(251, 191, 36, 0.05) 5deg, transparent 10deg); animation: rotateRays 40s linear infinite; z-index: 1; }
     .winner-content { position: relative; z-index: 10; animation: epicSlam 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    #winnerTitle { color: #e2e8f0; font-size: 30px; letter-spacing: 35px; margin-right: -35px; font-family: 'Montserrat', sans-serif; font-weight:900; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 5px 15px rgba(0,0,0,1); }
-    #winnerDisplayHtml { background: linear-gradient(180deg, #fffdee 0%, #fbbf24 30%, #d97706 60%, #78350f 100%); -webkit-background-clip: text; color: transparent; font-size: 200px; font-family: 'Bebas Neue', cursive; filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.9)); text-transform: uppercase; letter-spacing: 12px; line-height: 1.1; padding: 0 40px; }
+    #winnerTitle { color: #e2e8f0; font-size: 35px; letter-spacing: 40px; margin-right: -40px; font-family: 'Montserrat', sans-serif; font-weight:900; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 5px 15px rgba(0,0,0,1); }
+    #winnerDisplayHtml { font-size: 220px; font-family: 'Bebas Neue', cursive; filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.9)); text-transform: uppercase; letter-spacing: 12px; line-height: 1.1; padding: 0 40px; }
+    
+    /* THEME 1: GOLDEN GLORY */
+    .theme-gold { background: radial-gradient(circle at center, #0b1120 0%, #000000 100%); }
+    .theme-gold #winnerDisplayHtml { background: linear-gradient(180deg, #fffdee 0%, #fbbf24 30%, #d97706 60%, #78350f 100%); -webkit-background-clip: text; color: transparent; }
+    
+    /* THEME 2: CYBER STRIKE */
+    .theme-cyber { background: radial-gradient(circle at center, #001e36 0%, #000000 100%); }
+    .theme-cyber #winnerDisplayHtml { background: linear-gradient(180deg, #e0f2fe 0%, #0ea5e9 40%, #0369a1 100%); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 30px #0ea5e9; }
+    
+    /* THEME 3: CRIMSON HELLFIRE */
+    .theme-fire { background: radial-gradient(circle at center, #2e0000 0%, #000000 100%); }
+    .theme-fire #winnerDisplayHtml { background: linear-gradient(180deg, #fef2f2 0%, #ef4444 40%, #991b1b 100%); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 40px #ef4444; }
+
+    .god-rays { position: absolute; top: 50%; left: 50%; width: 250vw; height: 250vh; transform: translate(-50%, -50%); background: repeating-conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.05) 5deg, transparent 10deg); animation: rotateRays 40s linear infinite; z-index: 1; }
+    
     @keyframes cinematicFade { 0% { opacity: 0; } 100% { opacity: 1; } } @keyframes rotateRays { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } } @keyframes epicSlam { 0% { transform: scale(3); opacity: 0; filter: blur(20px); } 30% { transform: scale(0.9); opacity: 1; filter: blur(0); } 100% { transform: scale(1); opacity: 1; } }
 
     /* =========================================
-       ✨ NEW V26: FULL SCREEN PLAYING XI ✨
+       ✨ UPGRADE: FULL SCREEN PLAYING XI ✨
        ========================================= */
-    #xiBanner {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), #020617 70%);
-        backdrop-filter: blur(20px); z-index: 990; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        opacity: 0; transform: scale(1.05); pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    #xiBanner { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), #020617 80%); backdrop-filter: blur(20px); z-index: 990; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(1.05); pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
     #xiBanner.active { opacity: 1; transform: scale(1); }
-    .xi-header { background: linear-gradient(90deg, transparent, #10b981, transparent); color: #fff; font-size: 40px; font-weight: 900; text-transform: uppercase; padding: 10px 100px; margin-bottom: 40px; text-shadow: 0 5px 15px rgba(0,0,0,1); letter-spacing: 5px; border-top: 2px solid #fff; border-bottom: 2px solid #fff; }
+    
+    /* TEAM LOGO & NAME IN XI */
+    .xi-header { display: flex; align-items: center; gap: 20px; background: linear-gradient(90deg, transparent, rgba(16,185,129,0.8), transparent); padding: 10px 100px; margin-bottom: 40px; border-top: 2px solid #fff; border-bottom: 2px solid #fff; }
+    .xi-header img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); }
+    .xi-title-text { color: #fff; font-size: 50px; font-weight: 900; text-transform: uppercase; text-shadow: 0 5px 15px rgba(0,0,0,1); letter-spacing: 5px; }
+
     .xi-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1400px; }
     .xi-card { background: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.8)); border: 2px solid #10b981; border-radius: 12px; overflow: hidden; width: 160px; height: 220px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
     .xi-card img { width: 100%; height: 160px; object-fit: cover; background: #0f172a; }
     .xi-card .name { background: #10b981; color: #000; font-weight: 900; text-align: center; padding: 15px 5px; font-size: 16px; text-transform: uppercase; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
 
     /* =========================================
-       ✨ NEW V26: PRO PLAYER PROFILE (LEFT) ✨
+       ✨ UPGRADE: MASSIVE PRO PLAYER PROFILE ✨
        ========================================= */
-    #profileBanner {
-        position: fixed; top: 50%; left: -500px; transform: translateY(-50%); width: 450px; z-index: 980; display: flex; align-items: stretch; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    #profileBanner.active { left: 50px; }
-    .prof-img-box { width: 200px; height: 250px; background: #84cc16; clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%); box-shadow: 15px 15px 30px rgba(0,0,0,0.8); position: relative; z-index: 2; }
-    .prof-img-box img { width: 100%; height: 100%; object-fit: cover; }
-    .prof-stats-box { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); padding: 20px 30px 20px 40px; margin-left: -30px; border: 2px solid #334155; border-left: none; box-shadow: 15px 15px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; }
-    .prof-name { font-size: 32px; font-family: 'Bebas Neue', cursive; color: #84cc16; letter-spacing: 2px; border-bottom: 1px solid #475569; margin-bottom: 10px;}
-    .prof-stat-row { margin: 5px 0; } .prof-stat-label { font-size: 11px; color: #94a3b8; font-weight: 900; text-transform: uppercase; } .prof-stat-val { font-size: 24px; color: #fff; font-family: 'Bebas Neue', cursive; }
+    #profileBanner { position: fixed; top: 50%; left: -800px; transform: translateY(-50%); width: 700px; z-index: 980; display: flex; align-items: stretch; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)); }
+    #profileBanner.active { left: 80px; animation: profilePop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    
+    .prof-img-box { width: 350px; height: 400px; background: #84cc16; clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%); position: relative; z-index: 2; border: 4px solid #fff; border-right: none;}
+    .prof-img-box img { width: 100%; height: 100%; object-fit: cover; } /* CLEAR PHOTO FIX */
+    
+    .prof-stats-box { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); padding: 40px 40px 40px 60px; margin-left: -50px; border: 4px solid #334155; border-left: none; display: flex; flex-direction: column; justify-content: center; flex-grow: 1;}
+    .prof-name { font-size: 55px; font-family: 'Bebas Neue', cursive; color: #84cc16; letter-spacing: 2px; border-bottom: 2px solid #475569; margin-bottom: 20px; line-height: 1;}
+    .prof-stat-row { margin: 10px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;} 
+    .prof-stat-label { font-size: 16px; color: #94a3b8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; } 
+    .prof-stat-val { font-size: 40px; color: #fff; font-family: 'Bebas Neue', cursive; }
+    
+    @keyframes profilePop { 0% { transform: translateY(-50%) scale(0.5) rotateY(45deg); opacity: 0; } 100% { transform: translateY(-50%) scale(1) rotateY(0); opacity: 1; } }
 
     /* =========================================
-       ✨ NEW V26: VERSUS CLASH (CENTER) ✨
+       ✨ UPGRADE: CLEAR HD VERSUS CLASH ✨
        ========================================= */
-    #vsBanner {
-        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 1000px; height: 400px; z-index: 985; opacity: 0; pointer-events: none;
-        transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: space-between; align-items: center;
-    }
+    #vsBanner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 1200px; height: 500px; z-index: 985; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: space-between; align-items: center; }
     #vsBanner.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    .vs-side { width: 48%; height: 100%; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.9); overflow: hidden; }
-    .vs-left { background: linear-gradient(45deg, #4c1d95, #7c3aed); clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-left: 5px solid #fff; }
-    .vs-right { background: linear-gradient(-45deg, #7c2d12, #ea580c); clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-right: 5px solid #fff; }
-    .vs-img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: luminosity; opacity: 0.8; }
-    .vs-name { position: absolute; bottom: 0; width: 100%; background: #000; color: #fff; padding: 15px; font-family: 'Bebas Neue', cursive; font-size: 40px; text-align: center; letter-spacing: 3px; }
-    .vs-left .vs-name { clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-bottom: 4px solid #7c3aed;} .vs-right .vs-name { clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-bottom: 4px solid #ea580c;}
-    .vs-center-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0f172a; border: 4px solid #fff; color: #facc15; padding: 20px 40px; font-family: 'Bebas Neue', cursive; font-size: 55px; box-shadow: 0 0 30px rgba(0,0,0,1); z-index: 10; border-radius: 12px; letter-spacing: 5px; }
+    .vs-side { width: 48%; height: 100%; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,1); overflow: hidden; }
+    .vs-left { background: #4c1d95; clip-path: polygon(0 0, 95% 0, 80% 100%, 0 100%); border-left: 6px solid #a855f7; }
+    .vs-right { background: #7c2d12; clip-path: polygon(20% 0, 100% 0, 100% 100%, 5% 100%); border-right: 6px solid #ea580c; }
+    
+    /* CLEAR IMAGE FIX (Removed weird filters) */
+    .vs-img { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);}
+    
+    /* TEAM LOGO IN VERSUS */
+    .vs-team-badge { position: absolute; top: 20px; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.7); padding: 5px 15px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);}
+    .vs-left .vs-team-badge { left: 20px; } .vs-right .vs-team-badge { right: 20px; flex-direction: row-reverse;}
+    .vs-team-badge img { width: 40px; height: 40px; object-fit: contain; }
+    .vs-team-badge span { color: #fff; font-weight: 900; font-size: 16px; letter-spacing: 1px;}
+
+    .vs-name { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); color: #fff; padding: 25px; font-family: 'Bebas Neue', cursive; font-size: 50px; text-align: center; letter-spacing: 4px; text-shadow: 0 5px 10px #000;}
+    .vs-left .vs-name { clip-path: polygon(0 0, 95% 0, 80% 100%, 0 100%); border-bottom: 6px solid #a855f7;} .vs-right .vs-name { clip-path: polygon(20% 0, 100% 0, 100% 100%, 5% 100%); border-bottom: 6px solid #ea580c;}
+    .vs-center-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0f172a; border: 5px solid #fff; color: #facc15; padding: 25px 50px; font-family: 'Bebas Neue', cursive; font-size: 70px; box-shadow: 0 0 50px rgba(0,0,0,1); z-index: 10; border-radius: 15px; letter-spacing: 5px; }
 
 </style>
 </head>
 <body>
 <div class="overlay-container">
     
-    <!-- RESTORED: FAST EVENT ANIMATIONS -->
     <div id="animation-container"></div>
     
-    <!-- RESTORED: FULL SCREEN WINNER (CINEMATIC GOLD) -->
+    <!-- 3-OPTION CINEMATIC WINNER -->
     <div id="winnerBanner">
         <div class="god-rays"></div>
         <div class="winner-content"><div id="winnerTitle">MATCH CHAMPIONS</div><div id="winnerDisplayHtml">TEAM WON</div></div>
     </div>
     
-    <!-- NEW: PLAYING XI FULL SCREEN -->
-    <div id="xiBanner"><div class="xi-header" id="xiTitle">TEAM PLAYING XI</div><div class="xi-grid" id="xiGrid"></div></div>
+    <!-- FULL SCREEN PLAYING XI -->
+    <div id="xiBanner">
+        <div class="xi-header"><img id="xiLogoOut" src=""><div class="xi-title-text" id="xiTitle">TEAM PLAYING XI</div></div>
+        <div class="xi-grid" id="xiGrid"></div>
+    </div>
 
-    <!-- NEW: PRO PLAYER PROFILE -->
+    <!-- MASSIVE PRO PLAYER PROFILE -->
     <div id="profileBanner">
         <div class="prof-img-box"><img id="pImgOut" src=""></div>
         <div class="prof-stats-box"><div class="prof-name" id="pNameOut">PLAYER NAME</div><div class="prof-stat-row"><div class="prof-stat-label" id="pS1L">MATCHES</div><div class="prof-stat-val" id="pS1V">0</div></div><div class="prof-stat-row"><div class="prof-stat-label" id="pS2L">RUNS</div><div class="prof-stat-val" id="pS2V">0</div></div><div class="prof-stat-row"><div class="prof-stat-label" id="pS3L">SR</div><div class="prof-stat-val" id="pS3V">0</div></div></div>
     </div>
 
-    <!-- NEW: VERSUS CLASH -->
+    <!-- CLEAR HD VERSUS CLASH -->
     <div id="vsBanner">
-        <div class="vs-side vs-left"><img id="vImgL" class="vs-img" src=""><div class="vs-name" id="vNameL">PLAYER A</div></div>
+        <div class="vs-side vs-left">
+            <div class="vs-team-badge"><img id="vsLogoLOut" src=""><span id="vsTeamLOut">TEAM A</span></div>
+            <img id="vImgL" class="vs-img" src="">
+            <div class="vs-name" id="vNameL">PLAYER A</div>
+        </div>
         <div class="vs-center-badge" id="vTitleOut">VS</div>
-        <div class="vs-side vs-right"><img id="vImgR" class="vs-img" src=""><div class="vs-name" id="vNameR">PLAYER B</div></div>
+        <div class="vs-side vs-right">
+            <div class="vs-team-badge"><span id="vsTeamROut">TEAM B</span><img id="vsLogoROut" src=""></div>
+            <img id="vImgR" class="vs-img" src="">
+            <div class="vs-name" id="vNameR">PLAYER B</div>
+        </div>
     </div>
 
-    <!-- RESTORED: BASE SCOREBOARD -->
+    <!-- SCOREBOARD -->
     <div class="bottom-scorebar" id="scoreBarEl">
         <div class="team-section left"><div class="team-logo"><img id="team1Logo" src=""></div><div class="team-name" id="team1Name">TEAM A</div></div>
         <div class="score-center"><div id="scoreLarge" class="score-large">0-0</div><div id="oversLarge" class="overs-large">0.0 OVERS</div></div>
@@ -182,17 +187,17 @@
         <div class="team-section right"><div class="team-name" id="team2Name">TEAM B</div><div class="team-logo"><img id="team2Logo" src=""></div></div>
     </div>
     
-    <!-- RESTORED: DYNAMIC TICKER -->
+    <!-- TICKER -->
     <div class="ticker-bar" id="tickerBarEl"><div class="ticker-content" id="tickerTextDisplay">🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 🏆</div></div>
 
 </div>
 
 <script>
 let lastFlashId = 0; 
-const DB_KEY = "BPL_TITAN_V27"; 
+const DB_KEY = "BPL_PRO_V28"; 
 
 function fireAnimation(type) {
-    if(type === "WIDE") return; // RESTORED: WIDE Block on screen
+    if(type === "WIDE") return; 
     const container = document.getElementById("animation-container"); container.innerHTML = ""; 
     const card = document.createElement("div"); card.className = "pro-event"; 
     const txt = document.createElement("div"); txt.className = "pro-text";
@@ -217,11 +222,16 @@ function loadData() {
     let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
     
     // UI Visibility Toggles
-    let wBanner = document.getElementById("winnerBanner"); if(wBanner) { wBanner.style.display = data.showWinner ? "flex" : "none"; setTxt("winnerDisplayHtml", data.winnerText); }
+    let wBanner = document.getElementById("winnerBanner"); 
+    if(wBanner) { 
+        wBanner.style.display = data.showWinner ? "flex" : "none"; 
+        wBanner.className = "theme-" + (data.winnerTheme || "gold"); // THEME APPLIED
+        setTxt("winnerDisplayHtml", data.winnerText); 
+    }
+    
     let sBar = document.getElementById("scoreBarEl"); let tBar = document.getElementById("tickerBarEl");
     if(data.showScoreboard) { sBar.classList.remove("hidden-board"); tBar.classList.remove("hidden-board"); } else { sBar.classList.add("hidden-board"); tBar.classList.add("hidden-board"); }
     
-    // RESTORED: Scoreboard & Extras Sync
     setTxt("tickerTextDisplay", data.tickerText);
     if (data.flashId && data.flashId !== lastFlashId) { fireAnimation(data.flashEvent); lastFlashId = data.flashId; }
     
@@ -245,14 +255,17 @@ function loadData() {
         setHtml("thisOverBalls", html);
     }
 
-    // NEW FEATURES SYNC
+    // PLAYING XI LOGO & NAME UPGRADE
     let xiBanner = document.getElementById("xiBanner");
     if(data.showXiA || data.showXiB) {
-        let teamData = data.showXiA ? data.xiA : data.xiB; setTxt("xiTitle", (data.showXiA ? data.teamA : data.teamB) + " PLAYING XI");
+        let teamData = data.showXiA ? data.xiA : data.xiB; 
+        setTxt("xiTitle", (data.showXiA ? data.teamA : data.teamB) + " PLAYING XI");
+        setImg("xiLogoOut", data.showXiA ? data.teamALogo : data.teamBLogo);
         let html = ""; teamData.forEach(p => { if(p.name || p.img) { let imgSrc = (p.img && p.img.length > 20) ? p.img : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='; html += `<div class="xi-card"><img src="${imgSrc}"><div class="name">${p.name}</div></div>`; } });
         document.getElementById("xiGrid").innerHTML = html; xiBanner.classList.add("active");
     } else { xiBanner.classList.remove("active"); }
 
+    // MASSIVE PROFILE
     let profBanner = document.getElementById("profileBanner");
     if(data.showProfile) {
         setTxt("pNameOut", data.profName); setGraphicImg("pImgOut", data.profImg);
@@ -260,14 +273,22 @@ function loadData() {
         profBanner.classList.add("active");
     } else { profBanner.classList.remove("active"); }
 
+    // CLEAR VERSUS WITH TEAM LOGO
     let vsBanner = document.getElementById("vsBanner");
     if(data.showVs) {
-        setTxt("vTitleOut", data.vsTitle); setTxt("vNameL", data.vsLeftName); setGraphicImg("vImgL", data.vsLeftImg); setTxt("vNameR", data.vsRightName); setGraphicImg("vImgR", data.vsRightImg);
+        setTxt("vTitleOut", data.vsTitle); 
+        setTxt("vNameL", data.vsLeftName); setGraphicImg("vImgL", data.vsLeftImg); 
+        setTxt("vNameR", data.vsRightName); setGraphicImg("vImgR", data.vsRightImg);
+        
+        // Push Global Team Logos & Names to Versus
+        setTxt("vsTeamLOut", data.teamA); setImg("vsLogoLOut", data.teamALogo);
+        setTxt("vsTeamROut", data.teamB); setImg("vsLogoROut", data.teamBLogo);
+        
         vsBanner.classList.add("active");
     } else { vsBanner.classList.remove("active"); }
 }
 
-window.addEventListener('storage', loadData); setInterval(loadData, 300); loadData();
+window.addEventListener('storage', loadData); setInterval(loadData, 100); loadData();
 </script>
 </body>
 </html>
