@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director | V29 Syndicate</title>
+<title>BPL Director | V30 HD Infinity</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; margin: 0; padding: 0; }
@@ -33,7 +33,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 .flex-row input { margin: 0; width: 80px; text-align: center; font-size: 18px; }
 .player-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; align-items: center; background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #1e293b;}
 .player-row input { margin-bottom: 0; }
-.auto-fetch-box { background: rgba(0, 229, 255, 0.1); border: 2px dashed #00e5ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
+.auto-fetch-box { background: rgba(0, 229, 255, 0.1); border: 2px dashed #00e5ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
 </style>
 </head>
 <body>
@@ -52,8 +52,8 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     <div class="card">
         <h2>1. Global Team Setup</h2>
         <div class="grid">
-            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo (Global)</label><input type="file" id="teamALogo" accept="image/*"></div>
-            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo (Global)</label><input type="file" id="teamBLogo" accept="image/*"></div>
+            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo (HD)</label><input type="file" id="teamALogo" accept="image/*"></div>
+            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo (HD)</label><input type="file" id="teamBLogo" accept="image/*"></div>
         </div>
         <div class="grid">
             <div><label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">STRIKE</button></label><input id="b1Name"><div style="display:flex; gap:10px;"><input id="b1Runs" type="number" placeholder="Runs"><input id="b1Balls" type="number" placeholder="Balls"></div></div>
@@ -135,39 +135,53 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <h2>Team A - Playing XI</h2>
-            <div><button class="blue" onclick="toggleFlag('showXiA', true)">SHOW TEAM A</button></div>
+            <div>
+                <button class="blue" onclick="toggleFlag('showXiA', true)">SHOW TEAM A</button>
+                <button class="red" onclick="toggleFlag('showXiA', false)">HIDE</button>
+            </div>
         </div>
         <div id="xiA-container"></div>
     </div>
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <h2>Team B - Playing XI</h2>
-            <div><button class="blue" onclick="toggleFlag('showXiB', true)">SHOW TEAM B</button></div>
+            <div>
+                <button class="blue" onclick="toggleFlag('showXiB', true)">SHOW TEAM B</button>
+                <button class="red" onclick="toggleFlag('showXiB', false)">HIDE</button>
+            </div>
         </div>
         <div id="xiB-container"></div>
     </div>
-    <button class="red" style="width:100%;" onclick="toggleFlag('showXiA', false); toggleFlag('showXiB', false);">❌ HIDE PLAYING XI</button>
 </div>
 
 <!-- TAB 3: PRO PROFILE -->
 <div id="tab-profile" class="tab-content">
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Pro Profile (Auto-Fetch Matrix)</h2>
+            <h2>Pro Profile (Dual Auto-Fetch)</h2>
             <div><button class="blue" onclick="toggleFlag('showProfile', true)">SHOW PROFILE</button><button class="red" onclick="toggleFlag('showProfile', false)">HIDE</button></div>
         </div>
         
-        <div class="auto-fetch-box">
-            <label style="color:#00e5ff; font-size:14px;">⚡ AUTO-FETCH FROM PLAYING XI ⚡</label>
-            <select id="autoPlayerSelect" style="background:#020617; border-color:#00e5ff;" onchange="autoFillProfile(this.value)">
-                <option value="">-- SELECT PLAYER TO AUTO FILL --</option>
-            </select>
+        <!-- 💥 SPLIT DUAL DROPDOWNS FOR AUTO FETCH 💥 -->
+        <div class="auto-fetch-box grid">
+            <div>
+                <label style="color:#00e5ff; font-size:14px;">⚡ FETCH FROM TEAM A ⚡</label>
+                <select id="autoPlayerSelectA" style="background:#020617; border-color:#00e5ff;" onchange="autoFillProfile(this.value, 'A')">
+                    <option value="">-- SELECT TEAM A PLAYER --</option>
+                </select>
+            </div>
+            <div>
+                <label style="color:#facc15; font-size:14px;">⚡ FETCH FROM TEAM B ⚡</label>
+                <select id="autoPlayerSelectB" style="background:#020617; border-color:#facc15;" onchange="autoFillProfile(this.value, 'B')">
+                    <option value="">-- SELECT TEAM B PLAYER --</option>
+                </select>
+            </div>
         </div>
 
         <div class="grid">
             <div>
                 <label>Player Name (Auto-filled or Custom)</label><input id="profName">
-                <label>Manual Photo Override (Optional)</label><input type="file" id="profImg" accept="image/*">
+                <label>Manual HD Photo Override (Optional)</label><input type="file" id="profImg" accept="image/*">
             </div>
             <div>
                 <label>Stat 1</label><input id="profS1L" placeholder="Label"><input id="profS1V" placeholder="Value">
@@ -182,7 +196,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 <div id="tab-vs" class="tab-content">
     <div class="card">
          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Versus Clash Engine (Fully Custom)</h2>
+            <h2>Versus Clash Engine (Fully Custom HD)</h2>
             <div><button class="blue" onclick="toggleFlag('showVs', true)">SHOW CLASH</button><button class="red" onclick="toggleFlag('showVs', false)">HIDE</button></div>
         </div>
         <div align="center" style="margin-bottom: 15px;"><label>Center Title</label><input id="vsTitle" placeholder="E.g. CAPTAINS" style="width:50%;"></div>
@@ -190,18 +204,18 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#a855f7;">LEFT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamLName" placeholder="Leave blank for Global Team A">
-                <label>Custom Team Logo</label><input type="file" id="vsLogoL" accept="image/*">
+                <label>Custom Team Logo (HD)</label><input type="file" id="vsLogoL" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsLeftName">
-                <label>Player Photo</label><input type="file" id="vsLeftImg" accept="image/*">
+                <label>Player Photo (HD)</label><input type="file" id="vsLeftImg" accept="image/*">
             </div>
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#ef4444;">RIGHT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamRName" placeholder="Leave blank for Global Team B">
-                <label>Custom Team Logo</label><input type="file" id="vsLogoR" accept="image/*">
+                <label>Custom Team Logo (HD)</label><input type="file" id="vsLogoR" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsRightName">
-                <label>Player Photo</label><input type="file" id="vsRightImg" accept="image/*">
+                <label>Player Photo (HD)</label><input type="file" id="vsRightImg" accept="image/*">
             </div>
         </div>
     </div>
@@ -210,7 +224,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 </div>
 
 <script>
-const DB_KEY = "BPL_SYNDICATE_V29"; 
+const DB_KEY = "BPL_HD_V30"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
@@ -229,49 +243,48 @@ let defaultData = {
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
-function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 Error: Storage Limit Reached!"); } }
+function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 ERROR: Storage Full!"); } }
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     event.currentTarget.classList.add('active');
-    
-    // Auto-populate the dropdown when Profile tab opens
     if(tabId === 'tab-profile') populateProfileDropdown();
 }
 
-// 💥 AUTO-FETCH MATRIX LOGIC 💥
+// 💥 DUAL DROPDOWN LOGIC 💥
 function populateProfileDropdown() {
-    let sel = document.getElementById("autoPlayerSelect");
-    let html = `<option value="">-- SELECT PLAYER TO AUTO FILL --</option>`;
-    matchData.xiA.forEach((p, i) => { if(p.name) html += `<option value="A-${i}">${matchData.teamA} - ${p.name}</option>`; });
-    matchData.xiB.forEach((p, i) => { if(p.name) html += `<option value="B-${i}">${matchData.teamB} - ${p.name}</option>`; });
-    sel.innerHTML = html;
+    let selA = document.getElementById("autoPlayerSelectA");
+    let htmlA = `<option value="">-- SELECT TEAM A PLAYER --</option>`;
+    matchData.xiA.forEach((p, i) => { if(p.name) htmlA += `<option value="${i}">${p.name}</option>`; });
+    selA.innerHTML = htmlA;
+
+    let selB = document.getElementById("autoPlayerSelectB");
+    let htmlB = `<option value="">-- SELECT TEAM B PLAYER --</option>`;
+    matchData.xiB.forEach((p, i) => { if(p.name) htmlB += `<option value="${i}">${p.name}</option>`; });
+    selB.innerHTML = htmlB;
 }
 
-function autoFillProfile(val) {
-    if(!val) return;
-    let parts = val.split('-');
-    let team = parts[0]; let index = parseInt(parts[1]);
+function autoFillProfile(index, team) {
+    if(index === "") return;
     let player = (team === 'A') ? matchData.xiA[index] : matchData.xiB[index];
-    
     if(player) {
         matchData.profName = player.name;
-        matchData.profImg = player.img; // Copies base64 directly
+        matchData.profImg = player.img; 
         document.getElementById("profName").value = player.name;
         saveData();
     }
 }
 
-// Compression Engine
-function compressImage(file, callback, maxSize=250) {
+// 💥 RESOLUTION UPGRADED FOR HD QUALITY 💥
+function compressImage(file, callback, maxSize=600) {
     const reader = new FileReader(); reader.onload = (e) => {
         const img = new Image(); img.onload = () => {
             const canvas = document.createElement("canvas"); let w = img.width, h = img.height;
             if(w > h && w > maxSize) { h *= maxSize / w; w = maxSize; } else if (h > maxSize) { w *= maxSize / h; h = maxSize; }
             canvas.width = w; canvas.height = h; canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-            callback(canvas.toDataURL("image/webp", 0.6));
+            callback(canvas.toDataURL("image/webp", 0.85)); // High Quality WebP
         }; img.src = e.target.result;
     }; reader.readAsDataURL(file);
 }
@@ -284,7 +297,8 @@ function renderXiInputs() {
     });
 }
 function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); }
-function handleXiImg(input, team, index) { if(input.files[0]) compressImage(input.files[0], (base64) => { updateXi(team, index, 'img', base64); }, 150); }
+// XI Images compressed a bit more to save space
+function handleXiImg(input, team, index) { if(input.files[0]) compressImage(input.files[0], (base64) => { updateXi(team, index, 'img', base64); }, 300); }
 
 function saveHistory() { 
     let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 
@@ -328,9 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
+    // HD IMAGE SIZES (600px)
     ["teamALogo", "teamBLogo", "profImg", "vsLeftImg", "vsRightImg", "vsLogoL", "vsLogoR"].forEach(id => {
         let el = document.getElementById(id); if(!el) return;
-        el.addEventListener("change", e => { if(e.target.files[0]) compressImage(e.target.files[0], base64 => { matchData[id] = base64; saveData(); }, 350); });
+        el.addEventListener("change", e => { if(e.target.files[0]) compressImage(e.target.files[0], base64 => { matchData[id] = base64; saveData(); }, 600); });
     });
 });
 </script>
