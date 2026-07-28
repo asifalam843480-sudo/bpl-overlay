@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Premium Overlay | V31 God-Mode</title>
+<title>BPL Premium Overlay | V33 Nano-Core</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -39,11 +39,9 @@
     .this-over { display:flex; gap:5px; margin-top:3px; overflow: hidden; white-space: nowrap; max-width: 100%; }
     .ball { width: 24px; height: 24px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); flex-shrink: 0; }
     .ball.run { background: #2563eb; } .ball.four { background: #facc15; color:#000; box-shadow: 0 0 8px #facc15; } .ball.six { background: #9333ea; box-shadow: 0 0 8px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 8px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
-    
     .need-panel { width: 140px; text-align: center; background: rgba(0, 229, 255, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #00e5ff; margin: 0 10px; box-shadow: inset 0 0 15px rgba(0,229,255,0.2);}
     .need-title { font-size: 14px; font-weight: 900; color: #00e5ff; text-shadow: 1px 1px 3px #000; letter-spacing: 1px;}
     .need-runs { font-family: 'Bebas Neue', cursive; font-size: 45px; color: white; line-height: 1; text-shadow: 3px 3px 8px #000; }
-
     .ticker-bar { position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:94%; max-width: 1500px; height:32px; background: #000000; border-radius: 4px; border:1px solid #1e293b; overflow:hidden; z-index:100; box-shadow: 0 0 20px rgba(0,0,0,0.9); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out; }
     .ticker-bar.hidden-board { transform: translate(-50%, 150px); opacity: 0; }
     .ticker-content { white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; color: #facc15; line-height: 32px; letter-spacing: 3px; animation: tickerMove 25s linear infinite; text-shadow: 1px 1px 5px rgba(0,0,0,1); text-transform: uppercase; }
@@ -62,7 +60,7 @@
     @keyframes snapInOut { 0% { transform: scale(0) translateY(100px); opacity: 0; filter: blur(10px); } 15% { transform: scale(1.1) translateY(0); opacity: 1; filter: blur(0); } 25% { transform: scale(1); opacity: 1; } 85% { transform: scale(1); opacity: 1; filter: blur(0); } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; filter: blur(15px); } }
 
     /* =========================================
-       🏆 3-THEME WINNER BOARD
+       🏆 4-THEME WINNER BOARD
        ========================================= */
     #winnerBanner { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; animation: cinematicFade 0.5s ease-out forwards; }
     .winner-content { position: relative; z-index: 10; animation: epicSlam 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -72,9 +70,11 @@
     .theme-gold { background: radial-gradient(circle at center, #0b1120 0%, #000000 100%); } .theme-gold #winnerDisplayHtml { background: linear-gradient(180deg, #fffdee 0%, #fbbf24 30%, #d97706 60%, #78350f 100%); -webkit-background-clip: text; color: transparent; }
     .theme-cyber { background: radial-gradient(circle at center, #001e36 0%, #000000 100%); } .theme-cyber #winnerDisplayHtml { background: linear-gradient(180deg, #e0f2fe 0%, #0ea5e9 40%, #0369a1 100%); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 30px #0ea5e9; }
     .theme-fire { background: radial-gradient(circle at center, #2e0000 0%, #000000 100%); } .theme-fire #winnerDisplayHtml { background: linear-gradient(180deg, #fef2f2 0%, #ef4444 40%, #991b1b 100%); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 40px #ef4444; }
+    .theme-glass { background: url('https://www.transparenttextures.com/patterns/cubes.png'), radial-gradient(circle at center, rgba(15,23,42,0.9) 0%, #000000 100%); backdrop-filter: blur(20px); }
+    .theme-glass .winner-content { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255,255,255,0.2); padding: 50px 100px; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,1); backdrop-filter: blur(30px); }
+    .theme-glass #winnerDisplayHtml { color: #fff; text-shadow: 0 0 40px rgba(255,255,255,0.8), 0 0 10px #00e5ff; }
 
     .god-rays { position: absolute; top: 50%; left: 50%; width: 250vw; height: 250vh; transform: translate(-50%, -50%); background: repeating-conic-gradient(from 0deg, transparent 0deg, rgba(255, 255, 255, 0.05) 5deg, transparent 10deg); animation: rotateRays 40s linear infinite; z-index: 1; }
-    
     @keyframes cinematicFade { 0% { opacity: 0; } 100% { opacity: 1; } } @keyframes rotateRays { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } } @keyframes epicSlam { 0% { transform: scale(3); opacity: 0; filter: blur(20px); } 30% { transform: scale(0.9); opacity: 1; filter: blur(0); } 100% { transform: scale(1); opacity: 1; } }
 
     /* =========================================
@@ -91,60 +91,61 @@
     .xi-card .name { background: #10b981; color: #000; font-weight: 900; text-align: center; padding: 15px 5px; font-size: 16px; text-transform: uppercase; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
 
     /* =========================================
-       ✨ MASSIVE HD PRO PROFILE (CYBER-GOLD) ✨
+       💥 3D ISOMETRIC PROFILE (YAMAL STYLE) 💥
        ========================================= */
     #profileBanner { 
-        position: fixed; top: 50%; left: -1000px; transform: translateY(-50%); width: 850px; 
-        z-index: 980; display: flex; align-items: stretch; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
-        filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)); 
+        position: fixed; top: 50%; left: -600px; transform: translateY(-50%); width: 450px; 
+        z-index: 980; display: flex; justify-content: center; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        perspective: 1000px; 
     }
-    #profileBanner.active { left: 80px; animation: profilePop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    #profileBanner.active { left: 100px; }
     
-    .prof-img-box { 
-        width: 450px; height: 500px; background: #020617; 
-        clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%); position: relative; z-index: 2; 
-        border: 5px solid #00e5ff; border-right: none; overflow: hidden;
+    .card-3d-body {
+        width: 100%; background: #dc2626; 
+        border-radius: 6px; padding: 25px;
+        box-shadow: 
+            -1px 1px 0 #991b1b, -2px 2px 0 #991b1b, -3px 3px 0 #991b1b, -4px 4px 0 #991b1b, -5px 5px 0 #991b1b, 
+            -6px 6px 0 #991b1b, -7px 7px 0 #991b1b, -8px 8px 0 #991b1b, -9px 9px 0 #991b1b, -10px 10px 0 #991b1b,
+            -30px 40px 50px rgba(0,0,0,0.9); 
+        display: flex; flex-direction: column; align-items: center;
+        transform: rotateY(15deg) rotateX(5deg); 
+        transition: transform 0.5s ease;
     }
-    .prof-img-box::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: liquidGlass 3s infinite linear; }
-    .prof-img-box img { width: 100%; height: 100%; object-fit: cover; object-position: top; position: relative; z-index: 1;}
-    
-    .prof-stats-box { 
-        background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(20px); 
-        padding: 50px 40px 50px 70px; margin-left: -50px; 
-        border: 5px solid #facc15; border-left: none; 
-        display: flex; flex-direction: column; justify-content: center; flex-grow: 1; position: relative;
-    }
-    .prof-name { font-size: 65px; font-family: 'Bebas Neue', cursive; color: #00e5ff; letter-spacing: 2px; border-bottom: 3px solid #334155; margin-bottom: 20px; line-height: 1; position: relative; z-index: 2; text-shadow: 0 5px 15px rgba(0,0,0,1);}
-    .prof-stat-row { margin: 15px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; position: relative; z-index: 2;} 
-    .prof-stat-label { font-size: 18px; color: #94a3b8; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; } 
-    .prof-stat-val { font-size: 50px; color: #facc15; font-family: 'Bebas Neue', cursive; text-shadow: 0 5px 10px rgba(0,0,0,1);}
-    
-    @keyframes profilePop { 0% { transform: translateY(-50%) scale(0.5) rotateY(45deg); opacity: 0; } 100% { transform: translateY(-50%) scale(1) rotateY(0); opacity: 1; } }
-    @keyframes liquidGlass { 0% { left: -100%; } 100% { left: 100%; } }
+    .card-photo-frame { width: 100%; background: white; padding: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.5); }
+    .card-photo-frame img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border: 1px solid #ddd; background: #e2e8f0; }
+    .card-name-plaque { width: 105%; background: white; color: #111; margin-top: 20px; padding: 10px; text-align: center; font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    .card-stats-area { margin-top: 25px; text-align: center; color: #facc15; }
+    .card-stat-big { font-family: 'Bebas Neue', cursive; font-size: 110px; line-height: 0.8; text-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+    .card-stat-label { font-size: 24px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 15px;}
+    .card-logo { width: 80px; height: 60px; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); border-radius: 8px;}
 
     /* =========================================
-       ✨ HD VERSUS CLASH (PREMIUM) ✨
+       ✨ E-SPORTS PREMIUM VERSUS CLASH ✨
        ========================================= */
-    #vsBanner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 1400px; height: 600px; z-index: 985; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: space-between; align-items: center; }
+    #vsBanner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 100vw; height: 100vh; z-index: 985; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
     #vsBanner.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     
-    .vs-side { width: 49%; height: 100%; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,1); overflow: hidden; }
+    .vs-container { width: 1400px; height: 650px; display: flex; position: relative; box-shadow: 0 0 100px rgba(0, 229, 255, 0.2); border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1);}
+    .vs-side { width: 50%; height: 100%; position: relative; overflow: hidden; }
     
-    .vs-left { background: linear-gradient(45deg, #020617, #1e293b); clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-left: 8px solid #00e5ff; }
-    .vs-right { background: linear-gradient(-45deg, #020617, #1e293b); clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-right: 8px solid #facc15; }
+    .vs-left { background: radial-gradient(circle at left, #0f172a 0%, #000000 100%); border-right: 2px solid #00e5ff; }
+    .vs-right { background: radial-gradient(circle at right, #1e1b4b 0%, #000000 100%); }
     
-    .vs-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);}
-    
-    .vs-team-badge { position: absolute; top: 30px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.8); padding: 10px 25px; border-radius: 40px; border: 2px solid rgba(255,255,255,0.4); backdrop-filter: blur(10px); z-index: 5;}
-    .vs-left .vs-team-badge { left: 30px; border-color: #00e5ff; } .vs-right .vs-team-badge { right: 30px; flex-direction: row-reverse; border-color: #facc15;}
-    .vs-team-badge img { width: 50px; height: 50px; object-fit: contain; }
-    .vs-team-badge span { color: #fff; font-weight: 900; font-size: 22px; letter-spacing: 2px;}
+    .vs-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0.9; mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); transition: transform 3s ease-out;}
+    #vsBanner.active .vs-img { transform: scale(1.05); } 
 
-    .vs-name { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); color: #fff; padding: 30px; font-family: 'Bebas Neue', cursive; font-size: 60px; text-align: center; letter-spacing: 5px; text-shadow: 0 5px 15px #000; z-index: 5;}
-    .vs-left .vs-name { clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-bottom: 8px solid #00e5ff; color: #00e5ff;} .vs-right .vs-name { clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-bottom: 8px solid #facc15; color: #facc15;}
+    .vs-team-badge { position: absolute; top: 40px; display: flex; align-items: center; gap: 15px; z-index: 5;}
+    .vs-left .vs-team-badge { left: 40px; } .vs-right .vs-team-badge { right: 40px; flex-direction: row-reverse;}
+    .vs-team-badge img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
+    .vs-team-badge span { color: #fff; font-weight: 900; font-size: 30px; letter-spacing: 3px; text-shadow: 0 5px 10px #000;}
+
+    .vs-name { position: absolute; bottom: 50px; width: 100%; color: #fff; padding: 0 40px; font-family: 'Bebas Neue', cursive; font-size: 80px; letter-spacing: 5px; text-shadow: 0 10px 30px #000; z-index: 5; line-height: 1;}
+    .vs-left .vs-name { text-align: left; background: linear-gradient(90deg, rgba(0,229,255,0.8), transparent); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));} 
+    .vs-right .vs-name { text-align: right; background: linear-gradient(-90deg, rgba(250,204,21,0.8), transparent); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));}
     
-    .vs-center-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0f172a; border: 6px solid #fff; color: #fff; padding: 30px 60px; font-family: 'Bebas Neue', cursive; font-size: 80px; box-shadow: 0 0 60px rgba(0,0,0,1); z-index: 10; border-radius: 15px; letter-spacing: 5px; overflow: hidden; text-shadow: 0 5px 20px #000;}
-    .vs-center-badge::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: liquidGlass 2s infinite linear; }
+    .vs-center-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: #000; border: 4px solid #fff; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', cursive; font-size: 70px; box-shadow: 0 0 50px #00e5ff, inset 0 0 30px #a855f7; z-index: 10; border-radius: 50%; letter-spacing: 2px; text-shadow: 0 0 10px #fff; animation: pulseGlow 2s infinite alternate;}
+    
+    @keyframes pulseGlow { 0% { box-shadow: 0 0 30px #00e5ff, inset 0 0 20px #a855f7; } 100% { box-shadow: 0 0 80px #00e5ff, inset 0 0 50px #a855f7; transform: translate(-50%, -50%) scale(1.05); } }
 
 </style>
 </head>
@@ -153,36 +154,46 @@
     
     <div id="animation-container"></div>
     
-    <!-- CINEMATIC WINNER -->
+    <!-- WINNER BANNER (4 THEMES) -->
     <div id="winnerBanner">
         <div class="god-rays"></div>
         <div class="winner-content"><div id="winnerTitle">MATCH CHAMPIONS</div><div id="winnerDisplayHtml">TEAM WON</div></div>
     </div>
     
-    <!-- FULL SCREEN PLAYING XI -->
+    <!-- PLAYING XI -->
     <div id="xiBanner">
         <div class="xi-header"><img id="xiLogoOut" src=""><div class="xi-title-text" id="xiTitle">TEAM PLAYING XI</div></div>
         <div class="xi-grid" id="xiGrid"></div>
     </div>
 
-    <!-- MASSIVE PRO PLAYER PROFILE -->
+    <!-- 💥 YAMAL 3D STYLE PROFILE CARD 💥 -->
     <div id="profileBanner">
-        <div class="prof-img-box"><img id="pImgOut" src=""></div>
-        <div class="prof-stats-box"><div class="prof-name" id="pNameOut">PLAYER NAME</div><div class="prof-stat-row"><div class="prof-stat-label" id="pS1L">MATCHES</div><div class="prof-stat-val" id="pS1V">0</div></div><div class="prof-stat-row"><div class="prof-stat-label" id="pS2L">RUNS</div><div class="prof-stat-val" id="pS2V">0</div></div><div class="prof-stat-row"><div class="prof-stat-label" id="pS3L">SR</div><div class="prof-stat-val" id="pS3V">0</div></div></div>
+        <div class="card-3d-body">
+            <div class="card-photo-frame"><img id="pImgOut" src=""></div>
+            <div class="card-name-plaque" id="pNameOut">PLAYER</div>
+            <div class="card-stats-area">
+                <div class="card-stat-big" id="pS1V">1</div>
+                <div class="card-stat-label" id="pS1L">GOAL</div>
+                <img class="card-logo" id="pLogoOut" src="">
+                <div style="font-weight: 900; color: #fff; letter-spacing: 2px; font-size: 16px; margin-top: 5px;" id="pS2V">TEAM</div>
+            </div>
+        </div>
     </div>
 
-    <!-- VERSUS CLASH (CUSTOM TEAMS) -->
+    <!-- ⚡ E-SPORTS PREMIUM VERSUS CLASH ⚡ -->
     <div id="vsBanner">
-        <div class="vs-side vs-left">
-            <div class="vs-team-badge"><img id="vsLogoLOut" src=""><span id="vsTeamLOut">TEAM A</span></div>
-            <img id="vImgL" class="vs-img" src="">
-            <div class="vs-name" id="vNameL">PLAYER A</div>
-        </div>
-        <div class="vs-center-badge" id="vTitleOut">VS</div>
-        <div class="vs-side vs-right">
-            <div class="vs-team-badge"><span id="vsTeamROut">TEAM B</span><img id="vsLogoROut" src=""></div>
-            <img id="vImgR" class="vs-img" src="">
-            <div class="vs-name" id="vNameR">PLAYER B</div>
+        <div class="vs-container">
+            <div class="vs-side vs-left">
+                <div class="vs-team-badge"><img id="vsLogoLOut" src=""><span id="vsTeamLOut">TEAM A</span></div>
+                <img id="vImgL" class="vs-img" src="">
+                <div class="vs-name" id="vNameL">PLAYER A</div>
+            </div>
+            <div class="vs-center-badge" id="vTitleOut">VS</div>
+            <div class="vs-side vs-right">
+                <div class="vs-team-badge"><span id="vsTeamROut">TEAM B</span><img id="vsLogoROut" src=""></div>
+                <img id="vImgR" class="vs-img" src="">
+                <div class="vs-name" id="vNameR">PLAYER B</div>
+            </div>
         </div>
     </div>
 
@@ -190,14 +201,11 @@
     <div class="bottom-scorebar" id="scoreBarEl">
         <div class="team-section left"><div class="team-logo"><img id="team1Logo" src=""></div><div class="team-name" id="team1Name">TEAM A</div></div>
         <div class="score-center"><div id="scoreLarge" class="score-large">0-0</div><div id="oversLarge" class="overs-large">0.0 OVERS</div></div>
-        
         <div class="batsman-panel">
             <div class="batsman-row" id="rowB1"><div class="batsman-name"><span class="striker-icon">▶</span> <span id="b1NameDisplay">BAT 1</span></div><div class="batsman-score" id="b1ScoreDisplay">0 <span>(0)</span></div></div>
             <div class="batsman-row" id="rowB2"><div class="batsman-name"><span class="striker-icon">▶</span> <span id="b2NameDisplay">BAT 2</span></div><div class="batsman-score" id="b2ScoreDisplay">0 <span>(0)</span></div></div>
         </div>
-        
         <div class="need-panel" id="targetBox" style="display:none;"><div class="need-title">TARGET</div><div id="needRuns" class="need-runs">0</div></div>
-        
         <div class="bowler-panel"><div class="bowler-name" id="bowlerName">BOWLER</div><div class="bowler-figures" id="bowlerFigures">0-0</div><div class="this-over" id="thisOverBalls"></div></div>
         <div class="team-section right"><div class="team-name" id="team2Name">TEAM B</div><div class="team-logo"><img id="team2Logo" src=""></div></div>
     </div>
@@ -209,8 +217,8 @@
 
 <script>
 let lastFlashId = 0; 
-// 💥 THE FIX: Key matches perfectly with Admin 💥
-const DB_KEY = "BPL_ULTRA_V31"; 
+// 💥 THE V33 KEY 💥
+const DB_KEY = "BPL_ULTRA_V33"; 
 
 function fireAnimation(type) {
     if(type === "WIDE") return; 
@@ -238,7 +246,7 @@ function loadData() {
     let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
     
     let wBanner = document.getElementById("winnerBanner"); 
-    if(wBanner) { wBanner.style.display = data.showWinner ? "flex" : "none"; wBanner.className = "theme-" + (data.winnerTheme || "gold"); setTxt("winnerDisplayHtml", data.winnerText); }
+    if(wBanner) { wBanner.style.display = data.showWinner ? "flex" : "none"; wBanner.className = "theme-" + (data.winnerTheme || "glass"); setTxt("winnerDisplayHtml", data.winnerText); }
     
     let sBar = document.getElementById("scoreBarEl"); let tBar = document.getElementById("tickerBarEl");
     if(data.showScoreboard) { sBar.classList.remove("hidden-board"); tBar.classList.remove("hidden-board"); } else { sBar.classList.add("hidden-board"); tBar.classList.add("hidden-board"); }
@@ -273,7 +281,8 @@ function loadData() {
     if(data.showXiA || data.showXiB) {
         let teamData = data.showXiA ? data.xiA : data.xiB; 
         setTxt("xiTitle", data.xiTopText || "TEAM PLAYING XI");
-        setImg("xiLogoOut", data.showXiA ? data.teamALogo : data.teamBLogo);
+        let activeLogo = data.showXiA ? (data.xiLogoA || data.teamALogo) : (data.xiLogoB || data.teamBLogo);
+        setImg("xiLogoOut", activeLogo);
         let html = ""; teamData.forEach(p => { if(p.name || p.img) { let imgSrc = (p.img && p.img.length > 20) ? p.img : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='; html += `<div class="xi-card"><img src="${imgSrc}"><div class="name">${p.name}</div></div>`; } });
         document.getElementById("xiGrid").innerHTML = html; xiBanner.classList.add("active");
     } else { xiBanner.classList.remove("active"); }
@@ -281,13 +290,14 @@ function loadData() {
     let profBanner = document.getElementById("profileBanner");
     if(data.showProfile) {
         setTxt("pNameOut", data.profName); setGraphicImg("pImgOut", data.profImg);
-        setTxt("pS1L", data.profS1L); setTxt("pS1V", data.profS1V); setTxt("pS2L", data.profS2L); setTxt("pS2V", data.profS2V); setTxt("pS3L", data.profS3L); setTxt("pS3V", data.profS3V);
+        setTxt("pS1V", data.profS1V); setTxt("pS1L", data.profS1L); setTxt("pS2V", data.profS2V);
+        setImg("pLogoOut", data.profLogo); 
         profBanner.classList.add("active");
     } else { profBanner.classList.remove("active"); }
 
     let vsBanner = document.getElementById("vsBanner");
     if(data.showVs) {
-        setTxt("vTitleOut", data.vsTitle); 
+        setTxt("vTitleOut", data.vsTitle || "VS"); 
         setTxt("vNameL", data.vsLeftName); setGraphicImg("vImgL", data.vsLeftImg); 
         setTxt("vNameR", data.vsRightName); setGraphicImg("vImgR", data.vsRightImg);
         
@@ -298,7 +308,6 @@ function loadData() {
     } else { vsBanner.classList.remove("active"); }
 }
 
-// 💥 ZERO-LATENCY FAST LOOP 💥
 window.addEventListener('storage', loadData); setInterval(loadData, 50); loadData();
 </script>
 </body>
