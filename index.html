@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Premium Overlay | V25 Ultra</title>
+<title>BPL Premium Overlay | V26 Ultimate</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,700;0,900;1,900&display=swap" rel="stylesheet">
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -11,340 +11,241 @@
     .overlay-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow: hidden;}
     
     /* =========================================
-       📊 ULTRA-CLEAR SCOREBOARD
+       📊 BASE SCOREBOARD (UNCHANGED CORE)
        ========================================= */
     .bottom-scorebar { 
-        position:absolute; bottom:55px; left:50%; transform:translateX(-50%); 
+        position:absolute; bottom:30px; left:50%; transform:translateX(-50%); 
         width:96%; max-width: 1500px; height:95px; 
         background: linear-gradient(180deg, rgba(5, 8, 15, 0.98), rgba(0, 0, 0, 1)); 
-        border-top: 4px solid #00e5ff; 
-        border-bottom: 2px solid rgba(0, 229, 255, 0.3); 
-        display:flex; align-items:center; 
-        box-shadow: 0 -15px 50px rgba(0,0,0,0.9), 0 0 20px rgba(0, 229, 255, 0.2); 
-        clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
-        z-index:100;
-        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
+        border-top: 4px solid #00e5ff; display:flex; align-items:center; 
+        box-shadow: 0 -15px 50px rgba(0,0,0,0.9); clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%); 
+        z-index:100; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s;
     }
-    
     .bottom-scorebar.hidden-board { transform: translate(-50%, 150px) scale(0.95); opacity: 0; }
-    
-    .team-section { width: 230px; display:flex; align-items:center; justify-content:center; gap:15px; padding:0 15px; }
-    .team-logo img { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,1)); display: none; }
-    .team-name { font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px 6px rgba(0,0,0,1); }
-    
-    .score-center { 
-        width: 250px; text-align: center; 
-        background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 80%); 
-        height: 100%; display: flex; flex-direction: column; justify-content: center; 
-        border-left: 2px solid rgba(255,255,255,0.15); border-right: 2px solid rgba(255,255,255,0.15); 
-    }
-    .score-large { font-family: 'Bebas Neue', cursive; font-size: 75px; color: #ffffff; line-height: 0.9; text-shadow: 4px 6px 15px rgba(0,0,0,1); transition: 0.3s; }
-    .overs-large { font-size: 18px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
-    
-    /* Layout Fix: Perfect Vertical Centering */
+    .team-section { width: 230px; display:flex; align-items:center; justify-content:center; }
+    .team-name { font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; }
+    .score-center { width: 250px; text-align: center; border-left: 2px solid rgba(255,255,255,0.15); border-right: 2px solid rgba(255,255,255,0.15); }
+    .score-large { font-family: 'Bebas Neue', cursive; font-size: 75px; color: #ffffff; line-height: 0.9; }
+    .overs-large { font-size: 18px; font-weight: 900; color: #00e5ff; letter-spacing: 4px; }
     .batsman-panel, .bowler-panel { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 25px; }
-    .batsman-panel { width: 300px; }
-    .bowler-panel { width: 350px; max-width: 350px; overflow: hidden; } 
-    
-    .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 2px 0; }
-    .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap:8px; color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,1); }
-    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 1px; color:#ffffff; text-shadow: 2px 2px 5px rgba(0,0,0,1); }
-    .batsman-score span { font-family: 'Montserrat', sans-serif; font-size: 14px; color: #cbd5e1; font-weight: 700; }
-    .on-strike { background: rgba(0, 229, 255, 0.1); border-radius: 4px; padding: 0 5px; } 
-    .on-strike .batsman-score { color: #00e5ff; }
-    .off-strike { opacity: 0.8; } 
-    .striker-icon { color: #00e5ff; font-size: 15px; opacity: 0; text-shadow: 0 0 5px #00e5ff; } .on-strike .striker-icon { opacity: 1; }
-    
-    .bowler-name { font-size: 20px; font-weight: 900; color: #00e5ff; text-transform: uppercase; text-shadow: 2px 2px 5px rgba(0,0,0,1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #ffffff; letter-spacing: 2px; text-shadow: 3px 3px 10px rgba(0,0,0,1); }
-    
-    .this-over { display:flex; gap:5px; margin-top:3px; overflow: hidden; white-space: nowrap; max-width: 100%; }
-    .ball { width: 24px; height: 24px; border-radius: 50%; background: #1e293b; color: white; display:flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 900; border: 1px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.8); flex-shrink: 0; }
-    .ball.run { background: #2563eb; } .ball.four { background: #facc15; color:#000; box-shadow: 0 0 8px #facc15; } .ball.six { background: #9333ea; box-shadow: 0 0 8px #9333ea; } .ball.wicket { background: #dc2626; color:#fff; box-shadow: 0 0 8px #dc2626; } .ball.extra { background: #ea580c; } .ball.lb { background: #7e22ce; color:white; }
-    
-    .need-panel { width: 140px; text-align: center; background: rgba(0, 229, 255, 0.15); padding: 5px; border-radius: 8px; border: 1px solid #00e5ff; margin: 0 10px; }
-    .need-title { font-size: 14px; font-weight: 900; color: #00e5ff; text-shadow: 1px 1px 3px #000; } .need-runs { font-family: 'Bebas Neue', cursive; font-size: 45px; color: white; line-height: 1; text-shadow: 3px 3px 8px #000; }
-    
-    /* =========================================
-       🚀 DYNAMIC CUSTOM TICKER
-       ========================================= */
-    .ticker-bar { 
-        position:absolute; bottom:15px; left:50%; transform:translateX(-50%); 
-        width:94%; max-width: 1500px; height:32px; 
-        background: #000000; border-radius: 4px; border:1px solid #1e293b; 
-        overflow:hidden; z-index:100; box-shadow: 0 0 20px rgba(0,0,0,0.9);
-        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
-    }
-    .ticker-bar.hidden-board { transform: translate(-50%, 150px); opacity: 0; }
-    
-    .ticker-content { 
-        white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 15px; 
-        font-weight: 900; color: #facc15; line-height: 32px; letter-spacing: 3px; 
-        animation: tickerMove 25s linear infinite; text-shadow: 1px 1px 5px rgba(0,0,0,1); text-transform: uppercase;
-    }
-    @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    .batsman-panel { width: 300px; } .bowler-panel { width: 350px; } 
+    .batsman-row { display:flex; justify-content:space-between; align-items: center; padding: 2px 0; color: #fff;}
+    .batsman-name { font-size: 17px; font-weight: 900; text-transform: uppercase; }
+    .batsman-score { font-family: 'Bebas Neue', cursive; font-size: 32px; }
+    .bowler-name { font-size: 20px; font-weight: 900; color: #00e5ff; text-transform: uppercase; }
+    .bowler-figures { font-family: 'Bebas Neue', cursive; font-size: 36px; color: #fff;}
 
     /* =========================================
-       ⚡ FAST & PREMIUM EVENT GRAPHICS (GLASSMORPHISM)
+       🔥 FEATURE 1: FULL SCREEN PLAYING XI 🔥
        ========================================= */
-    #animation-container { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: flex; justify-content: center; align-items: center; width: 100%;}
+    #xiBanner {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), #020617 70%);
+        backdrop-filter: blur(20px); z-index: 990; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        opacity: 0; transform: scale(1.05); pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #xiBanner.active { opacity: 1; transform: scale(1); }
     
-    .pro-event {
-        position: relative;
-        /* Premium Glassmorphism Look */
-        background: rgba(2, 6, 23, 0.9);
-        backdrop-filter: blur(15px);
-        border-top: 4px solid;
-        border-bottom: 4px solid;
-        padding: 10px 100px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+    .xi-header { 
+        background: linear-gradient(90deg, transparent, #10b981, transparent);
+        color: #fff; font-size: 40px; font-weight: 900; text-transform: uppercase;
+        padding: 10px 100px; margin-bottom: 40px; text-shadow: 0 5px 15px rgba(0,0,0,1);
+        letter-spacing: 5px; border-top: 2px solid #fff; border-bottom: 2px solid #fff;
+    }
+    
+    .xi-grid {
+        display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1400px;
+    }
+    
+    .xi-card {
+        background: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.8));
+        border: 2px solid #10b981; border-radius: 12px; overflow: hidden;
+        width: 160px; height: 220px; display: flex; flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative;
+    }
+    .xi-card img { width: 100%; height: 160px; object-fit: cover; background: #0f172a; }
+    .xi-card .name { 
+        background: #10b981; color: #000; font-weight: 900; text-align: center; 
+        padding: 15px 5px; font-size: 16px; text-transform: uppercase; flex-grow: 1;
         display: flex; align-items: center; justify-content: center;
-        /* Ultra Fast Snappy Animation (1.8s) */
-        animation: snapInOut 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        overflow: hidden;
-        border-radius: 8px;
-    }
-    
-    .pro-text {
-        font-family: 'Bebas Neue', cursive; 
-        font-size: 150px; 
-        color: #fff;
-        margin: 0; letter-spacing: 15px; line-height: 1; text-transform: uppercase; 
-        text-shadow: 0 15px 25px rgba(0,0,0,1);
-        white-space: nowrap;
-    }
-
-    /* Event specific colors */
-    .pro-event.four { border-color: #00e5ff; box-shadow: 0 20px 50px rgba(0, 229, 255, 0.2); }
-    .pro-event.four .pro-text { color: #00e5ff; }
-
-    .pro-event.six { border-color: #facc15; box-shadow: 0 20px 50px rgba(250, 204, 21, 0.2); }
-    .pro-event.six .pro-text { color: #facc15; }
-
-    .pro-event.danger { border-color: #ef4444; box-shadow: 0 20px 50px rgba(239, 68, 68, 0.2); }
-    .pro-event.danger .pro-text { color: #ef4444; }
-
-    .pro-event.alert { border-color: #a855f7; box-shadow: 0 20px 50px rgba(168, 85, 247, 0.2); }
-    .pro-event.alert .pro-text { color: #a855f7; }
-
-    /* Snap Physics Animation */
-    @keyframes snapInOut { 
-        0% { transform: scale(0) translateY(100px); opacity: 0; filter: blur(10px); } 
-        15% { transform: scale(1.1) translateY(0); opacity: 1; filter: blur(0); } 
-        25% { transform: scale(1); opacity: 1; } 
-        85% { transform: scale(1); opacity: 1; filter: blur(0); } 
-        100% { transform: scale(1.5) translateY(-50px); opacity: 0; filter: blur(15px); } 
     }
 
     /* =========================================
-       🔥 HOLLYWOOD CINEMATIC MATCH WINNER 🔥
+       🔥 FEATURE 2: PRO PLAYER PROFILE (LEFT) 🔥
        ========================================= */
-    #winnerBanner { 
-        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: radial-gradient(circle at center, #0b1120 0%, #000000 100%); 
-        z-index: 999999; flex-direction: column; justify-content: center;
-        align-items: center; text-align: center; overflow: hidden; 
-        animation: cinematicFade 0.5s ease-out forwards;
+    #profileBanner {
+        position: fixed; top: 50%; left: -500px; transform: translateY(-50%);
+        width: 450px; z-index: 980; display: flex; align-items: stretch;
+        transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* Rotating Golden God-Rays */
-    .god-rays {
-        position: absolute; top: 50%; left: 50%; width: 250vw; height: 250vh; 
-        transform: translate(-50%, -50%);
-        background: repeating-conic-gradient(from 0deg, transparent 0deg, rgba(251, 191, 36, 0.05) 5deg, transparent 10deg);
-        animation: rotateRays 40s linear infinite;
-        z-index: 1;
-    }
-
-    .winner-content { 
-        position: relative; z-index: 10; 
-        animation: epicSlam 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-    }
+    #profileBanner.active { left: 50px; }
     
-    #winnerTitle { 
-        color: #e2e8f0; font-size: 30px; letter-spacing: 35px; margin-right: -35px; 
-        font-family: 'Montserrat', sans-serif; font-weight:900; 
-        text-transform: uppercase; margin-bottom: 5px;
-        text-shadow: 0 5px 15px rgba(0,0,0,1);
+    .prof-img-box {
+        width: 200px; height: 250px; background: #84cc16; 
+        clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+        box-shadow: 15px 15px 30px rgba(0,0,0,0.8); position: relative; z-index: 2;
+    }
+    .prof-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .prof-stats-box {
+        background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+        padding: 20px 30px 20px 40px; margin-left: -30px;
+        border: 2px solid #334155; border-left: none;
+        box-shadow: 15px 15px 30px rgba(0,0,0,0.6);
+        display: flex; flex-direction: column; justify-content: center;
+    }
+    .prof-name { font-size: 32px; font-family: 'Bebas Neue', cursive; color: #84cc16; letter-spacing: 2px; border-bottom: 1px solid #475569; margin-bottom: 10px;}
+    .prof-stat-row { margin: 5px 0; }
+    .prof-stat-label { font-size: 11px; color: #94a3b8; font-weight: 900; text-transform: uppercase; }
+    .prof-stat-val { font-size: 24px; color: #fff; font-family: 'Bebas Neue', cursive; }
+
+    /* =========================================
+       🔥 FEATURE 3: VERSUS CLASH (CENTER) 🔥
+       ========================================= */
+    #vsBanner {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+        width: 1000px; height: 400px; z-index: 985; opacity: 0; pointer-events: none;
+        transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    #vsBanner.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    
+    .vs-side { width: 48%; height: 100%; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.9); overflow: hidden; }
+    
+    /* Slanted Cuts exactly like reference */
+    .vs-left { background: linear-gradient(45deg, #4c1d95, #7c3aed); clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-left: 5px solid #fff; }
+    .vs-right { background: linear-gradient(-45deg, #7c2d12, #ea580c); clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-right: 5px solid #fff; }
+    
+    .vs-img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: luminosity; opacity: 0.8; }
+    .vs-name { 
+        position: absolute; bottom: 0; width: 100%; background: #000; color: #fff;
+        padding: 15px; font-family: 'Bebas Neue', cursive; font-size: 40px; text-align: center; letter-spacing: 3px;
+    }
+    .vs-left .vs-name { clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%); border-bottom: 4px solid #7c3aed;}
+    .vs-right .vs-name { clip-path: polygon(15% 0, 100% 0, 100% 100%, 5% 100%); border-bottom: 4px solid #ea580c;}
+
+    .vs-center-badge {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: #0f172a; border: 4px solid #fff; color: #facc15;
+        padding: 20px 40px; font-family: 'Bebas Neue', cursive; font-size: 55px;
+        box-shadow: 0 0 30px rgba(0,0,0,1); z-index: 10; border-radius: 12px; letter-spacing: 5px;
     }
 
-    /* Extreme 3D Gold Gradient for Text */
-    #winnerDisplayHtml { 
-        background: linear-gradient(180deg, #fffdee 0%, #fbbf24 30%, #d97706 60%, #78350f 100%);
-        -webkit-background-clip: text; color: transparent;
-        font-size: 200px; font-family: 'Bebas Neue', cursive; 
-        filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.9));
-        text-transform: uppercase; letter-spacing: 12px; line-height: 1.1; 
-        padding: 0 40px;
-    }
-    
-    @keyframes cinematicFade { 0% { opacity: 0; } 100% { opacity: 1; } }
-    @keyframes rotateRays { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    @keyframes epicSlam { 
-        0% { transform: scale(3); opacity: 0; filter: blur(20px); } 
-        30% { transform: scale(0.9); opacity: 1; filter: blur(0); } 
-        100% { transform: scale(1); opacity: 1; } 
-    }
 </style>
 </head>
 <body>
 <div class="overlay-container">
-    <div id="animation-container"></div>
     
-    <!-- FULL SCREEN WINNER (CINEMATIC GOLD) -->
-    <div id="winnerBanner">
-        <div class="god-rays"></div>
-        <div class="winner-content">
-            <div id="winnerTitle">MATCH CHAMPIONS</div>
-            <div id="winnerDisplayHtml">TEAM WON</div>
+    <!-- FEATURE 1: PLAYING XI FULL SCREEN -->
+    <div id="xiBanner">
+        <div class="xi-header" id="xiTitle">TEAM PLAYING XI</div>
+        <div class="xi-grid" id="xiGrid">
+            <!-- Populated via JS -->
         </div>
     </div>
-    
-    <!-- SCOREBOARD -->
+
+    <!-- FEATURE 2: PRO PLAYER PROFILE -->
+    <div id="profileBanner">
+        <div class="prof-img-box"><img id="pImgOut" src=""></div>
+        <div class="prof-stats-box">
+            <div class="prof-name" id="pNameOut">PLAYER NAME</div>
+            <div class="prof-stat-row"><div class="prof-stat-label" id="pS1L">MATCHES</div><div class="prof-stat-val" id="pS1V">0</div></div>
+            <div class="prof-stat-row"><div class="prof-stat-label" id="pS2L">RUNS</div><div class="prof-stat-val" id="pS2V">0</div></div>
+            <div class="prof-stat-row"><div class="prof-stat-label" id="pS3L">SR</div><div class="prof-stat-val" id="pS3V">0</div></div>
+        </div>
+    </div>
+
+    <!-- FEATURE 3: VERSUS CLASH -->
+    <div id="vsBanner">
+        <div class="vs-side vs-left">
+            <img id="vImgL" class="vs-img" src="">
+            <div class="vs-name" id="vNameL">PLAYER A</div>
+        </div>
+        <div class="vs-center-badge" id="vTitleOut">VS</div>
+        <div class="vs-side vs-right">
+            <img id="vImgR" class="vs-img" src="">
+            <div class="vs-name" id="vNameR">PLAYER B</div>
+        </div>
+    </div>
+
+    <!-- BASE SCOREBOARD -->
     <div class="bottom-scorebar" id="scoreBarEl">
-        <div class="team-section left">
-            <div class="team-logo"><img id="team1Logo" src=""></div>
-            <div class="team-name" id="team1Name">TEAM A</div>
-        </div>
+        <div class="team-section"><div class="team-name" id="team1Name">TEAM A</div></div>
         <div class="score-center"><div id="scoreLarge" class="score-large">0-0</div><div id="oversLarge" class="overs-large">0.0 OVERS</div></div>
-        
         <div class="batsman-panel">
-            <div class="batsman-row" id="rowB1"><div class="batsman-name"><span class="striker-icon">▶</span> <span id="b1NameDisplay">BAT 1</span></div><div class="batsman-score" id="b1ScoreDisplay">0 <span>(0)</span></div></div>
-            <div class="batsman-row" id="rowB2"><div class="batsman-name"><span class="striker-icon">▶</span> <span id="b2NameDisplay">BAT 2</span></div><div class="batsman-score" id="b2ScoreDisplay">0 <span>(0)</span></div></div>
+            <div class="batsman-row"><div class="batsman-name" id="b1NameDisplay">BAT 1</div><div class="batsman-score" id="b1ScoreDisplay">0</div></div>
+            <div class="batsman-row"><div class="batsman-name" id="b2NameDisplay">BAT 2</div><div class="batsman-score" id="b2ScoreDisplay">0</div></div>
         </div>
-        
-        <div class="need-panel" id="targetBox" style="display:none;"><div class="need-title">TARGET</div><div id="needRuns" class="need-runs">0</div></div>
-        
-        <!-- EXTENDED BOWLER PANEL -->
-        <div class="bowler-panel">
-            <div class="bowler-name" id="bowlerName">BOWLER</div>
-            <div class="bowler-figures" id="bowlerFigures">0-0</div>
-            <div class="this-over" id="thisOverBalls"></div>
-        </div>
-        
-        <div class="team-section right">
-            <div class="team-name" id="team2Name">TEAM B</div>
-            <div class="team-logo"><img id="team2Logo" src=""></div>
-        </div>
+        <div class="bowler-panel"><div class="bowler-name" id="bowlerName">BOWLER</div><div class="bowler-figures" id="bowlerFigures">0-0</div></div>
+        <div class="team-section"><div class="team-name" id="team2Name">TEAM B</div></div>
     </div>
-    
-    <!-- DYNAMIC TICKER -->
-    <div class="ticker-bar" id="tickerBarEl">
-        <div class="ticker-content" id="tickerTextDisplay">
-            🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 🏆
-        </div>
-    </div>
+
 </div>
 
 <script>
-let lastFlashId = 0; 
-const DB_KEY = "BPL_ULTRA_V25"; 
-
-function fireAnimation(type) {
-    // 💥 THE FIX: BLOCK THE WIDE ANIMATION FROM SHOWING ON SCREEN 💥
-    if(type === "WIDE") {
-        return; // Exits the function immediately. No popup on screen.
-    }
-
-    const container = document.getElementById("animation-container"); 
-    container.innerHTML = ""; 
-    const card = document.createElement("div");
-    card.className = "pro-event"; 
-    
-    const txt = document.createElement("div");
-    txt.className = "pro-text";
-
-    let shouldShow = false;
-    
-    if(type === 4 || type === "4") { txt.innerText = "FOUR"; card.classList.add("four"); shouldShow = true; }
-    else if(type === 6 || type === "6") { txt.innerText = "SIX"; card.classList.add("six"); shouldShow = true; }
-    else if(type === "NO BALL") { txt.innerText = "NO BALL"; card.classList.add("alert"); shouldShow = true; }
-    
-    // SMART WICKET PROCESSOR
-    else if(["BOWLED", "CAUGHT", "CAUGHT BEHIND", "C & B", "LBW", "STUMPED", "RUN OUT", "RETIRED HURT"].includes(type)) { 
-        if (type === "RUN OUT" || type === "RETIRED HURT") {
-            txt.innerText = type; 
-        } else {
-            txt.innerText = "WICKET"; 
-        }
-        card.classList.add("danger"); 
-        shouldShow = true; 
-    }
-    
-    if(shouldShow) {
-        card.appendChild(txt);
-        container.appendChild(card); 
-        // 💥 TIME REDUCED TO 1.8 SECONDS 💥
-        setTimeout(() => { if(container.contains(card)) card.remove(); }, 1800); 
-    }
-}
+const DB_KEY = "BPL_ULTRA_V26"; 
 
 function setTxt(id, val) { let el = document.getElementById(id); if(el) el.innerText = val || ""; }
-function setHtml(id, val) { let el = document.getElementById(id); if(el) el.innerHTML = val || ""; }
 function setImg(id, val) { 
     let el = document.getElementById(id); 
-    if(el) { if(!val || val.length < 50) el.style.display = "none"; else { el.style.display = "block"; el.src = val; } }
+    if(el) { if(!val || val.length < 20) el.style.opacity = "0"; else { el.style.opacity = "1"; el.src = val; } }
 }
 
 function loadData() {
     let data; try { let saved = localStorage.getItem(DB_KEY); if(!saved) return; data = JSON.parse(saved); } catch(e) { return; } if(!data) return; 
     
-    let wBanner = document.getElementById("winnerBanner");
-    if(wBanner) { 
-        wBanner.style.display = data.showWinner ? "flex" : "none"; 
-        setTxt("winnerDisplayHtml", data.winnerText); 
-    }
-
+    // Core Scoreboard
     let sBar = document.getElementById("scoreBarEl");
-    let tBar = document.getElementById("tickerBarEl");
-    if(data.showScoreboard) {
-        sBar.classList.remove("hidden-board");
-        tBar.classList.remove("hidden-board");
-    } else {
-        sBar.classList.add("hidden-board");
-        tBar.classList.add("hidden-board");
-    }
-
-    setTxt("tickerTextDisplay", data.tickerText);
-    
-    if (data.flashId && data.flashId !== lastFlashId) { fireAnimation(data.flashEvent); lastFlashId = data.flashId; }
+    if(data.showScoreboard) sBar.classList.remove("hidden-board"); else sBar.classList.add("hidden-board");
     
     setTxt("scoreLarge", data.score + "-" + data.wickets);
     setTxt("oversLarge", Math.floor(data.balls/6) + "." + (data.balls%6) + " OVERS");
     setTxt("team1Name", data.teamA); setTxt("team2Name", data.teamB);
-    setImg("team1Logo", data.teamALogo); setImg("team2Logo", data.teamBLogo);
-    
-    setTxt("b1NameDisplay", data.b1Name); setHtml("b1ScoreDisplay", `${data.b1Runs} <span>(${data.b1Balls})</span>`);
-    setTxt("b2NameDisplay", data.b2Name); setHtml("b2ScoreDisplay", `${data.b2Runs} <span>(${data.b2Balls})</span>`);
-    document.getElementById("rowB1").className = data.onStrike === 1 ? "batsman-row on-strike" : "batsman-row off-strike";
-    document.getElementById("rowB2").className = data.onStrike === 2 ? "batsman-row on-strike" : "batsman-row off-strike";
-    
+    setTxt("b1NameDisplay", data.b1Name); setTxt("b1ScoreDisplay", data.b1Runs);
+    setTxt("b2NameDisplay", data.b2Name); setTxt("b2ScoreDisplay", data.b2Runs);
     setTxt("bowlerName", data.bowler); setTxt("bowlerFigures", `${data.bowlerWickets}-${data.bowlerRuns}`);
-    const tb = document.getElementById("targetBox");
-    if(tb) { tb.style.display = (data.innings === 2 && data.target > 0) ? "block" : "none"; setTxt("needRuns", data.target); }
-    
-    let tob = document.getElementById("thisOverBalls");
-    if(tob) {
-        let html = ""; 
-        let displayBalls = (data.thisOver || []).slice(-8); 
-        displayBalls.forEach(ball => {
-            let cls = "ball"; 
-            if(ball === 4 || ball === "4") cls += " four"; 
-            else if(ball === 6 || ball === "6") cls += " six"; 
-            else if(ball === "W" || ball === "RO") cls += " wicket"; 
-            else if(String(ball).includes("LB")) cls += " lb";
-            
-            // 💥 WIDE WILL STILL SHOW UP HERE IN THE THIS OVER STATUS 💥
-            else if(String(ball).includes("WD") || String(ball).includes("NB") || String(ball).includes("B")) cls += " extra"; 
-            else cls += " run";
-            html += `<span class="${cls}">${ball}</span>`;
-        }); 
-        setHtml("thisOverBalls", html);
+
+    // 🔥 FEATURE 1: PLAYING XI LOGIC
+    let xiBanner = document.getElementById("xiBanner");
+    if(data.showXiA || data.showXiB) {
+        let teamData = data.showXiA ? data.xiA : data.xiB;
+        setTxt("xiTitle", (data.showXiA ? data.teamA : data.teamB) + " PLAYING XI");
+        let html = "";
+        teamData.forEach(p => {
+            if(p.name || p.img) {
+                let imgSrc = (p.img && p.img.length > 20) ? p.img : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='; // Transparent blank
+                html += `<div class="xi-card"><img src="${imgSrc}"><div class="name">${p.name}</div></div>`;
+            }
+        });
+        document.getElementById("xiGrid").innerHTML = html;
+        xiBanner.classList.add("active");
+    } else {
+        xiBanner.classList.remove("active");
     }
+
+    // 🔥 FEATURE 2: PROFILE LOGIC
+    let profBanner = document.getElementById("profileBanner");
+    if(data.showProfile) {
+        setTxt("pNameOut", data.profName); setImg("pImgOut", data.profImg);
+        setTxt("pS1L", data.profS1L); setTxt("pS1V", data.profS1V);
+        setTxt("pS2L", data.profS2L); setTxt("pS2V", data.profS2V);
+        setTxt("pS3L", data.profS3L); setTxt("pS3V", data.profS3V);
+        profBanner.classList.add("active");
+    } else { profBanner.classList.remove("active"); }
+
+    // 🔥 FEATURE 3: VERSUS LOGIC
+    let vsBanner = document.getElementById("vsBanner");
+    if(data.showVs) {
+        setTxt("vTitleOut", data.vsTitle);
+        setTxt("vNameL", data.vsLeftName); setImg("vImgL", data.vsLeftImg);
+        setTxt("vNameR", data.vsRightName); setImg("vImgR", data.vsRightImg);
+        vsBanner.classList.add("active");
+    } else { vsBanner.classList.remove("active"); }
 }
 
 window.addEventListener('storage', loadData); 
-setInterval(loadData, 200); 
+setInterval(loadData, 300); 
 loadData();
 </script>
 </body>
