@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director | V32 Studio</title>
+<title>BPL Director | V33 Nano-Core</title>
 <!-- Cropper.js for HD Cropping -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -49,11 +49,11 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 
 <!-- HD STUDIO CROPPER MODAL -->
 <div id="cropModal">
-    <h2 style="color:#00e5ff;">✂️ STUDIO CROPPER: SET PERFECT FRAME</h2>
+    <h2 style="color:#00e5ff;" id="cropTitle">✂️ SMART CROPPER</h2>
     <div id="cropContainer"><img id="cropImage" src="" style="max-width: 100%;"></div>
     <div class="crop-controls">
         <button class="red" onclick="closeCropper()">❌ CANCEL</button>
-        <button class="green" onclick="saveCrop()">✅ SAVE CROP (HD)</button>
+        <button class="green" onclick="saveCrop()">✅ SAVE CROP</button>
     </div>
 </div>
 
@@ -71,8 +71,8 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     <div class="card">
         <h2>1. Global Team Setup</h2>
         <div class="grid">
-            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo (HD Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamALogo = base64; saveData(); })" accept="image/*"></div>
-            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo (HD Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamBLogo = base64; saveData(); })" accept="image/*"></div>
+            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamALogo = base64; saveData(); }, 300)" accept="image/*"></div>
+            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamBLogo = base64; saveData(); }, 300)" accept="image/*"></div>
         </div>
         <div class="grid">
             <div><label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">STRIKE</button></label><input id="b1Name"><div style="display:flex; gap:10px;"><input id="b1Runs" type="number" placeholder="Runs"><input id="b1Balls" type="number" placeholder="Balls"></div></div>
@@ -125,10 +125,10 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             <div>
                 <label>WINNER SCREEN THEME</label>
                 <select id="winnerTheme" onchange="matchData.winnerTheme = this.value; saveData();">
-                    <option value="gold">🏆 Theme 1: Golden Glory (Particles)</option>
-                    <option value="cyber">🔵 Theme 2: Cyber Strike (Glitch)</option>
-                    <option value="fire">🔴 Theme 3: Crimson Hellfire (Pulse)</option>
-                    <option value="glass">💎 Theme 4: Premium Glassmorphism (New)</option>
+                    <option value="gold">🏆 Theme 1: Golden Glory</option>
+                    <option value="cyber">🔵 Theme 2: Cyber Strike</option>
+                    <option value="fire">🔴 Theme 3: Crimson Hellfire</option>
+                    <option value="glass">💎 Theme 4: Premium Glass</option>
                 </select>
                 <input id="winnerText" placeholder="E.g. TEAM WON THE MATCH">
             </div>
@@ -153,10 +153,9 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
         <input id="xiTopText" placeholder="E.g. TEAM PLAYING XI">
     </div>
     
-    <!-- XI CUSTOM LOGOS ADDED -->
     <div class="card grid">
-        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team A Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoA = base64; saveData(); })" accept="image/*"></div>
-        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team B Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoB = base64; saveData(); })" accept="image/*"></div>
+        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team A Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoA = base64; saveData(); }, 300)" accept="image/*"></div>
+        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team B Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoB = base64; saveData(); }, 300)" accept="image/*"></div>
     </div>
 
     <div class="card">
@@ -200,12 +199,12 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 
         <div class="grid">
             <div>
-                <label>Player Name (Auto-filled or Custom)</label><input id="profName">
+                <label>Player Name</label><input id="profName">
                 <label>Manual Photo Override (Crop Tool)</label>
-                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profImg = base64; saveData(); })" accept="image/*">
+                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profImg = base64; saveData(); }, 500)" accept="image/*">
                 
-                <label style="color:#dc2626; margin-top:15px;">Card Bottom Custom Logo (Optional)</label>
-                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profLogo = base64; saveData(); })" accept="image/*">
+                <label style="color:#dc2626; margin-top:15px;">Card Bottom Custom Logo</label>
+                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profLogo = base64; saveData(); }, 200)" accept="image/*">
             </div>
             <div>
                 <label>Primary Stat Value (E.g. "1")</label><input id="profS1V" placeholder="E.g. 1">
@@ -220,7 +219,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 <div id="tab-vs" class="tab-content">
     <div class="card">
          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Versus Clash Engine (E-Sports Grade)</h2>
+            <h2>Versus Clash Engine (E-Sports)</h2>
             <div><button class="blue" onclick="toggleFlag('showVs', true)">SHOW CLASH</button><button class="red" onclick="toggleFlag('showVs', false)">HIDE</button></div>
         </div>
         <div align="center" style="margin-bottom: 15px;"><label>Center Title</label><input id="vsTitle" placeholder="E.g. CAPTAINS" style="width:50%;"></div>
@@ -228,18 +227,18 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#a855f7;">LEFT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamLName" placeholder="Leave blank for Global Team A">
-                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoL = base64; saveData(); })" accept="image/*">
+                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoL = base64; saveData(); }, 300)" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsLeftName">
-                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLeftImg = base64; saveData(); })" accept="image/*">
+                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLeftImg = base64; saveData(); }, 500)" accept="image/*">
             </div>
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#ef4444;">RIGHT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamRName" placeholder="Leave blank for Global Team B">
-                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoR = base64; saveData(); })" accept="image/*">
+                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoR = base64; saveData(); }, 300)" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsRightName">
-                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsRightImg = base64; saveData(); })" accept="image/*">
+                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsRightImg = base64; saveData(); }, 500)" accept="image/*">
             </div>
         </div>
     </div>
@@ -248,7 +247,8 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 </div>
 
 <script>
-const DB_KEY = "BPL_ULTRA_V32"; 
+// V33 NANO CORE - CRASH PROOF
+const DB_KEY = "BPL_ULTRA_V33"; 
 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
@@ -265,34 +265,40 @@ let defaultData = {
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
-function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 Error: Storage Limit!"); } }
+function saveData() { 
+    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } 
+    catch(e) { alert("🚨 Browser memory limit (5MB) saved you! But wait, try clearing your history or lowering image size."); } 
+}
 
-// 💥 STUDIO CROPPER ENGINE 💥
+// 💥 NANO-CORE CROPPER LOGIC (Prevents Storage Crash) 💥
 let cropper = null;
 let currentCropCallback = null;
+let currentCropSize = 300; 
 
-function triggerCrop(inputElement, callback) {
+function triggerCrop(inputElement, callback, size = 300) {
     if (inputElement.files && inputElement.files[0]) {
+        currentCropSize = size; 
+        document.getElementById('cropTitle').innerText = "✂️ SMART CROPPER (" + size + "px)";
         let reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('cropImage').src = e.target.result;
             document.getElementById('cropModal').style.display = 'flex';
             if (cropper) cropper.destroy();
-            // Force 1:1 Aspect ratio so image perfectly fits the 3D Profile Frame and VS boxes
             cropper = new Cropper(document.getElementById('cropImage'), { aspectRatio: 1, viewMode: 1 });
             currentCropCallback = callback;
         };
         reader.readAsDataURL(inputElement.files[0]);
-        inputElement.value = ''; // Reset input so same file can be selected again
+        inputElement.value = ''; 
     }
 }
 
 function closeCropper() { document.getElementById('cropModal').style.display = 'none'; if(cropper) cropper.destroy(); }
+
 function saveCrop() {
     if(!cropper) return;
-    // Export exactly at 600x600 for HD resolution but low file size
-    let canvas = cropper.getCroppedCanvas({ width: 600, height: 600 });
-    let base64 = canvas.toDataURL('image/webp', 0.85); // 85% WebP is extremely light and HD
+    // Compress at strict dynamic sizes to avoid LocalStorage Quota Error
+    let canvas = cropper.getCroppedCanvas({ width: currentCropSize, height: currentCropSize });
+    let base64 = canvas.toDataURL('image/webp', 0.65); // 0.65 is the sweet spot for visual quality + small size
     if(currentCropCallback) currentCropCallback(base64);
     closeCropper();
 }
@@ -322,8 +328,8 @@ function renderXiInputs() {
     ['A', 'B'].forEach(t => {
         let html = "";
         for(let i=0; i<11; i++) { 
-            // Using Studio Cropper for Playing XI images too
-            html += `<div class="player-row"><input type="text" placeholder="Player ${i+1}" value="${matchData['xi'+t][i].name}" oninput="updateXi('${t}', ${i}, 'name', this.value)"><input type="file" accept="image/*" onchange="triggerCrop(this, base64 => { updateXi('${t}', ${i}, 'img', base64); })"></div>`; 
+            // 💥 XI Images forced to 200px max, keeping size tiny! 💥
+            html += `<div class="player-row"><input type="text" placeholder="Player ${i+1}" value="${matchData['xi'+t][i].name}" oninput="updateXi('${t}', ${i}, 'name', this.value)"><input type="file" accept="image/*" onchange="triggerCrop(this, base64 => { updateXi('${t}', ${i}, 'img', base64); }, 200)"></div>`; 
         }
         document.getElementById(`xi${t}-container`).innerHTML = html;
     });
@@ -332,8 +338,13 @@ function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = 
 
 function saveHistory() { 
     let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 
-    snap.xiA = []; snap.xiB = []; snap.profImg = ""; snap.vsLeftImg = ""; snap.vsRightImg = ""; snap.teamALogo = ""; snap.teamBLogo = ""; snap.vsLogoL = ""; snap.vsLogoR = ""; snap.profLogo = ""; snap.xiLogoA = ""; snap.xiLogoB = "";
-    matchData.history.push(snap); if(matchData.history.length > 8) matchData.history.shift(); 
+    
+    // 🔥 STRIP ALL HEAVY IMAGES FROM HISTORY TO PREVENT CRASH 🔥
+    snap.xiA.forEach(p => p.img = ""); snap.xiB.forEach(p => p.img = "");
+    snap.profImg = ""; snap.vsLeftImg = ""; snap.vsRightImg = ""; snap.teamALogo = ""; snap.teamBLogo = ""; snap.vsLogoL = ""; snap.vsLogoR = ""; snap.profLogo = ""; snap.xiLogoA = ""; snap.xiLogoB = "";
+    
+    matchData.history.push(snap); 
+    if(matchData.history.length > 5) matchData.history.shift(); // Keep only 5 undos to save memory
 }
 
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
