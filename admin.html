@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPL Director | V28 Mastery</title>
+<title>BPL Director | V29 Syndicate</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 body { background: #050b14; font-family: 'Montserrat', sans-serif; color: #fff; margin: 0; padding: 0; }
@@ -33,6 +33,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 .flex-row input { margin: 0; width: 80px; text-align: center; font-size: 18px; }
 .player-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; align-items: center; background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #1e293b;}
 .player-row input { margin-bottom: 0; }
+.auto-fetch-box { background: rgba(0, 229, 255, 0.1); border: 2px dashed #00e5ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
 </style>
 </head>
 <body>
@@ -40,7 +41,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 <div class="header">
     <button class="tab-btn active" onclick="switchTab('tab-live')">🔴 Match Engine</button>
     <button class="tab-btn" onclick="switchTab('tab-xi')">👥 Playing XI</button>
-    <button class="tab-btn" onclick="switchTab('tab-profile')">👤 Pro Profile</button>
+    <button class="tab-btn" onclick="switchTab('tab-profile')">👤 Auto Profile</button>
     <button class="tab-btn" onclick="switchTab('tab-vs')">⚡ Versus Clash</button>
 </div>
 
@@ -48,12 +49,11 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 
 <!-- TAB 1: LIVE MATCH ENGINE -->
 <div id="tab-live" class="tab-content active">
-    
     <div class="card">
         <h2>1. Global Team Setup</h2>
         <div class="grid">
-            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo (Used in XI & VS)</label><input type="file" id="teamALogo" accept="image/*"></div>
-            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo (Used in XI & VS)</label><input type="file" id="teamBLogo" accept="image/*"></div>
+            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo (Global)</label><input type="file" id="teamALogo" accept="image/*"></div>
+            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo (Global)</label><input type="file" id="teamBLogo" accept="image/*"></div>
         </div>
         <div class="grid">
             <div><label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">STRIKE</button></label><input id="b1Name"><div style="display:flex; gap:10px;"><input id="b1Runs" type="number" placeholder="Runs"><input id="b1Balls" type="number" placeholder="Balls"></div></div>
@@ -61,7 +61,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
         </div>
         <div class="grid">
             <div><label>Bowler</label><input id="bowler"><div style="display:flex; gap:10px;"><input id="bowlerWickets" type="number" placeholder="W"><input id="bowlerRuns" type="number" placeholder="R"></div></div>
-            <div><label>Target</label><input id="target" type="number"></div>
+            <div><label>Target (2nd Innings)</label><input id="target" type="number"></div>
         </div>
     </div>
 
@@ -72,7 +72,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     </div>
 
     <div class="card">
-        <h2>2. Action Room & Extras (BUG FIXED)</h2>
+        <h2>2. Action Room & Extras</h2>
         <div style="text-align: center; margin-bottom: 20px;">
             <button class="runBtn green" onclick="addRun(0)">0</button>
             <button class="runBtn green" onclick="addRun(1)">1</button>
@@ -93,10 +93,7 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             </div>
             <div style="background: #020617; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;">
                 <label style="color:#ef4444;">🔴 Smart Wickets</label><br><br>
-                <select id="wicketTypeBox">
-                    <option value="BOWLED">Bowled</option><option value="CAUGHT">Caught</option><option value="CAUGHT BEHIND">Caught Behind</option>
-                    <option value="LBW">LBW</option><option value="STUMPED">Stumped</option><option value="RUN OUT">Run Out</option><option value="RETIRED HURT">Retired Hurt</option>
-                </select>
+                <select id="wicketTypeBox"><option value="BOWLED">Bowled</option><option value="CAUGHT">Caught</option><option value="LBW">LBW</option><option value="STUMPED">Stumped</option><option value="RUN OUT">Run Out</option><option value="RETIRED HURT">Retired Hurt</option></select>
                 <button class="red" style="width: 100%; padding: 15px; font-size: 18px;" onclick="processWicket()">🚨 OUT!</button>
             </div>
         </div>
@@ -107,11 +104,11 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
         <div class="grid">
             <div><label>Live Ticker Message</label><input id="tickerText"></div>
             <div>
-                <label>WINNER SCREEN THEME (3 OPTIONS)</label>
+                <label>WINNER SCREEN THEME</label>
                 <select id="winnerTheme" onchange="matchData.winnerTheme = this.value; saveData();">
-                    <option value="gold">🏆 Option 1: Golden Glory (IPL)</option>
-                    <option value="cyber">🔵 Option 2: Cyber Strike (BBL)</option>
-                    <option value="fire">🔴 Option 3: Crimson Hellfire (PSL)</option>
+                    <option value="gold">🏆 Theme 1: Golden Glory</option>
+                    <option value="cyber">🔵 Theme 2: Cyber Strike</option>
+                    <option value="fire">🔴 Theme 3: Crimson Hellfire</option>
                 </select>
                 <input id="winnerText" placeholder="E.g. TEAM WON THE MATCH">
             </div>
@@ -123,7 +120,6 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
         </div>
     </div>
 
-    <!-- RESTORED: SWAP & RESET BUTTONS -->
     <div class="card" style="display:flex; justify-content:space-between;">
         <button class="green" style="width:48%; background:#2563eb;" onclick="startSecondInnings()">🔄 SWAP / 2ND INNINGS</button>
         <button class="red" style="width:48%; background:#7f1d1d;" onclick="seasonEndWipe()">🗑️ SEASON END WIPE</button>
@@ -132,6 +128,10 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 
 <!-- TAB 2: PLAYING XI -->
 <div id="tab-xi" class="tab-content">
+    <div class="card">
+        <h2>Custom Header Text</h2>
+        <input id="xiTopText" placeholder="E.g. TEAM PLAYING XI">
+    </div>
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <h2>Team A - Playing XI</h2>
@@ -153,11 +153,22 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 <div id="tab-profile" class="tab-content">
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Player Profile Engine (Massive Upgrade)</h2>
+            <h2>Pro Profile (Auto-Fetch Matrix)</h2>
             <div><button class="blue" onclick="toggleFlag('showProfile', true)">SHOW PROFILE</button><button class="red" onclick="toggleFlag('showProfile', false)">HIDE</button></div>
         </div>
+        
+        <div class="auto-fetch-box">
+            <label style="color:#00e5ff; font-size:14px;">⚡ AUTO-FETCH FROM PLAYING XI ⚡</label>
+            <select id="autoPlayerSelect" style="background:#020617; border-color:#00e5ff;" onchange="autoFillProfile(this.value)">
+                <option value="">-- SELECT PLAYER TO AUTO FILL --</option>
+            </select>
+        </div>
+
         <div class="grid">
-            <div><label>Player Name</label><input id="profName"><label>Clear HD Photo</label><input type="file" id="profImg" accept="image/*"></div>
+            <div>
+                <label>Player Name (Auto-filled or Custom)</label><input id="profName">
+                <label>Manual Photo Override (Optional)</label><input type="file" id="profImg" accept="image/*">
+            </div>
             <div>
                 <label>Stat 1</label><input id="profS1L" placeholder="Label"><input id="profS1V" placeholder="Value">
                 <label>Stat 2</label><input id="profS2L" placeholder="Label"><input id="profS2V" placeholder="Value">
@@ -171,13 +182,27 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 <div id="tab-vs" class="tab-content">
     <div class="card">
          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Versus Clash Engine (Clear Image Fix)</h2>
+            <h2>Versus Clash Engine (Fully Custom)</h2>
             <div><button class="blue" onclick="toggleFlag('showVs', true)">SHOW CLASH</button><button class="red" onclick="toggleFlag('showVs', false)">HIDE</button></div>
         </div>
         <div align="center" style="margin-bottom: 15px;"><label>Center Title</label><input id="vsTitle" placeholder="E.g. CAPTAINS" style="width:50%;"></div>
         <div class="grid">
-            <div style="background:#1e293b; padding:15px; border-radius:8px;"><h3 style="color:#a855f7;">LEFT SIDE</h3><label>Player Name</label><input id="vsLeftName"><label>Clear Photo</label><input type="file" id="vsLeftImg" accept="image/*"></div>
-            <div style="background:#1e293b; padding:15px; border-radius:8px;"><h3 style="color:#ef4444;">RIGHT SIDE</h3><label>Player Name</label><input id="vsRightName"><label>Clear Photo</label><input type="file" id="vsRightImg" accept="image/*"></div>
+            <div style="background:#1e293b; padding:15px; border-radius:8px;">
+                <h3 style="color:#a855f7;">LEFT SIDE</h3>
+                <label>Custom Team Name</label><input id="vsTeamLName" placeholder="Leave blank for Global Team A">
+                <label>Custom Team Logo</label><input type="file" id="vsLogoL" accept="image/*">
+                <hr style="border-color:#334155; margin:15px 0;">
+                <label>Player Name</label><input id="vsLeftName">
+                <label>Player Photo</label><input type="file" id="vsLeftImg" accept="image/*">
+            </div>
+            <div style="background:#1e293b; padding:15px; border-radius:8px;">
+                <h3 style="color:#ef4444;">RIGHT SIDE</h3>
+                <label>Custom Team Name</label><input id="vsTeamRName" placeholder="Leave blank for Global Team B">
+                <label>Custom Team Logo</label><input type="file" id="vsLogoR" accept="image/*">
+                <hr style="border-color:#334155; margin:15px 0;">
+                <label>Player Name</label><input id="vsRightName">
+                <label>Player Photo</label><input type="file" id="vsRightImg" accept="image/*">
+            </div>
         </div>
     </div>
 </div>
@@ -185,50 +210,70 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 </div>
 
 <script>
-// V28 PRO KEY
-const DB_KEY = "BPL_PRO_V28"; 
+const DB_KEY = "BPL_SYNDICATE_V29"; 
 let defaultData = { 
     teamA: "TEAM A", teamB: "TEAM B", teamALogo: "", teamBLogo: "", 
     score: 0, wickets: 0, balls: 0, target: 0, innings: 1, thisOver: [], history: [], 
     b1Name: "BAT 1", b1Runs: 0, b1Balls: 0, b2Name: "BAT 2", b2Runs: 0, b2Balls: 0, onStrike: 1, 
     bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, 
-    winnerText: "", showWinner: false, winnerTheme: "gold", showScoreboard: true, 
-    tickerText: "🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 | POWERED BY A2 SERIES 🏆",
-    showXiA: false, showXiB: false, showProfile: false, showVs: false,
+    winnerText: "", showWinner: false, winnerTheme: "gold", showScoreboard: true, tickerText: "🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 🏆",
+    
+    showXiA: false, showXiB: false, xiTopText: "TEAM PLAYING XI",
     xiA: Array(11).fill({name: "", img: ""}), xiB: Array(11).fill({name: "", img: ""}),
-    profName: "BABAR", profImg: "", profS1L: "MATCHES", profS1V: "0", profS2L: "RUNS", profS2V: "0", profS3L: "STRIKE RATE", profS3V: "0",
-    vsTitle: "CAPTAINS", vsLeftName: "", vsLeftImg: "", vsRightName: "", vsRightImg: ""
+    
+    showProfile: false, profName: "BABAR", profImg: "", profS1L: "MATCHES", profS1V: "0", profS2L: "RUNS", profS2V: "0", profS3L: "STRIKE RATE", profS3V: "0",
+    
+    showVs: false, vsTitle: "CAPTAINS", vsTeamLName: "", vsLogoL: "", vsLeftName: "", vsLeftImg: "", vsTeamRName: "", vsLogoR: "", vsRightName: "", vsRightImg: ""
 };
 
 let matchData;
 try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
 
-function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 ERROR: Storage Full! Compress images further."); } }
+function saveData() { try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } catch(e) { alert("🚨 Error: Storage Limit Reached!"); } }
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     event.currentTarget.classList.add('active');
+    
+    // Auto-populate the dropdown when Profile tab opens
+    if(tabId === 'tab-profile') populateProfileDropdown();
 }
 
-// 💥 NANO-COMPRESSION (Keeps resolution high enough for screen, low enough for LS Quota) 💥
+// 💥 AUTO-FETCH MATRIX LOGIC 💥
+function populateProfileDropdown() {
+    let sel = document.getElementById("autoPlayerSelect");
+    let html = `<option value="">-- SELECT PLAYER TO AUTO FILL --</option>`;
+    matchData.xiA.forEach((p, i) => { if(p.name) html += `<option value="A-${i}">${matchData.teamA} - ${p.name}</option>`; });
+    matchData.xiB.forEach((p, i) => { if(p.name) html += `<option value="B-${i}">${matchData.teamB} - ${p.name}</option>`; });
+    sel.innerHTML = html;
+}
+
+function autoFillProfile(val) {
+    if(!val) return;
+    let parts = val.split('-');
+    let team = parts[0]; let index = parseInt(parts[1]);
+    let player = (team === 'A') ? matchData.xiA[index] : matchData.xiB[index];
+    
+    if(player) {
+        matchData.profName = player.name;
+        matchData.profImg = player.img; // Copies base64 directly
+        document.getElementById("profName").value = player.name;
+        saveData();
+    }
+}
+
+// Compression Engine
 function compressImage(file, callback, maxSize=250) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            let w = img.width, h = img.height;
-            if(w > h && w > maxSize) { h *= maxSize / w; w = maxSize; } 
-            else if (h > maxSize) { w *= maxSize / h; h = maxSize; }
-            canvas.width = w; canvas.height = h;
-            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-            callback(canvas.toDataURL("image/webp", 0.6)); // Balanced Quality
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    const reader = new FileReader(); reader.onload = (e) => {
+        const img = new Image(); img.onload = () => {
+            const canvas = document.createElement("canvas"); let w = img.width, h = img.height;
+            if(w > h && w > maxSize) { h *= maxSize / w; w = maxSize; } else if (h > maxSize) { w *= maxSize / h; h = maxSize; }
+            canvas.width = w; canvas.height = h; canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL("image/webp", 0.6));
+        }; img.src = e.target.result;
+    }; reader.readAsDataURL(file);
 }
 
 function renderXiInputs() {
@@ -241,14 +286,10 @@ function renderXiInputs() {
 function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); }
 function handleXiImg(input, team, index) { if(input.files[0]) compressImage(input.files[0], (base64) => { updateXi(team, index, 'img', base64); }, 150); }
 
-// GHOST-STATE ARCHITECTURE: Saves history but strips heavy images so run buttons NEVER crash.
 function saveHistory() { 
-    let snap = JSON.parse(JSON.stringify(matchData)); 
-    delete snap.history; 
-    // Strip heavy arrays to prevent LocalStorage crash
-    snap.xiA = []; snap.xiB = []; snap.profImg = ""; snap.vsLeftImg = ""; snap.vsRightImg = ""; snap.teamALogo = ""; snap.teamBLogo = "";
-    matchData.history.push(snap); 
-    if(matchData.history.length > 8) matchData.history.shift(); 
+    let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 
+    snap.xiA = []; snap.xiB = []; snap.profImg = ""; snap.vsLeftImg = ""; snap.vsRightImg = ""; snap.teamALogo = ""; snap.teamBLogo = ""; snap.vsLogoL = ""; snap.vsLogoR = "";
+    matchData.history.push(snap); if(matchData.history.length > 8) matchData.history.shift(); 
 }
 
 function getOvers() { return Math.floor(matchData.balls / 6) + "." + (matchData.balls % 6); }
@@ -256,66 +297,24 @@ function rotateStrike() { matchData.onStrike = matchData.onStrike === 1 ? 2 : 1;
 function triggerAnimation(type) { matchData.flashEvent = type; matchData.flashId = Date.now(); }
 function checkAndClearOver() { let legal = matchData.thisOver.filter(b => !String(b).includes("WD") && !String(b).includes("NB")).length; if (legal >= 6) matchData.thisOver = []; }
 
-// BUG FIXED: Bulletproof Core Logic
-function addRun(run) {
-    saveHistory(); checkAndClearOver(); run = parseInt(run);
-    matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run);
-    if(matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls++; } else { matchData.b2Runs += run; matchData.b2Balls++; }
-    if(run === 4 || run === 6) triggerAnimation(run);
-    if(run % 2 !== 0) rotateStrike(); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike();
-    updateUI();
-}
+function addRun(run) { saveHistory(); checkAndClearOver(); run = parseInt(run); matchData.score += run; matchData.bowlerRuns += run; matchData.balls++; matchData.thisOver.push(run); if(matchData.onStrike === 1) { matchData.b1Runs += run; matchData.b1Balls++; } else { matchData.b2Runs += run; matchData.b2Balls++; } if(run === 4 || run === 6) triggerAnimation(run); if(run % 2 !== 0) rotateStrike(); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
+function processWicket() { saveHistory(); checkAndClearOver(); let wType = document.getElementById("wicketTypeBox").value; matchData.wickets++; matchData.balls++; matchData.thisOver.push("W"); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(wType !== "RUN OUT" && wType !== "RETIRED HURT") matchData.bowlerWickets++; triggerAnimation(wType); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI(); }
+function addSmartExtra(type) { saveHistory(); checkAndClearOver(); let extraRuns = parseInt(document.getElementById("in" + type).value) || 0; if(type === 'WD') { let total = 1 + extraRuns; matchData.score += total; matchData.bowlerRuns += total; matchData.thisOver.push(extraRuns > 0 ? `WD+${extraRuns}` : `WD`); if(extraRuns % 2 !== 0) rotateStrike(); triggerAnimation('WIDE'); } else if(type === 'NB') { let total = 1 + extraRuns; matchData.score += total; matchData.bowlerRuns += total; matchData.thisOver.push(extraRuns > 0 ? `NB+${extraRuns}` : `NB`); if(extraRuns % 2 !== 0) rotateStrike(); triggerAnimation('NO BALL'); } else if(type === 'B' || type === 'LB') { matchData.score += extraRuns; matchData.balls++; matchData.thisOver.push(`${extraRuns}${type}`); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(extraRuns % 2 !== 0) rotateStrike(); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); } updateUI(); }
+function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let old = { teamALogo: matchData.teamALogo, teamBLogo: matchData.teamBLogo, xiA: matchData.xiA, xiB: matchData.xiB, profImg: matchData.profImg, vsLeftImg: matchData.vsLeftImg, vsRightImg: matchData.vsRightImg, vsLogoL: matchData.vsLogoL, vsLogoR: matchData.vsLogoR }; matchData = hist.pop(); Object.assign(matchData, old); matchData.history = hist; updateUI(); }
 
-function processWicket() {
-    saveHistory(); checkAndClearOver(); let wType = document.getElementById("wicketTypeBox").value; 
-    matchData.wickets++; matchData.balls++; matchData.thisOver.push("W");
-    if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++;
-    if(wType !== "RUN OUT" && wType !== "RETIRED HURT") matchData.bowlerWickets++;
-    triggerAnimation(wType); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); updateUI();
-}
-
-function addSmartExtra(type) {
-    saveHistory(); checkAndClearOver(); let extraRuns = parseInt(document.getElementById("in" + type).value) || 0;
-    if(type === 'WD') { let total = 1 + extraRuns; matchData.score += total; matchData.bowlerRuns += total; matchData.thisOver.push(extraRuns > 0 ? `WD+${extraRuns}` : `WD`); if(extraRuns % 2 !== 0) rotateStrike(); triggerAnimation('WIDE'); } 
-    else if(type === 'NB') { let total = 1 + extraRuns; matchData.score += total; matchData.bowlerRuns += total; matchData.thisOver.push(extraRuns > 0 ? `NB+${extraRuns}` : `NB`); if(extraRuns % 2 !== 0) rotateStrike(); triggerAnimation('NO BALL'); } 
-    else if(type === 'B' || type === 'LB') { matchData.score += extraRuns; matchData.balls++; matchData.thisOver.push(`${extraRuns}${type}`); if(matchData.onStrike === 1) matchData.b1Balls++; else matchData.b2Balls++; if(extraRuns % 2 !== 0) rotateStrike(); if(matchData.balls > 0 && matchData.balls % 6 === 0) rotateStrike(); }
-    updateUI();
-}
-
-function undoBall() { 
-    if(matchData.history.length === 0) return; 
-    let hist = matchData.history; let oldA = matchData.teamALogo, oldB = matchData.teamBLogo, oldXiA = matchData.xiA, oldXiB = matchData.xiB, oldPI = matchData.profImg, oldVL = matchData.vsLeftImg, oldVR = matchData.vsRightImg; 
-    matchData = hist.pop(); 
-    // Restore stripped images
-    matchData.teamALogo = oldA; matchData.teamBLogo = oldB; matchData.xiA = oldXiA; matchData.xiB = oldXiB; matchData.profImg = oldPI; matchData.vsLeftImg = oldVL; matchData.vsRightImg = oldVR;
-    matchData.history = hist; updateUI(); 
-}
-
-// SECOND INNINGS
-function startSecondInnings() { 
-    if(!confirm("Start 2nd Innings? Teams & scores will swap!")) return;
-    saveHistory(); let tA = matchData.teamA, tB = matchData.teamB, lA = matchData.teamALogo, lB = matchData.teamBLogo;
-    matchData.teamA = tB; matchData.teamB = tA; matchData.teamALogo = lB; matchData.teamBLogo = lA;
-    matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0; 
-    matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0; matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; matchData.thisOver = []; matchData.showWinner = false; updateUI(); 
-}
-
-// WIPE BUTTON
-function seasonEndWipe() { if(confirm("🚨 WARNING: Season End! Pura data delete ho jayega. Pakka?")) { localStorage.clear(); location.reload(); } }
+function startSecondInnings() { if(!confirm("Start 2nd Innings?")) return; saveHistory(); let tA = matchData.teamA, tB = matchData.teamB, lA = matchData.teamALogo, lB = matchData.teamBLogo; matchData.teamA = tB; matchData.teamB = tA; matchData.teamALogo = lB; matchData.teamBLogo = lA; matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0; matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0; matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; matchData.thisOver = []; matchData.showWinner = false; updateUI(); }
+function seasonEndWipe() { if(confirm("🚨 WARNING: Season End Data Wipe. Pakka?")) { localStorage.clear(); location.reload(); } }
 
 function setStrike(n) { matchData.onStrike = n; updateUI(); }
 function toggleScoreboard() { matchData.showScoreboard = !matchData.showScoreboard; updateUI(); }
-function toggleFlag(flag, state) { 
-    if(state && (flag === 'showXiA' || flag === 'showXiB' || flag === 'showVs' || flag === 'showWinner' || flag === 'showProfile')) { matchData.showXiA = false; matchData.showXiB = false; matchData.showVs = false; matchData.showWinner = false; matchData.showProfile = false; }
-    matchData[flag] = state; updateUI(); 
-}
+function toggleFlag(flag, state) { if(state && (flag === 'showXiA' || flag === 'showXiB' || flag === 'showVs' || flag === 'showWinner' || flag === 'showProfile')) { matchData.showXiA = false; matchData.showXiB = false; matchData.showVs = false; matchData.showWinner = false; matchData.showProfile = false; } matchData[flag] = state; updateUI(); }
 
 function updateUI() {
     document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
     document.getElementById("overs").innerText = getOvers() + " Overs";
     let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`); document.getElementById("thisOver").innerHTML = html;
     
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "winnerTheme", "tickerText", "profName", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "vsTitle", "vsLeftName", "vsRightName"].forEach(id => { 
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "winnerTheme", "tickerText", "xiTopText", "profName", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => { 
         let el = document.getElementById(id); if(el && document.activeElement !== el) el.value = matchData[id] || ""; 
     });
     document.getElementById("btnStrike1").className = matchData.onStrike===1 ? "badge active" : "badge";
@@ -325,14 +324,13 @@ function updateUI() {
 
 document.addEventListener("DOMContentLoaded", () => {
     updateUI(); renderXiInputs();
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText", "profName", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "vsTitle", "vsLeftName", "vsRightName"].forEach(id => {
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText", "xiTopText", "profName", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => {
         document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
     
-    // Higher res for main photos
-    ["teamALogo", "teamBLogo", "profImg", "vsLeftImg", "vsRightImg"].forEach(id => {
+    ["teamALogo", "teamBLogo", "profImg", "vsLeftImg", "vsRightImg", "vsLogoL", "vsLogoR"].forEach(id => {
         let el = document.getElementById(id); if(!el) return;
-        el.addEventListener("change", e => { if(e.target.files[0]) compressImage(e.target.files[0], base64 => { matchData[id] = base64; saveData(); }, 400); });
+        el.addEventListener("change", e => { if(e.target.files[0]) compressImage(e.target.files[0], base64 => { matchData[id] = base64; saveData(); }, 350); });
     });
 });
 </script>
