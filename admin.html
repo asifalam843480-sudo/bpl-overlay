@@ -39,6 +39,22 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 .player-row input { margin-bottom: 0; }
 .auto-fetch-box { background: rgba(0, 229, 255, 0.1); border: 2px dashed #00e5ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
 
+
+/* PREMIUM PROFILE + VERSUS CONTROL ROOM */
+#tab-profile .card, #tab-vs .card{position:relative;overflow:hidden;background:radial-gradient(circle at top right,rgba(34,211,238,.08),transparent 28%),radial-gradient(circle at bottom left,rgba(139,92,246,.08),transparent 32%),linear-gradient(145deg,#0d1524,#030712);border-color:rgba(34,211,238,.28);box-shadow:0 18px 55px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.05)}
+#tab-profile .card::before,#tab-vs .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 0 44%,rgba(255,255,255,.03) 48%,transparent 52%)}
+#tab-profile h2,#tab-vs h2{position:relative;color:#a5f3fc;border-bottom-color:rgba(34,211,238,.22);text-shadow:0 0 18px rgba(34,211,238,.14)}
+#tab-profile .auto-fetch-box{background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(139,92,246,.08));border:1px solid rgba(34,211,238,.35);box-shadow:inset 0 0 25px rgba(34,211,238,.035)}
+#tab-profile .grid>div,#tab-vs .grid>div{background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(0,0,0,.18));border:1px solid rgba(255,255,255,.06);padding:14px;border-radius:14px}
+#tab-vs .grid>div{position:relative;overflow:hidden}
+#tab-vs .grid>div:first-child{box-shadow:inset 3px 0 0 #22d3ee}
+#tab-vs .grid>div:last-child{box-shadow:inset -3px 0 0 #8b5cf6}
+#tab-vs .grid>div::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(34,211,238,.04),transparent 40%,rgba(139,92,246,.04))}
+#tab-vs label{color:#94a3b8}
+#tab-vs input,#tab-profile input,#tab-profile select{background:#070d18;border-color:#263449}
+#tab-vs input:focus,#tab-profile input:focus,#tab-profile select:focus{border-color:#22d3ee;box-shadow:0 0 0 2px rgba(34,211,238,.10),0 0 18px rgba(34,211,238,.08);outline:none}
+@media(max-width:760px){.grid{grid-template-columns:1fr}#tab-vs .grid,#tab-profile .grid{grid-template-columns:1fr}}
+
 /* CROPPER MODAL CSS */
 #cropModal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
 #cropContainer { width: 90%; max-width: 600px; height: 60vh; background: #000; }
@@ -58,10 +74,10 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 </div>
 
 <div class="header">
-    <button class="tab-btn active" onclick="switchTab('tab-live')">🔴 Match Engine</button>
-    <button class="tab-btn" onclick="switchTab('tab-xi')">👥 Playing XI</button>
-    <button class="tab-btn" onclick="switchTab('tab-profile')">👤 3D Profile</button>
-    <button class="tab-btn" onclick="switchTab('tab-vs')">⚡ Versus Clash</button>
+    <button class="tab-btn active" onclick="switchTab('tab-live', this)">🔴 Match Engine</button>
+    <button class="tab-btn" onclick="switchTab('tab-xi', this)">👥 Playing XI</button>
+    <button class="tab-btn" onclick="switchTab('tab-profile', this)">👤 3D Profile</button>
+    <button class="tab-btn" onclick="switchTab('tab-vs', this)">⚡ Versus Clash</button>
 </div>
 
 <div class="container">
@@ -71,8 +87,8 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     <div class="card">
         <h2>1. Global Team Setup</h2>
         <div class="grid">
-            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamALogo = base64; saveData(); }, 300)" accept="image/*"></div>
-            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamBLogo = base64; saveData(); }, 300)" accept="image/*"></div>
+            <div><label>Team A Name</label><input id="teamA"><label style="color:#10b981;">Team A Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamALogo = base64; saveData(); }, 600)" accept="image/*"></div>
+            <div><label>Team B Name</label><input id="teamB"><label style="color:#10b981;">Team B Logo</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.teamBLogo = base64; saveData(); }, 600)" accept="image/*"></div>
         </div>
         <div class="grid">
             <div><label>Batsman 1 <button id="btnStrike1" class="badge active" onclick="setStrike(1)">STRIKE</button></label><input id="b1Name"><div style="display:flex; gap:10px;"><input id="b1Runs" type="number" placeholder="Runs"><input id="b1Balls" type="number" placeholder="Balls"></div></div>
@@ -154,8 +170,8 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
     </div>
     
     <div class="card grid">
-        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team A Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoA = base64; saveData(); }, 300)" accept="image/*"></div>
-        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team B Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoB = base64; saveData(); }, 300)" accept="image/*"></div>
+        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team A Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoA = base64; saveData(); }, 600)" accept="image/*"></div>
+        <div style="background:#020617; padding:10px; border:1px solid #10b981; border-radius:5px;"><label style="color:#10b981;">Team B Custom Logo (For XI)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.xiLogoB = base64; saveData(); }, 600)" accept="image/*"></div>
     </div>
 
     <div class="card">
@@ -199,17 +215,32 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
 
         <div class="grid">
             <div>
+                <label>Profile Header</label><input id="profLeague" placeholder="PLAYER SPOTLIGHT / MATCH HERO">
                 <label>Player Name</label><input id="profName">
-                <label>Manual Photo Override (Crop Tool)</label>
-                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profImg = base64; saveData(); }, 500)" accept="image/*">
-                
-                <label style="color:#dc2626; margin-top:15px;">Card Bottom Custom Logo</label>
-                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profLogo = base64; saveData(); }, 200)" accept="image/*">
+                <label>Role</label><input id="profRole" placeholder="BATTER / BOWLER / ALL-ROUNDER">
+                <label>Jersey No.</label><input id="profJersey" placeholder="18">
+                <label>Team Name</label><input id="profTeam" placeholder="TEAM A">
             </div>
             <div>
-                <label>Primary Stat Value (E.g. "1")</label><input id="profS1V" placeholder="E.g. 1">
-                <label>Primary Stat Label (E.g. "Goal")</label><input id="profS1L" placeholder="E.g. Goal">
-                <label>Team Nationality/Badge Name</label><input id="profS2V" placeholder="E.g. SPAIN">
+                <label>Stat 1 Value</label><input id="profS1V" placeholder="120">
+                <label>Stat 1 Label</label><input id="profS1L" placeholder="RUNS">
+                <label>Stat 2 Value</label><input id="profS2V" placeholder="156.4">
+                <label>Stat 2 Label</label><input id="profS2L" placeholder="STRIKE RATE">
+                <label>Stat 3 Value</label><input id="profS3V" placeholder="8">
+                <label>Stat 3 Label</label><input id="profS3L" placeholder="WICKETS">
+            </div>
+        </div>
+        <div class="grid">
+            <div>
+                <label>Meta 1</label><input id="profMeta1" placeholder="RIGHT HAND">
+                <label>Meta 2</label><input id="profMeta2" placeholder="INDIA">
+                <label>Meta 3</label><input id="profMeta3" placeholder="ALL-ROUNDER">
+            </div>
+            <div>
+                <label>Player Photo (Crop)</label>
+                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profImg = base64; saveData(); }, 1400)" accept="image/*">
+                <label style="color:#dc2626; margin-top:15px;">Team / Card Logo (Crop)</label>
+                <input type="file" onchange="triggerCrop(this, base64 => { matchData.profLogo = base64; saveData(); }, 600)" accept="image/*">
             </div>
         </div>
     </div>
@@ -227,18 +258,18 @@ button { padding: 12px; margin: 5px; font-size: 14px; font-weight: 900; cursor: 
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#a855f7;">LEFT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamLName" placeholder="Leave blank for Global Team A">
-                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoL = base64; saveData(); }, 300)" accept="image/*">
+                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoL = base64; saveData(); }, 600)" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsLeftName">
-                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLeftImg = base64; saveData(); }, 500)" accept="image/*">
+                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLeftImg = base64; saveData(); }, 1200)" accept="image/*">
             </div>
             <div style="background:#1e293b; padding:15px; border-radius:8px;">
                 <h3 style="color:#ef4444;">RIGHT SIDE</h3>
                 <label>Custom Team Name</label><input id="vsTeamRName" placeholder="Leave blank for Global Team B">
-                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoR = base64; saveData(); }, 300)" accept="image/*">
+                <label>Custom Team Logo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsLogoR = base64; saveData(); }, 600)" accept="image/*">
                 <hr style="border-color:#334155; margin:15px 0;">
                 <label>Player Name</label><input id="vsRightName">
-                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsRightImg = base64; saveData(); }, 500)" accept="image/*">
+                <label>Player Photo (Crop)</label><input type="file" onchange="triggerCrop(this, base64 => { matchData.vsRightImg = base64; saveData(); }, 1200)" accept="image/*">
             </div>
         </div>
     </div>
@@ -257,57 +288,333 @@ let defaultData = {
     bowler: "BOWLER", bowlerRuns: 0, bowlerWickets: 0, flashEvent: "", flashId: 0, 
     winnerText: "", showWinner: false, winnerTheme: "glass", showScoreboard: true, tickerText: "🏆 BARAHPURA PREMIER LEAGUE SEASON 1, 2026 🏆",
     showXiA: false, showXiB: false, xiTopText: "TEAM PLAYING XI", xiLogoA: "", xiLogoB: "",
-    xiA: Array(11).fill({name: "", img: ""}), xiB: Array(11).fill({name: "", img: ""}),
-    showProfile: false, profName: "YAMAL", profImg: "", profLogo: "", profS1V: "1", profS1L: "Goal", profS2V: "SPAIN",
+    xiA: Array.from({length:11}, () => ({name: "", img: ""})), xiB: Array.from({length:11}, () => ({name: "", img: ""})),
+    showProfile: false, profLeague: "PLAYER SPOTLIGHT", profJersey: "18", profRole: "BATTER", profName: "PLAYER", profImg: "", profLogo: "", profTeam: "TEAM A",
+    profS1V: "0", profS1L: "RUNS", profS2V: "0", profS2L: "STRIKE RATE", profS3V: "0", profS3L: "WICKETS",
+    profMeta1: "RIGHT HAND", profMeta2: "INDIA", profMeta3: "ALL-ROUNDER",
     showVs: false, vsTitle: "CAPTAINS", vsTeamLName: "", vsLogoL: "", vsLeftName: "", vsLeftImg: "", vsTeamRName: "", vsLogoR: "", vsRightName: "", vsRightImg: ""
 };
 
 let matchData;
-try { let saved = localStorage.getItem(DB_KEY); matchData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData)); } catch(e) { matchData = JSON.parse(JSON.stringify(defaultData)); }
+function createFreshData(){ return JSON.parse(JSON.stringify(defaultData)); }
+function normalizeData(raw){
+    const data = createFreshData();
+    if(raw && typeof raw === 'object') Object.assign(data, raw);
+    ['xiA','xiB'].forEach(key => {
+        data[key] = Array.from({length:11}, (_,i) => {
+            const p = (Array.isArray(data[key]) && data[key][i]) ? data[key][i] : {};
+            return { name: String(p.name || ''), img: String(p.img || '') };
+        });
+    });
+    data.history = Array.isArray(data.history) ? data.history : [];
+    return data;
+}
+try { let saved = localStorage.getItem(DB_KEY); matchData = normalizeData(saved ? JSON.parse(saved) : null); } catch(e) { matchData = createFreshData(); }
 
-function saveData() { 
-    try { localStorage.setItem(DB_KEY, JSON.stringify(matchData)); } 
-    catch(e) { alert("🚨 Browser memory limit (5MB) saved you! But wait, try clearing your history or lowering image size."); } 
+const IMAGE_DB_NAME = "BPL_ULTRA_IMAGES_V2";
+const IMAGE_STORE = "images";
+const IMAGE_CACHE_NAME = "BPL_IMAGE_CACHE_V2";
+let imageDbPromise = null;
+let imageSaveBusy = false;
+// Always keep the live blob in memory first. Persistence is best-effort and never blocks the UI.
+const liveMemoryImages = new Map();
+
+function withTimeout(promise, ms, label) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(label || "Operation timed out")), ms))
+    ]);
 }
 
-// 💥 NANO-CORE CROPPER LOGIC (Prevents Storage Crash) 💥
-let cropper = null;
-let currentCropCallback = null;
-let currentCropSize = 300; 
-
-function triggerCrop(inputElement, callback, size = 300) {
-    if (inputElement.files && inputElement.files[0]) {
-        currentCropSize = size; 
-        document.getElementById('cropTitle').innerText = "✂️ SMART CROPPER (" + size + "px)";
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('cropImage').src = e.target.result;
-            document.getElementById('cropModal').style.display = 'flex';
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(document.getElementById('cropImage'), { aspectRatio: 1, viewMode: 1 });
-            currentCropCallback = callback;
+function openImageDB() {
+    if (imageDbPromise) return imageDbPromise;
+    imageDbPromise = new Promise((resolve, reject) => {
+        if (!window.indexedDB) return reject(new Error("IndexedDB unavailable"));
+        const req = indexedDB.open(IMAGE_DB_NAME, 1);
+        req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(IMAGE_STORE)) db.createObjectStore(IMAGE_STORE);
         };
-        reader.readAsDataURL(inputElement.files[0]);
-        inputElement.value = ''; 
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error || new Error("IndexedDB open failed"));
+        req.onblocked = () => reject(new Error("IndexedDB blocked by browser context"));
+    });
+    return imageDbPromise;
+}
+
+function makeImageRef() { return "bplimg:" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10); }
+
+async function persistImageToIndexedDB(ref, blob) {
+    const db = await withTimeout(openImageDB(), 2500, "IndexedDB open timeout");
+    await withTimeout(new Promise((resolve, reject) => {
+        const tx = db.transaction(IMAGE_STORE, "readwrite");
+        tx.objectStore(IMAGE_STORE).put(blob, ref);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error || new Error("Image save failed"));
+        tx.onabort = () => reject(tx.error || new Error("Image save aborted"));
+    }), 4000, "Image database save timeout");
+}
+
+async function persistImageToCache(ref, blob) {
+    if (!('caches' in window)) throw new Error("Cache API unavailable");
+    const cache = await withTimeout(caches.open(IMAGE_CACHE_NAME), 2500, "Cache open timeout");
+    const response = new Response(blob, {headers:{'Content-Type': blob.type || 'image/webp'}});
+    await withTimeout(cache.put(new Request(location.origin + '/__bpl_image__/' + encodeURIComponent(ref)), response), 5000, "Cache image save timeout");
+}
+
+async function putImageBlob(blob) {
+    if (!(blob instanceof Blob) || blob.size === 0) throw new Error("Invalid image data");
+    const ref = makeImageRef();
+    // Make the image available immediately for OBS live relay.
+    liveMemoryImages.set(ref, blob);
+    // Persist in the background; NEVER make SAVE CROP wait for storage.
+    (async () => {
+        try {
+            await persistImageToIndexedDB(ref, blob);
+            return;
+        } catch (e) {
+            console.warn("BPL: IndexedDB image persistence failed; trying Cache API", e);
+        }
+        try { await persistImageToCache(ref, blob); }
+        catch (e) { console.warn("BPL: Cache image persistence failed; live memory remains available", e); }
+    })();
+    return ref;
+}
+
+async function getImageBlob(ref) {
+    if(!ref) return null;
+    const live = liveMemoryImages.get(ref);
+    if(live) return live;
+    try {
+        if (ref.startsWith("bplimg:")) {
+            try {
+                const db = await withTimeout(openImageDB(), 2000, "IndexedDB read timeout");
+                const blob = await withTimeout(new Promise((resolve, reject) => {
+                    const req = db.transaction(IMAGE_STORE, "readonly").objectStore(IMAGE_STORE).get(ref);
+                    req.onsuccess = () => resolve(req.result || null);
+                    req.onerror = () => reject(req.error || new Error("Image read failed"));
+                }), 3000, "Image read timeout");
+                if (blob) { liveMemoryImages.set(ref, blob); return blob; }
+            } catch(e) {}
+            if ('caches' in window) {
+                try {
+                    const cache = await caches.open(IMAGE_CACHE_NAME);
+                    const res = await cache.match(new Request(location.origin + '/__bpl_image__/' + encodeURIComponent(ref)));
+                    if (res) { const blob = await res.blob(); liveMemoryImages.set(ref, blob); return blob; }
+                } catch(e) {}
+            }
+        }
+    } catch(e) {}
+    return null;
+}
+
+function isImageValue(v) { return typeof v === "string" && (v.startsWith("data:image/") || v.startsWith("bplimg:") || v.startsWith("idbimg:") || v.startsWith("memimg:")); }
+const IMAGE_FIELDS = ["teamALogo","teamBLogo","xiLogoA","xiLogoB","profImg","profLogo","vsLogoL","vsLogoR","vsLeftImg","vsRightImg"];
+
+// Cross-context sync for OBS Custom Browser Dock <-> Browser Source.
+const SYNC_CHANNEL_NAME = "BPL_ULTRA_SYNC_V1";
+let syncChannel = null;
+try { syncChannel = new BroadcastChannel(SYNC_CHANNEL_NAME); } catch(e) { syncChannel = null; }
+
+const SYNC_IMAGE_FIELDS = ["teamALogo","teamBLogo","xiLogoA","xiLogoB","profImg","profLogo","vsLogoL","vsLogoR","vsLeftImg","vsRightImg"];
+
+function stripImagesForSync(data) {
+    const copy = JSON.parse(JSON.stringify(data));
+    SYNC_IMAGE_FIELDS.forEach(k => copy[k] = "");
+    ["xiA","xiB"].forEach(t => { if(Array.isArray(copy[t])) copy[t].forEach(p => { if(p) p.img = ""; }); });
+    return copy;
+}
+
+let imageRelay = null;
+try {
+    if (window.SharedWorker) {
+        imageRelay = new SharedWorker(new URL('sync-worker.js', document.baseURI));
+        imageRelay.port.start();
+        window.__bplImageRelay = imageRelay;
+    }
+} catch(e) { imageRelay = null; }
+
+async function relayImage(field, ref, extra = {}) {
+    if(!imageRelay || !ref) return false;
+    try {
+        const blob = await getImageBlob(ref);
+        if(!blob) return false;
+        const buffer = await blob.arrayBuffer();
+        imageRelay.port.postMessage({type:'imageArrayBuffer', ref, field, mime:blob.type || 'image/webp', buffer, ...extra}, [buffer]);
+        return true;
+    } catch(e) { console.warn('BPL OBS image relay failed', field, e); return false; }
+}
+
+async function broadcastImageRef(field, ref) {
+    if(!ref) return;
+    const relayed = await relayImage(field, ref);
+    if(relayed || !syncChannel) return;
+    try { syncChannel.postMessage({type:"imageRef", field, ref}); } catch(e) {}
+}
+async function broadcastXiImage(team, index, ref) {
+    if(!ref) return;
+    const relayed = await relayImage('xi.' + team + '.' + index, ref, {team, index});
+    if(relayed || !syncChannel) return;
+    try { syncChannel.postMessage({type:"xiImageRef", team, index, ref}); } catch(e) {}
+}
+
+async function broadcastVisibleImages() {
+    const fields = new Set(["teamALogo","teamBLogo"]);
+    if(matchData.showProfile) { fields.add("profImg"); fields.add("profLogo"); }
+    if(matchData.showVs) { fields.add("vsLogoL"); fields.add("vsLogoR"); fields.add("vsLeftImg"); fields.add("vsRightImg"); }
+    if(matchData.showXiA) fields.add("xiLogoA");
+    if(matchData.showXiB) fields.add("xiLogoB");
+    for(const field of fields) await broadcastImageRef(field, matchData[field]);
+    for(const team of ["xiA","xiB"]) {
+        const visible = (team === "xiA" && matchData.showXiA) || (team === "xiB" && matchData.showXiB);
+        if(!visible) continue;
+        const arr = Array.isArray(matchData[team]) ? matchData[team] : [];
+        for(let i=0;i<arr.length;i++) await broadcastXiImage(team, i, arr[i] && arr[i].img);
     }
 }
 
-function closeCropper() { document.getElementById('cropModal').style.display = 'none'; if(cropper) cropper.destroy(); }
+function broadcastState() {
+    const tinyState = stripImagesForSync(matchData);
+    if(syncChannel) { try { syncChannel.postMessage({type:"state", data:tinyState}); } catch(e) {} }
+    if(imageRelay) { try { imageRelay.port.postMessage({type:'state', data:matchData}); } catch(e) {} }
+}
+if(imageRelay) { try { imageRelay.port.postMessage({type:'hello'}); } catch(e) {} }
+if(syncChannel) { syncChannel.onmessage = async (ev) => { const msg = ev && ev.data; if(msg && msg.type === "hello") { broadcastState(); await broadcastVisibleImages(); } }; }
 
-function saveCrop() {
-    if(!cropper) return;
-    // Compress at strict dynamic sizes to avoid LocalStorage Quota Error
-    let canvas = cropper.getCroppedCanvas({ width: currentCropSize, height: currentCropSize });
-    let base64 = canvas.toDataURL('image/webp', 0.65); // 0.65 is the sweet spot for visual quality + small size
-    if(currentCropCallback) currentCropCallback(base64);
-    closeCropper();
+function serializeForStorage() { return JSON.stringify(matchData); }
+function trimHistoryForQuota(copy) {
+    copy.history = Array.isArray(copy.history) ? copy.history.slice(-2) : [];
+    if(copy.history.length) copy.history.forEach(h => { if(!h || typeof h !== 'object') return; IMAGE_FIELDS.forEach(k => h[k] = ""); ["xiA","xiB"].forEach(k => Array.isArray(h[k]) && h[k].forEach(p => { if(p) p.img = ""; })); });
+    return copy;
+}
+function saveData() {
+    try { localStorage.setItem(DB_KEY, serializeForStorage()); }
+    catch(e) { try { const compact = trimHistoryForQuota(JSON.parse(serializeForStorage())); localStorage.setItem(DB_KEY, JSON.stringify(compact)); matchData.history = compact.history || []; } catch(e2) { console.warn("BPL state storage failed", e2); } }
+    broadcastState();
 }
 
-function switchTab(tabId) {
+async function blobFromCanvas(canvas, quality = 0.92) {
+    if(!canvas || !canvas.width || !canvas.height) throw new Error("Crop canvas is empty");
+    const makeBlob = () => new Promise((resolve, reject) => {
+        let done = false;
+        const timer = setTimeout(() => { if(!done){ done=true; reject(new Error("Canvas encoding timeout")); } }, 8000);
+        try {
+            canvas.toBlob(blob => { if(done) return; done=true; clearTimeout(timer); blob ? resolve(blob) : reject(new Error("Canvas encoding failed")); }, "image/webp", quality);
+        } catch(e) { if(!done){done=true;clearTimeout(timer);reject(e);} }
+    });
+    try { return await makeBlob(); }
+    catch(e) {
+        // OBS/CEF fallback: encode a still-sharp 1080px JPEG rather than hanging forever.
+        const size = Math.min(1080, canvas.width, canvas.height);
+        const c = document.createElement('canvas'); c.width=size; c.height=size;
+        const ctx=c.getContext('2d',{alpha:false}); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+        ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size); ctx.drawImage(canvas,0,0,size,size);
+        return new Promise((resolve,reject)=>{ c.toBlob(b=>b?resolve(b):reject(new Error("Fallback image encoding failed")),"image/jpeg",0.92); });
+    }
+}
+
+// HD cropper: quality is kept high, while image bytes are kept OUT of localStorage.
+let cropper = null;
+let currentCropCallback = null;
+let currentCropSize = 1400;
+
+function triggerCrop(inputElement, callback, size = 1400) {
+    if (inputElement.files && inputElement.files[0]) {
+        currentCropSize = Math.max(300, Math.min(2048, Number(size) || 1400));
+        document.getElementById('cropTitle').innerText = "✂️ HD SMART CROPPER (up to " + currentCropSize + "px)";
+        const file = inputElement.files[0];
+        const objectUrl = URL.createObjectURL(file);
+        document.getElementById('cropImage').src = objectUrl;
+        document.getElementById('cropImage').dataset.objectUrl = objectUrl;
+        document.getElementById('cropModal').style.display = 'flex';
+            if (cropper) cropper.destroy();
+            if (typeof Cropper === 'function') {
+                cropper = new Cropper(document.getElementById('cropImage'), { aspectRatio: 1, viewMode: 1, autoCropArea: 0.96, responsive: true, background: false, checkOrientation: true, guides: true, center: true, highlight: false, dragMode: 'move', zoomOnWheel: true, zoomOnTouch: true });
+            } else {
+                cropper = {
+                    _native: true,
+                    image: document.getElementById('cropImage'),
+                    getImageData(){ return { naturalWidth: this.image.naturalWidth || currentCropSize, naturalHeight: this.image.naturalHeight || currentCropSize }; },
+                    getCroppedCanvas(opts){
+                        const img=this.image, sw=img.naturalWidth||img.width, sh=img.naturalHeight||img.height;
+                        const side=Math.min(sw,sh), sx=(sw-side)/2, sy=(sh-side)/2;
+                        const c=document.createElement('canvas'); c.width=opts.width; c.height=opts.height; const ctx=c.getContext('2d',{alpha:true}); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high'; ctx.drawImage(img,sx,sy,side,side,0,0,c.width,c.height); return c;
+                    }, destroy(){}
+                };
+            }
+        currentCropCallback = callback;
+        inputElement.value = '';
+    }
+}
+
+function closeCropper() { const imgEl=document.getElementById('cropImage'); const u=imgEl && imgEl.dataset.objectUrl; if(u){ try{URL.revokeObjectURL(u);}catch(e){} delete imgEl.dataset.objectUrl; } document.getElementById('cropModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } currentCropCallback = null; }
+
+async function saveCrop() {
+    if(!cropper || imageSaveBusy) return;
+    imageSaveBusy = true;
+    const button = document.querySelector('#cropModal .green');
+    const title = document.getElementById('cropTitle');
+    if(button) { button.disabled = true; button.innerText = '⏳ PROCESSING...'; }
+    try {
+        const imageInfo = cropper.getImageData ? cropper.getImageData() : {};
+        const naturalW = Number(imageInfo.naturalWidth) || currentCropSize;
+        const naturalH = Number(imageInfo.naturalHeight) || currentCropSize;
+        const sourceLimit = Math.max(1, Math.floor(Math.min(naturalW, naturalH)));
+        const outputSize = Math.max(300, Math.min(currentCropSize, sourceLimit, 1600));
+        if(title) title.innerText = '⚡ PROCESSING HD PHOTO...';
+        const canvas = cropper.getCroppedCanvas({width:outputSize,height:outputSize,imageSmoothingEnabled:true,imageSmoothingQuality:'high',fillColor:'transparent'});
+        if(!canvas || !canvas.width || !canvas.height) throw new Error('Crop canvas unavailable');
+        const blob = await blobFromCanvas(canvas, 0.94);
+        if(!blob || !blob.size) throw new Error('Image encoding produced no data');
+        if(title) title.innerText = '💾 SAVING PHOTO...';
+        // putImageBlob returns immediately after placing the blob in live memory.
+        // IndexedDB/Cache persistence continues in the background, so OBS can never
+        // leave the SAVE button stuck on "SAVING HD..." because storage is blocked.
+        const ref = await withTimeout(putImageBlob(blob), 1500, 'Live image staging timeout');
+        if(!ref) throw new Error('Image staging failed');
+        if(currentCropCallback) currentCropCallback(ref);
+        closeCropper();
+        saveData();
+        updateUI();
+        await broadcastVisibleImages();
+    } catch(err) {
+        console.error('BPL photo save failed', err);
+        if(title) title.innerText = '❌ SAVE FAILED — TRY AGAIN';
+    } finally {
+        imageSaveBusy = false;
+        if(button) { button.disabled = false; button.innerText = '✅ SAVE CROP'; }
+    }
+}
+
+async function migrateLegacyImages() {
+    const fields = IMAGE_FIELDS;
+    const migrateOne = async (value) => {
+        if (!value || !value.startsWith("data:image/")) return value || "";
+        try {
+            const res = await fetch(value);
+            const blob = await res.blob();
+            return await putImageBlob(blob);
+        } catch (e) { return ""; }
+    };
+    let changed = false;
+    for (const key of fields) {
+        const old = matchData[key];
+        if (old && old.startsWith("data:image/")) { matchData[key] = await migrateOne(old); changed = true; }
+    }
+    for (const team of ["xiA","xiB"]) {
+        if (!Array.isArray(matchData[team])) continue;
+        for (const p of matchData[team]) {
+            if (p && p.img && p.img.startsWith("data:image/")) { p.img = await migrateOne(p.img); changed = true; }
+        }
+    }
+    if (changed) saveData();
+}
+
+function switchTab(tabId, buttonEl) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
+    const target = document.getElementById(tabId); if(target) target.classList.add('active');
+    const btn = buttonEl || document.querySelector(`.tab-btn[onclick*="${tabId}"]`); if(btn) btn.classList.add('active');
     if(tabId === 'tab-profile') populateProfileDropdown();
 }
 
@@ -320,8 +627,16 @@ function populateProfileDropdown() {
 
 function autoFillProfile(index, team) {
     if(index === "") return;
-    let player = (team === 'A') ? matchData.xiA[index] : matchData.xiB[index];
-    if(player) { matchData.profName = player.name; matchData.profImg = player.img; document.getElementById("profName").value = player.name; saveData(); }
+    const player = (team === 'A') ? matchData.xiA[index] : matchData.xiB[index];
+    if(player) {
+        matchData.profName = player.name;
+        matchData.profImg = player.img || matchData.profImg;
+        matchData.profTeam = team === 'A' ? matchData.teamA : matchData.teamB;
+        matchData.profLogo = team === 'A' ? matchData.teamALogo : matchData.teamBLogo;
+        const nameEl = document.getElementById("profName"); if(nameEl) nameEl.value = player.name;
+        const teamEl = document.getElementById("profTeam"); if(teamEl) teamEl.value = matchData.profTeam;
+        saveData(); updateUI();
+    }
 }
 
 function renderXiInputs() {
@@ -329,12 +644,12 @@ function renderXiInputs() {
         let html = "";
         for(let i=0; i<11; i++) { 
             // 💥 XI Images forced to 200px max, keeping size tiny! 💥
-            html += `<div class="player-row"><input type="text" placeholder="Player ${i+1}" value="${matchData['xi'+t][i].name}" oninput="updateXi('${t}', ${i}, 'name', this.value)"><input type="file" accept="image/*" onchange="triggerCrop(this, base64 => { updateXi('${t}', ${i}, 'img', base64); }, 200)"></div>`; 
+            html += `<div class="player-row"><input type="text" placeholder="Player ${i+1}" value="${matchData['xi'+t][i].name}" oninput="updateXi('${t}', ${i}, 'name', this.value)"><input type="file" accept="image/*" onchange="triggerCrop(this, base64 => { updateXi('${t}', ${i}, 'img', base64); }, 800)"></div>`; 
         }
         document.getElementById(`xi${t}-container`).innerHTML = html;
     });
 }
-function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); }
+function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); if(key === "img") broadcastXiImage('xi'+team, index, value); }
 
 function saveHistory() { 
     let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 
@@ -358,18 +673,25 @@ function addSmartExtra(type) { saveHistory(); checkAndClearOver(); let extraRuns
 function undoBall() { if(matchData.history.length === 0) return; let hist = matchData.history; let old = { teamALogo: matchData.teamALogo, teamBLogo: matchData.teamBLogo, xiA: matchData.xiA, xiB: matchData.xiB, profImg: matchData.profImg, vsLeftImg: matchData.vsLeftImg, vsRightImg: matchData.vsRightImg, vsLogoL: matchData.vsLogoL, vsLogoR: matchData.vsLogoR, profLogo: matchData.profLogo, xiLogoA: matchData.xiLogoA, xiLogoB: matchData.xiLogoB }; matchData = hist.pop(); Object.assign(matchData, old); matchData.history = hist; updateUI(); }
 
 function startSecondInnings() { if(!confirm("Start 2nd Innings?")) return; saveHistory(); let tA = matchData.teamA, tB = matchData.teamB, lA = matchData.teamALogo, lB = matchData.teamBLogo; matchData.teamA = tB; matchData.teamB = tA; matchData.teamALogo = lB; matchData.teamBLogo = lA; matchData.target = matchData.score + 1; matchData.score = 0; matchData.wickets = 0; matchData.balls = 0; matchData.b1Runs = 0; matchData.b1Balls = 0; matchData.b2Runs = 0; matchData.b2Balls = 0; matchData.bowlerRuns = 0; matchData.bowlerWickets = 0; matchData.innings = 2; matchData.thisOver = []; matchData.showWinner = false; updateUI(); }
-function seasonEndWipe() { if(confirm("🚨 WARNING: Season End Data Wipe. Pakka?")) { localStorage.clear(); location.reload(); } }
+async function seasonEndWipe() {
+    if(!confirm("🚨 WARNING: Season End Data Wipe. Pakka?")) return;
+    try {
+        localStorage.removeItem(DB_KEY);
+        if(window.indexedDB) await new Promise(resolve => { const req = indexedDB.deleteDatabase(IMAGE_DB_NAME); req.onsuccess = req.onerror = req.onblocked = () => resolve(); });
+    } catch(e) {}
+    location.reload();
+}
 
 function setStrike(n) { matchData.onStrike = n; updateUI(); }
 function toggleScoreboard() { matchData.showScoreboard = !matchData.showScoreboard; updateUI(); }
-function toggleFlag(flag, state) { if(state && (flag === 'showXiA' || flag === 'showXiB' || flag === 'showVs' || flag === 'showWinner' || flag === 'showProfile')) { matchData.showXiA = false; matchData.showXiB = false; matchData.showVs = false; matchData.showWinner = false; matchData.showProfile = false; } matchData[flag] = state; updateUI(); }
+function toggleFlag(flag, state) { if(state && (flag === 'showXiA' || flag === 'showXiB' || flag === 'showVs' || flag === 'showWinner' || flag === 'showProfile')) { matchData.showXiA = false; matchData.showXiB = false; matchData.showVs = false; matchData.showWinner = false; matchData.showProfile = false; } matchData[flag] = state; updateUI(); if(state) setTimeout(() => broadcastVisibleImages(), 0); }
 
 function updateUI() {
     document.getElementById("score").innerText = matchData.score + "/" + matchData.wickets;
     document.getElementById("overs").innerText = getOvers() + " Overs";
     let html = ""; matchData.thisOver.forEach(b => html += `<span class="over-log">${b}</span>`); document.getElementById("thisOver").innerHTML = html;
     
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "winnerTheme", "tickerText", "xiTopText", "profName", "profS1L", "profS1V", "profS2V", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => { 
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "winnerTheme", "tickerText", "xiTopText", "profLeague", "profJersey", "profRole", "profName", "profTeam", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "profMeta1", "profMeta2", "profMeta3", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => { 
         let el = document.getElementById(id); if(el && document.activeElement !== el) el.value = matchData[id] || ""; 
     });
     document.getElementById("btnStrike1").className = matchData.onStrike===1 ? "badge active" : "badge";
@@ -377,12 +699,72 @@ function updateUI() {
     saveData();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await migrateLegacyImages();
     updateUI(); renderXiInputs();
-    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText", "xiTopText", "profName", "profS1L", "profS1V", "profS2V", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => {
-        document.getElementById(id).addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
+    ["teamA", "teamB", "b1Name", "b1Runs", "b1Balls", "b2Name", "b2Runs", "b2Balls", "bowler", "bowlerRuns", "bowlerWickets", "target", "winnerText", "tickerText", "xiTopText", "profLeague", "profJersey", "profRole", "profName", "profTeam", "profS1L", "profS1V", "profS2L", "profS2V", "profS3L", "profS3V", "profMeta1", "profMeta2", "profMeta3", "vsTitle", "vsTeamLName", "vsLeftName", "vsTeamRName", "vsRightName"].forEach(id => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener("input", e => { matchData[id] = e.target.type === 'number' ? (parseInt(e.target.value)||0) : e.target.value; saveData(); });
     });
 });
+</script>
+
+<script>
+/* BPL OBS RELAY v2: SharedWorker is the primary transport for OBS Custom Dock <-> Browser Source. */
+(function(){
+  const WORKER_URL = new URL('sync-worker.js', document.baseURI).href;
+  let relay = null;
+  try { if (window.SharedWorker) { relay = new SharedWorker(WORKER_URL); relay.port.start(); } } catch(e) { relay = null; console.warn('BPL SharedWorker unavailable', e); }
+  window.__bplRelay = relay;
+
+  function relayState(){
+    if(!relay || !matchData) return false;
+    try { relay.port.postMessage({type:'state', data:matchData}); return true; } catch(e){ console.warn('BPL relay state failed',e); return false; }
+  }
+  async function relayVisibleImages(){
+    if(!relay || !matchData) return false;
+    const fields = new Set(['teamALogo','teamBLogo']);
+    if(matchData.showProfile){ fields.add('profImg'); fields.add('profLogo'); }
+    if(matchData.showVs){ fields.add('vsLogoL'); fields.add('vsLogoR'); fields.add('vsLeftImg'); fields.add('vsRightImg'); }
+    if(matchData.showXiA) fields.add('xiLogoA');
+    if(matchData.showXiB) fields.add('xiLogoB');
+    const sendRef = async (field, ref) => {
+      if(!ref || !(String(ref).startsWith('idbimg:') || String(ref).startsWith('memimg:'))) return;
+      try {
+        const blob = await getImageBlob(ref);
+        if(!blob) return;
+        const buffer = await blob.arrayBuffer();
+        relay.port.postMessage({type:'imageArrayBuffer', field, ref, mime:blob.type || 'image/webp', buffer}, [buffer]);
+      } catch(e) { console.warn('BPL relay image failed',field,e); }
+    };
+    for(const field of fields) await sendRef(field, matchData[field]);
+    for(const team of ['xiA','xiB']){
+      const visible = (team==='xiA' && matchData.showXiA) || (team==='xiB' && matchData.showXiB);
+      if(!visible) continue;
+      const arr = Array.isArray(matchData[team]) ? matchData[team] : [];
+      for(let i=0;i<arr.length;i++) await sendRef(team+'.'+i, arr[i] && arr[i].img);
+    }
+    return true;
+  }
+
+  // Override the existing transport with the OBS-safe relay. Existing fallback remains underneath.
+  const oldBroadcastState = window.broadcastState;
+  const oldBroadcastVisibleImages = window.broadcastVisibleImages;
+  window.broadcastState = function(){ relayState(); try { if(oldBroadcastState) oldBroadcastState(); } catch(e){} };
+  window.broadcastVisibleImages = async function(){ await relayVisibleImages(); try { if(oldBroadcastVisibleImages) await oldBroadcastVisibleImages(); } catch(e){} };
+
+  if(relay){
+    relay.port.onmessage = function(ev){
+      const m=ev && ev.data; if(!m) return;
+      // Admin is the source of truth; it doesn't need to apply its own relay messages.
+      if(m.type==='clearImages') return;
+    };
+    // Push current state immediately and again after the page is fully ready.
+    setTimeout(()=>{ relayState(); relayVisibleImages(); }, 250);
+    setTimeout(()=>{ relayState(); relayVisibleImages(); }, 1500);
+  }
+})();
 </script>
 </body>
 </html>
