@@ -473,10 +473,15 @@ async function broadcastVisibleImages() {
     }
 }
 
-function broadcastState() {
+let stateBroadcastTimer = null;
+function broadcastStateNow() {
     const tinyState = stripImagesForSync(matchData);
     if(syncChannel) { try { syncChannel.postMessage({type:"state", data:tinyState}); } catch(e) {} }
     if(imageRelay) { try { imageRelay.port.postMessage({type:'state', data:matchData}); } catch(e) {} }
+}
+function broadcastState() {
+    if(stateBroadcastTimer) clearTimeout(stateBroadcastTimer);
+    stateBroadcastTimer = setTimeout(() => { stateBroadcastTimer = null; broadcastStateNow(); }, 35);
 }
 if(imageRelay) { try { imageRelay.port.postMessage({type:'hello'}); } catch(e) {} }
 if(syncChannel) { syncChannel.onmessage = async (ev) => { const msg = ev && ev.data; if(msg && msg.type === "hello") { broadcastState(); await broadcastVisibleImages(); } }; }
@@ -710,7 +715,14 @@ function renderXiInputs() {
         document.getElementById(`xi${t}-container`).innerHTML = html;
     });
 }
-function updateXi(team, index, key, value) { matchData['xi'+team][index][key] = value; saveData(); if(key === "img") broadcastXiImage('xi'+team, index, value); }
+function updateXi(team, index, key, value) {
+    const list = matchData['xi'+team];
+    if(!Array.isArray(list)) matchData['xi'+team] = Array.from({length:11}, () => ({name:'', img:''}));
+    if(!matchData['xi'+team][index] || typeof matchData['xi'+team][index] !== 'object') matchData['xi'+team][index] = {name:'', img:''};
+    matchData['xi'+team][index][key] = value;
+    saveData();
+    if(key === "img") broadcastXiImage('xi'+team, index, value);
+}
 
 function saveHistory() { 
     let snap = JSON.parse(JSON.stringify(matchData)); delete snap.history; 

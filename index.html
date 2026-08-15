@@ -442,6 +442,8 @@ const IMAGE_DB_NAME = "BPL_ULTRA_IMAGES_V2";
 const IMAGE_STORE = "images";
 let imageDbPromise = null;
 const imageUrlCache = new Map();
+// Last successfully rendered image per field. OBS may receive state before image bytes.
+const renderedImageCache = new Map();
 let loadSequence = 0;
 let lastWinnerVisible = false;
 let syncActive = false;
@@ -495,10 +497,37 @@ async function getImageUrl(ref) {
 async function hydrateImages(data) {
     const copy = JSON.parse(JSON.stringify(data));
     const fields = ['teamALogo','teamBLogo','xiLogoA','xiLogoB','profImg','profLogo','vsLogoL','vsLogoR','vsLeftImg','vsRightImg'];
-    await Promise.all(fields.map(async k => { if(copy[k]) copy[k] = await getImageUrl(copy[k]); }));
+
+    async function hydrateField(fieldKey, value) {
+        // Empty means the admin explicitly removed this image.
+        if(!value) {
+            renderedImageCache.delete(fieldKey);
+            return '';
+        }
+        if(typeof value !== 'string') return value;
+        const resolved = await getImageUrl(value);
+        if(resolved) {
+            renderedImageCache.set(fieldKey, {ref:value, url:resolved});
+            return resolved;
+        }
+        // If the bytes are still travelling through OBS/SharedWorker, retain the
+        // currently visible image instead of flashing/hiding it. The later image
+        // packet will trigger renderData() again and swap it to the new photo.
+        const previous = renderedImageCache.get(fieldKey);
+        return previous && previous.url ? previous.url : '';
+    }
+
+    await Promise.all(fields.map(async k => {
+        if(copy[k]) copy[k] = await hydrateField(k, copy[k]);
+    }));
+
     for(const team of ['xiA','xiB']) {
         if(!Array.isArray(copy[team])) continue;
-        await Promise.all(copy[team].map(async p => { if(p && p.img) p.img = await getImageUrl(p.img); }));
+        await Promise.all(copy[team].map(async (p, i) => {
+            const key = team + '.' + i;
+            if(p && p.img) p.img = await hydrateField(key, p.img);
+            else if(p) p.img = await hydrateField(key, '');
+        }));
     }
     return copy;
 }
@@ -755,6 +784,7 @@ loadData(true);
     };
     try { relay.port.postMessage({type:'hello'}); } catch(e){}
     setTimeout(()=>{ try{relay.port.postMessage({type:'hello'});}catch(e){} },1000);
+    setTimeout(()=>{ try{relay.port.postMessage({type:'hello'});}catch(e){} },2500);
   }
 })();
 </script>
