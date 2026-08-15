@@ -493,23 +493,51 @@ function saveData() {
     broadcastState();
 }
 
-async function blobFromCanvas(canvas, quality = 0.92) {
+async function blobFromCanvas(canvas, quality = 0.94) {
     if(!canvas || !canvas.width || !canvas.height) throw new Error("Crop canvas is empty");
-    const makeBlob = () => new Promise((resolve, reject) => {
-        let done = false;
-        const timer = setTimeout(() => { if(!done){ done=true; reject(new Error("Canvas encoding timeout")); } }, 8000);
-        try {
-            canvas.toBlob(blob => { if(done) return; done=true; clearTimeout(timer); blob ? resolve(blob) : reject(new Error("Canvas encoding failed")); }, "image/webp", quality);
-        } catch(e) { if(!done){done=true;clearTimeout(timer);reject(e);} }
-    });
-    try { return await makeBlob(); }
-    catch(e) {
-        // OBS/CEF fallback: encode a still-sharp 1080px JPEG rather than hanging forever.
-        const size = Math.min(1080, canvas.width, canvas.height);
-        const c = document.createElement('canvas'); c.width=size; c.height=size;
-        const ctx=c.getContext('2d',{alpha:false}); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
-        ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size); ctx.drawImage(canvas,0,0,size,size);
-        return new Promise((resolve,reject)=>{ c.toBlob(b=>b?resolve(b):reject(new Error("Fallback image encoding failed")),"image/jpeg",0.92); });
+
+    // OBS/CEF-safe encoder: prefer JPEG because older embedded Chromium builds can
+    // hang on WebP toBlob(). Never leave the Save button waiting for a callback.
+    const target = Math.min(1600, Math.max(300, canvas.width, canvas.height));
+    let work = canvas;
+    if(canvas.width !== target || canvas.height !== target){
+        work = document.createElement('canvas');
+        work.width = target; work.height = target;
+        const ctx = work.getContext('2d', {alpha:false});
+        if(!ctx) throw new Error('Canvas context unavailable');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#fff'; ctx.fillRect(0,0,target,target);
+        ctx.drawImage(canvas,0,0,target,target);
+    }
+
+    // 1) JPEG toBlob with a short hard timeout.
+    try {
+        const blob = await new Promise((resolve, reject) => {
+            let settled = false;
+            const finish = (fn, value) => { if(settled) return; settled=true; clearTimeout(timer); fn(value); };
+            const timer = setTimeout(() => finish(reject, new Error('Canvas encoder timeout')), 2500);
+            try {
+                work.toBlob(b => b && b.size ? finish(resolve,b) : finish(reject,new Error('JPEG encoding failed')), 'image/jpeg', quality);
+            } catch(e) { finish(reject,e); }
+        });
+        return blob;
+    } catch(e) {
+        console.warn('BPL: JPEG toBlob unavailable, using dataURL fallback', e);
+    }
+
+    // 2) Synchronous dataURL fallback. This works in embedded OBS/CEF builds
+    // where toBlob is unreliable. It is immediately converted back to a Blob.
+    try {
+        const dataUrl = work.toDataURL('image/jpeg', quality);
+        const comma = dataUrl.indexOf(',');
+        if(comma < 0) throw new Error('Invalid canvas dataURL');
+        const binary = atob(dataUrl.slice(comma + 1));
+        const bytes = new Uint8Array(binary.length);
+        for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+        return new Blob([bytes], {type:'image/jpeg'});
+    } catch(e) {
+        throw new Error('Photo encoding failed in this OBS browser: ' + (e && e.message || e));
     }
 }
 
@@ -517,17 +545,21 @@ async function blobFromCanvas(canvas, quality = 0.92) {
 let cropper = null;
 let currentCropCallback = null;
 let currentCropSize = 1400;
+let currentCropFile = null;
 
 function triggerCrop(inputElement, callback, size = 1400) {
     if (inputElement.files && inputElement.files[0]) {
         currentCropSize = Math.max(300, Math.min(2048, Number(size) || 1400));
         document.getElementById('cropTitle').innerText = "✂️ HD SMART CROPPER (up to " + currentCropSize + "px)";
         const file = inputElement.files[0];
+        currentCropFile = file;
         const objectUrl = URL.createObjectURL(file);
         document.getElementById('cropImage').src = objectUrl;
         document.getElementById('cropImage').dataset.objectUrl = objectUrl;
         document.getElementById('cropModal').style.display = 'flex';
-            if (cropper) cropper.destroy();
+            if (cropper) { try { cropper.destroy(); } catch(e) {} cropper = null; }
+            const imgEl = document.getElementById('cropImage');
+            const buildCropper = () => {
             if (typeof Cropper === 'function') {
                 cropper = new Cropper(document.getElementById('cropImage'), { aspectRatio: 1, viewMode: 1, autoCropArea: 0.96, responsive: true, background: false, checkOrientation: true, guides: true, center: true, highlight: false, dragMode: 'move', zoomOnWheel: true, zoomOnTouch: true });
             } else {
@@ -542,12 +574,15 @@ function triggerCrop(inputElement, callback, size = 1400) {
                     }, destroy(){}
                 };
             }
+            };
+            if (imgEl.complete && imgEl.naturalWidth) buildCropper();
+            else imgEl.onload = buildCropper;
         currentCropCallback = callback;
         inputElement.value = '';
     }
 }
 
-function closeCropper() { const imgEl=document.getElementById('cropImage'); const u=imgEl && imgEl.dataset.objectUrl; if(u){ try{URL.revokeObjectURL(u);}catch(e){} delete imgEl.dataset.objectUrl; } document.getElementById('cropModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } currentCropCallback = null; }
+function closeCropper() { const imgEl=document.getElementById('cropImage'); const u=imgEl && imgEl.dataset.objectUrl; if(u){ try{URL.revokeObjectURL(u);}catch(e){} delete imgEl.dataset.objectUrl; } if(imgEl) imgEl.onload = null; document.getElementById('cropModal').style.display = 'none'; if(cropper) { cropper.destroy(); cropper = null; } currentCropCallback = null; currentCropFile = null; }
 
 async function saveCrop() {
     if(!cropper || imageSaveBusy) return;
@@ -555,31 +590,57 @@ async function saveCrop() {
     const button = document.querySelector('#cropModal .green');
     const title = document.getElementById('cropTitle');
     if(button) { button.disabled = true; button.innerText = '⏳ PROCESSING...'; }
-    try {
-        const imageInfo = cropper.getImageData ? cropper.getImageData() : {};
-        const naturalW = Number(imageInfo.naturalWidth) || currentCropSize;
-        const naturalH = Number(imageInfo.naturalHeight) || currentCropSize;
-        const sourceLimit = Math.max(1, Math.floor(Math.min(naturalW, naturalH)));
-        const outputSize = Math.max(300, Math.min(currentCropSize, sourceLimit, 1600));
-        if(title) title.innerText = '⚡ PROCESSING HD PHOTO...';
-        const canvas = cropper.getCroppedCanvas({width:outputSize,height:outputSize,imageSmoothingEnabled:true,imageSmoothingQuality:'high',fillColor:'transparent'});
-        if(!canvas || !canvas.width || !canvas.height) throw new Error('Crop canvas unavailable');
-        const blob = await blobFromCanvas(canvas, 0.94);
+
+    const finishWithBlob = async (blob) => {
         if(!blob || !blob.size) throw new Error('Image encoding produced no data');
         if(title) title.innerText = '💾 SAVING PHOTO...';
-        // putImageBlob returns immediately after placing the blob in live memory.
-        // IndexedDB/Cache persistence continues in the background, so OBS can never
-        // leave the SAVE button stuck on "SAVING HD..." because storage is blocked.
-        const ref = await withTimeout(putImageBlob(blob), 1500, 'Live image staging timeout');
+        // The reference is created in memory immediately. Persistent storage is
+        // deliberately best-effort and cannot block this save operation.
+        const ref = await withTimeout(putImageBlob(blob), 5000, 'Live image staging timeout');
         if(!ref) throw new Error('Image staging failed');
-        if(currentCropCallback) currentCropCallback(ref);
+        const cb = currentCropCallback;
+        if(typeof cb === 'function') cb(ref);
         closeCropper();
         saveData();
         updateUI();
+        // Give the worker one deterministic image push after the state ref exists.
         await broadcastVisibleImages();
+        return true;
+    };
+
+    try {
+        const imageInfo = cropper.getImageData ? cropper.getImageData() : {};
+        const naturalW = Number(imageInfo.naturalWidth) || (currentCropFile && currentCropFile.width) || currentCropSize;
+        const naturalH = Number(imageInfo.naturalHeight) || (currentCropFile && currentCropFile.height) || currentCropSize;
+        const sourceLimit = Math.max(1, Math.floor(Math.min(naturalW, naturalH)));
+        const outputSize = Math.max(300, Math.min(currentCropSize, sourceLimit, 1600));
+        if(title) title.innerText = '⚡ PROCESSING HD PHOTO...';
+
+        let canvas = null;
+        try {
+            canvas = cropper.getCroppedCanvas({width:outputSize,height:outputSize,imageSmoothingEnabled:true,imageSmoothingQuality:'high',fillColor:'transparent'});
+        } catch(e) { console.warn('BPL crop canvas failed; using source image fallback', e); }
+
+        if(canvas && canvas.width && canvas.height) {
+            try {
+                const blob = await blobFromCanvas(canvas, 0.94);
+                await finishWithBlob(blob);
+                return;
+            } catch(e) {
+                console.warn('BPL canvas encoding failed; trying original file fallback', e);
+            }
+        }
+
+        // Last-resort OBS/CEF path: preserve the original file instead of failing
+        // the upload. The image will still be sharp; cropping can be retried later.
+        if(currentCropFile instanceof File && currentCropFile.size > 0) {
+            await finishWithBlob(currentCropFile);
+            return;
+        }
+        throw new Error('No usable image data available');
     } catch(err) {
         console.error('BPL photo save failed', err);
-        if(title) title.innerText = '❌ SAVE FAILED — TRY AGAIN';
+        if(title) title.innerText = '❌ SAVE FAILED — SELECT PHOTO AGAIN';
     } finally {
         imageSaveBusy = false;
         if(button) { button.disabled = false; button.innerText = '✅ SAVE CROP'; }
@@ -710,61 +771,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 </script>
 
-<script>
-/* BPL OBS RELAY v2: SharedWorker is the primary transport for OBS Custom Dock <-> Browser Source. */
-(function(){
-  const WORKER_URL = new URL('sync-worker.js', document.baseURI).href;
-  let relay = null;
-  try { if (window.SharedWorker) { relay = new SharedWorker(WORKER_URL); relay.port.start(); } } catch(e) { relay = null; console.warn('BPL SharedWorker unavailable', e); }
-  window.__bplRelay = relay;
-
-  function relayState(){
-    if(!relay || !matchData) return false;
-    try { relay.port.postMessage({type:'state', data:matchData}); return true; } catch(e){ console.warn('BPL relay state failed',e); return false; }
-  }
-  async function relayVisibleImages(){
-    if(!relay || !matchData) return false;
-    const fields = new Set(['teamALogo','teamBLogo']);
-    if(matchData.showProfile){ fields.add('profImg'); fields.add('profLogo'); }
-    if(matchData.showVs){ fields.add('vsLogoL'); fields.add('vsLogoR'); fields.add('vsLeftImg'); fields.add('vsRightImg'); }
-    if(matchData.showXiA) fields.add('xiLogoA');
-    if(matchData.showXiB) fields.add('xiLogoB');
-    const sendRef = async (field, ref) => {
-      if(!ref || !(String(ref).startsWith('idbimg:') || String(ref).startsWith('memimg:'))) return;
-      try {
-        const blob = await getImageBlob(ref);
-        if(!blob) return;
-        const buffer = await blob.arrayBuffer();
-        relay.port.postMessage({type:'imageArrayBuffer', field, ref, mime:blob.type || 'image/webp', buffer}, [buffer]);
-      } catch(e) { console.warn('BPL relay image failed',field,e); }
-    };
-    for(const field of fields) await sendRef(field, matchData[field]);
-    for(const team of ['xiA','xiB']){
-      const visible = (team==='xiA' && matchData.showXiA) || (team==='xiB' && matchData.showXiB);
-      if(!visible) continue;
-      const arr = Array.isArray(matchData[team]) ? matchData[team] : [];
-      for(let i=0;i<arr.length;i++) await sendRef(team+'.'+i, arr[i] && arr[i].img);
-    }
-    return true;
-  }
-
-  // Override the existing transport with the OBS-safe relay. Existing fallback remains underneath.
-  const oldBroadcastState = window.broadcastState;
-  const oldBroadcastVisibleImages = window.broadcastVisibleImages;
-  window.broadcastState = function(){ relayState(); try { if(oldBroadcastState) oldBroadcastState(); } catch(e){} };
-  window.broadcastVisibleImages = async function(){ await relayVisibleImages(); try { if(oldBroadcastVisibleImages) await oldBroadcastVisibleImages(); } catch(e){} };
-
-  if(relay){
-    relay.port.onmessage = function(ev){
-      const m=ev && ev.data; if(!m) return;
-      // Admin is the source of truth; it doesn't need to apply its own relay messages.
-      if(m.type==='clearImages') return;
-    };
-    // Push current state immediately and again after the page is fully ready.
-    setTimeout(()=>{ relayState(); relayVisibleImages(); }, 250);
-    setTimeout(()=>{ relayState(); relayVisibleImages(); }, 1500);
-  }
-})();
-</script>
 </body>
 </html>

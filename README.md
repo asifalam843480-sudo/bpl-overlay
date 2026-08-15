@@ -1,5 +1,13 @@
-# BPL Premium OBS Image-Safe Final
+# BPL Premium OBS — Photo Save Stable Final
 
-Use the extracted files directly in the GitHub Pages repository root.
-Important files: index.html, admin.html, script.js, style.css, sync-worker.js.
-This build uses an independent per-image ArrayBuffer relay through SharedWorker so multiple player/profile/versus photos can coexist across OBS Custom Browser Dock and Browser Source contexts without relying on shared IndexedDB.
+This build keeps the existing BPL overlay/admin design and fixes the OBS photo-save path.
+
+Key fixes:
+- OBS-safe JPEG canvas encoding with a hard timeout.
+- Synchronous dataURL fallback when embedded Chromium `toBlob()` is unreliable.
+- Original File fallback if cropping/encoding fails, so a selected photo is not lost.
+- Images are staged in memory immediately; IndexedDB/Cache persistence is best-effort.
+- Unique image references prevent one photo from overwriting another.
+- SharedWorker relay remains the live Admin Dock → Scoreboard transport.
+- Redundant second SharedWorker admin relay removed to avoid duplicate/racing state transport.
+- Existing match engine, Profile, Versus, Winner and scoreboard behavior preserved.
