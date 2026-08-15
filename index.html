@@ -530,8 +530,27 @@ if(syncChannel) {
             if(msg.type === "state" && msg.data) {
                 syncActive = true;
                 lastSyncAt = Date.now();
-                lastLiveState = msg.data;
-                await renderData(msg.data);
+                // The Admin intentionally strips heavy image payloads from its
+                // BroadcastChannel state snapshot. Never let that lightweight
+                // snapshot erase images already received through SharedWorker.
+                const incoming = msg.data;
+                const previous = lastLiveState || {};
+                const merged = Object.assign({}, previous, incoming);
+                const imageFields = ['teamALogo','teamBLogo','xiLogoA','xiLogoB','profImg','profLogo','vsLogoL','vsLogoR','vsLeftImg','vsRightImg'];
+                imageFields.forEach(k => {
+                    if (!incoming[k] && previous[k]) merged[k] = previous[k];
+                });
+                ['xiA','xiB'].forEach(t => {
+                    const inc = Array.isArray(incoming[t]) ? incoming[t] : [];
+                    const prev = Array.isArray(previous[t]) ? previous[t] : [];
+                    merged[t] = inc.map((p, i) => {
+                        const obj = Object.assign({}, p || {});
+                        if (!obj.img && prev[i] && prev[i].img) obj.img = prev[i].img;
+                        return obj;
+                    });
+                });
+                lastLiveState = merged;
+                await renderData(merged);
                 return;
             }
             if(msg.type === "image" && msg.ref && msg.dataUrl) {
